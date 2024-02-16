@@ -1,0 +1,22 @@
+{
+  "short_name": "Snowtricks",
+  "name": "Snowtricks",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "browser",
+  "scope": "/",
+  "description": "A community website for snowboard enthusiasts"
+}
