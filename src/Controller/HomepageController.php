@@ -12,11 +12,22 @@ class HomepageController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(TrickService $trickService): Response
     {
-        $tricks = $trickService->findAll();
+        $batch = $trickService->getBatch();
 
         return $this->render(
             'homepage/index.html.twig',
-            compact("tricks")
+            compact("batch")
+        );
+    }
+
+    #[Route('/homepage-tricks-batch-{batchNumber}', name: 'homepage-tricks-batch')]
+    public function tricksBatch(TrickService $trickService, int $batchNumber): Response
+    {
+        $batch = $trickService->getBatch($batchNumber);
+
+        return $this->render(
+            'homepage/tricks.html.twig',
+            compact("batch")
         );
     }
 }

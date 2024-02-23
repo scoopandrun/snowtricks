@@ -25,10 +25,19 @@
   </header>
 
   <main>
-    <div class="grid mx-3">
-      {% for trick in tricks %}
-        {% include("homepage/_trick-card.html.twig") %}
-      {% endfor %}
+    <div id="tricks" data-controller="homepage-tricks">
+      {{ include("homepage/tricks.html.twig") }}
+    
+      {% if batch.nextItems %}
+        <div class="my-4 text-center">
+          <button
+            class="btn btn-primary"
+            data-next-page-number="{{ batch.nextPageNumber }}"
+            data-action="click->homepage-tricks#fetch"
+            data-homepage-tricks-target="fetchButton"
+          >Load more</button>
+        </div>
+      {% endif %}
     </div>
   </main>
 {% endblock %}
