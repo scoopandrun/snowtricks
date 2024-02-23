@@ -1,11 +1,14 @@
 <div class="card mb-3">
   <img
-    src="{{ asset('images/fallback-trick-image-640.jpg') }}"
+    src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-640.jpg') }}"
     class="rounded-top"
-    alt="Trick name"
+    alt="{{ trick.name }}"
   >
   
   <div class="card-body text-muted">
-    <h5 class="card-title">Trick name</h5>
+    <h5 class="card-title">{{ trick.name }}</h5>
+    {% if trick.category.id %}
+      <p class="badge bg-secondary">{{ trick.category.name|lower }}</p>
+    {% endif %}
   </div>
 </div>

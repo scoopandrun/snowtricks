@@ -2,15 +2,21 @@
 
 namespace App\Controller;
 
+use App\Service\TrickService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class HomepageController extends AbstractController
 {
-    #[Route('/', name: 'app_homepage')]
-    public function index(): Response
+    #[Route('/', name: 'homepage')]
+    public function index(TrickService $trickService): Response
     {
-        return $this->render('homepage/index.html.twig');
+        $tricks = $trickService->findAll();
+
+        return $this->render(
+            'homepage/index.html.twig',
+            compact("tricks")
+        );
     }
 }
