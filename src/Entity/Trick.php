@@ -118,7 +118,7 @@ class Trick
         return $this->mediaCollection;
     }
 
-    public function addMedium(Media $media): static
+    public function addMedia(Media $media): static
     {
         if (!$this->mediaCollection->contains($media)) {
             $this->mediaCollection->add($media);
@@ -128,7 +128,7 @@ class Trick
         return $this;
     }
 
-    public function removeMedium(Media $media): static
+    public function removeMedia(Media $media): static
     {
         if ($this->mediaCollection->removeElement($media)) {
             // set the owning side to null (unless already changed)
