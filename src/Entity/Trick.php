@@ -16,6 +16,9 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 50, unique: true)]
+    private ?string $slug = null;
+
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
@@ -60,6 +63,27 @@ class Trick
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function makeSlug(): string
+    {
+        $slug = strtolower($this->name);
+        $slug = preg_replace(" ", "-", $slug);
+        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
+
+        return $slug;
     }
 
     public function getDescription(): ?string

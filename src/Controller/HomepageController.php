@@ -23,19 +23,4 @@ class HomepageController extends AbstractController
             compact("batch")
         );
     }
-
-    #[Route(
-        '/homepage-tricks-batch-{batchNumber}',
-        name: 'homepage-tricks-batch',
-        methods: ["GET"]
-    )]
-    public function tricksBatch(TrickService $trickService, int $batchNumber): Response
-    {
-        $batch = $trickService->getBatch($batchNumber);
-
-        return $this->render(
-            'homepage/tricks.html.twig',
-            compact("batch")
-        );
-    }
 }

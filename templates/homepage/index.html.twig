@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/homepage/tricks-grid.css') }}">
 {% endblock %}
 
@@ -8,7 +9,7 @@
   <header class="container col-xxl-8 px-4 py-5 position-relative mb-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
       <div class="col-10 col-sm-8 col-lg-6 mx-auto">
-        <img src="{{ asset('images/hero-image.jpg') }}" class="d-block mx-lg-auto img-fluid rounded" alt="Snowboard rider" width="700" height="500" loading="lazy" />
+        <img src="{{ asset('images/hero-image-640.jpg') }}" class="d-block mx-lg-auto img-fluid rounded" alt="Snowboard rider" width="700" height="500" loading="lazy" />
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">Snowtricks</h1>
@@ -28,24 +29,26 @@
     </div>
   </header>
 
-  <main class="position-relative">
-    <div id="tricks" data-controller="homepage-tricks">
-      {{ include("homepage/tricks.html.twig") }}
-    
-      {% if batch.nextItems %}
-        <div class="my-4 text-center">
-          <button
-            class="btn btn-primary"
-            data-next-page-number="{{ batch.nextPageNumber }}"
-            data-action="homepage-tricks#fetch"
-            data-homepage-tricks-target="fetchButton"
-          >Load more</button>
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="position-absolute bottom-0 end-0 m-2">
-      <a href="#tricks" class="fs-1 text-decoration-none" title="Scroll up">↑</a>
+  <main>
+    <div class="container position-relative">
+      <div id="tricks" data-controller="homepage-tricks">
+        {{ include("trick/batch.html.twig") }}
+      
+        {% if batch.nextItems %}
+          <div class="my-4 text-center">
+            <button
+              class="btn btn-primary"
+              data-next-page-number="{{ batch.nextPageNumber }}"
+              data-action="homepage-tricks#fetch"
+              data-homepage-tricks-target="fetchButton"
+            >Load more</button>
+          </div>
+        {% endif %}
+      </div>
+  
+      <div class="position-absolute bottom-0 end-0 m-2">
+        <a href="#tricks" class="fs-1 text-decoration-none" title="Scroll up">↑</a>
+      </div>
     </div>
   </main>
 {% endblock %}

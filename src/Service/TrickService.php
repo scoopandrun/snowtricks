@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Core\Component\Batch;
+use App\Entity\Trick;
 use App\Repository\TrickRepository;
 
 class TrickService
@@ -10,6 +11,11 @@ class TrickService
     public function __construct(
         private TrickRepository $trickRepository
     ) {
+    }
+
+    public function findOne(string $slug): ?Trick
+    {
+        return $this->trickRepository->findOneBy(["slug" => $slug]);
     }
 
     public function findAll(): array

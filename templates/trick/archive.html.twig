@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tricks{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('styles/homepage/tricks-grid.css') }}">
+{% endblock %}
+
+{% block body %}
+  <header class="container">
+    <div class="text-center my-5">
+      <h1 class="display-5 fw-bold lh-1 mb-3">Tricks</h1>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="grid mx-3">
+        {% for trick in tricks %}
+          {{ include("trick/_trick-card.html.twig") }}
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+{% endblock %}
