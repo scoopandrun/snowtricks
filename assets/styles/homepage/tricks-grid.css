@@ -1,0 +1,27 @@
+.grid {
+  --columns: 1;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(var(--columns), 1fr);
+}
+
+/* Small */
+@media (min-width: 576px) {
+  .grid {
+    --columns: 2;
+  }
+}
+
+/* Small */
+@media (min-width: 768px) {
+  .grid {
+    --columns: 3;
+  }
+}
+
+/* Small */
+@media (min-width: 992px) {
+  .grid {
+    --columns: 4;
+  }
+}
