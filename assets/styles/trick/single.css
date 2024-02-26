@@ -1,0 +1,22 @@
+.main-media {
+  position: relative;
+  width: fit-content;
+  padding: 0;
+}
+
+.main-media__image {
+  max-width: 100%;
+  max-height: 60vh;
+}
+
+.main-media__overlay {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.main-media__trick-name {
+  color: white;
+  padding: 1rem;
+}

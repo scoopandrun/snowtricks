@@ -13,9 +13,9 @@ class TrickService
     ) {
     }
 
-    public function findOne(): ?Trick
+    public function findOne(string $slug): ?Trick
     {
-        return new Trick();
+        return $this->trickRepository->findOneBy(["slug" => $slug]);
     }
 
     public function findAll(): array
@@ -56,16 +56,5 @@ class TrickService
             firstIndex: $offset + 1,
             totalCount: $count
         );
-    }
-
-    private function makeSlug(Trick $trick): string
-    {
-        $name = $trick->getName();
-
-        $slug = strtolower($name);
-        $slug = preg_replace(" ", "-", $slug);
-        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
-
-        return $slug;
     }
 }

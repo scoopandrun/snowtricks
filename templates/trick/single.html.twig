@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
+{% endblock %}
+
+{% block body %}
+  <header>
+    <div class="container mx-3 mx-sm-auto my-5 text-center main-media">
+      <img
+        src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
+        class="main-media__image rounded"
+        alt="{{ trick.name }}"
+      >
+      <div class="main-media__overlay rounded-bottom">
+        <h1 class="main-media__trick-name">{{ trick.name }}</h1>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container mb-5">
+      {{ trick.description }}
+    </div>
+  </main>
+{% endblock %}

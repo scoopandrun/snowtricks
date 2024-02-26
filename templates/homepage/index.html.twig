@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/homepage/tricks-grid.css') }}">
 {% endblock %}
 
@@ -28,24 +29,26 @@
     </div>
   </header>
 
-  <main class="position-relative">
-    <div id="tricks" data-controller="homepage-tricks">
-      {{ include("trick/batch.html.twig") }}
-    
-      {% if batch.nextItems %}
-        <div class="my-4 text-center">
-          <button
-            class="btn btn-primary"
-            data-next-page-number="{{ batch.nextPageNumber }}"
-            data-action="homepage-tricks#fetch"
-            data-homepage-tricks-target="fetchButton"
-          >Load more</button>
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="position-absolute bottom-0 end-0 m-2">
-      <a href="#tricks" class="fs-1 text-decoration-none" title="Scroll up">↑</a>
+  <main>
+    <div class="container position-relative">
+      <div id="tricks" data-controller="homepage-tricks">
+        {{ include("trick/batch.html.twig") }}
+      
+        {% if batch.nextItems %}
+          <div class="my-4 text-center">
+            <button
+              class="btn btn-primary"
+              data-next-page-number="{{ batch.nextPageNumber }}"
+              data-action="homepage-tricks#fetch"
+              data-homepage-tricks-target="fetchButton"
+            >Load more</button>
+          </div>
+        {% endif %}
+      </div>
+  
+      <div class="position-absolute bottom-0 end-0 m-2">
+        <a href="#tricks" class="fs-1 text-decoration-none" title="Scroll up">↑</a>
+      </div>
     </div>
   </main>
 {% endblock %}

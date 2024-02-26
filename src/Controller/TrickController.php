@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\TrickService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TrickController extends AbstractController
@@ -25,22 +26,27 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/trick/{slug}',
+        '/tricks/{slug}',
         name: 'trick_single',
         methods: ["GET"]
     )]
     public function single(TrickService $trickService, string $slug): Response
     {
-        $trick = $trickService->findOne();
+        $trick = $trickService->findOne($slug);
 
-        return $this->render('trick/single.html.twig', [
-            'trick' => 'TrickController',
-        ]);
+        if (!$trick) {
+            throw new NotFoundHttpException("Trick not found");
+        }
+
+        return $this->render(
+            'trick/single.html.twig',
+            compact("trick")
+        );
     }
 
     #[Route(
         '/tricks-batch-{batchNumber}',
-        name: 'tricks_batch',
+        name: 'trick_batch',
         methods: ["GET"]
     )]
     public function tricksBatch(TrickService $trickService, int $batchNumber): Response

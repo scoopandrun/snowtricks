@@ -77,6 +77,15 @@ class Trick
         return $this;
     }
 
+    public function makeSlug(): string
+    {
+        $slug = strtolower($this->name);
+        $slug = preg_replace(" ", "-", $slug);
+        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
+
+        return $slug;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
