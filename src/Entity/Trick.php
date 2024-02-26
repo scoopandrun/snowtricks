@@ -16,6 +16,9 @@ class Trick
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 50, unique: true)]
+    private ?string $slug = null;
+
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
@@ -58,6 +61,18 @@ class Trick
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

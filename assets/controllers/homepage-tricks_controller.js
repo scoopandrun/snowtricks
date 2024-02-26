@@ -12,7 +12,7 @@ export default class extends Controller {
 
     try {
       const nextPageNumber = fetchButton.dataset.nextPageNumber;
-      const url = "/homepage-tricks-batch-" + nextPageNumber;
+      const url = "/tricks-batch-" + nextPageNumber;
 
       fetchButton.setAttribute("disabled", true);
       fetchButton.textContent = "Loading...";

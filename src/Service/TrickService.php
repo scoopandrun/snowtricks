@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Core\Component\Batch;
+use App\Entity\Trick;
 use App\Repository\TrickRepository;
 
 class TrickService
@@ -10,6 +11,11 @@ class TrickService
     public function __construct(
         private TrickRepository $trickRepository
     ) {
+    }
+
+    public function findOne(): ?Trick
+    {
+        return new Trick();
     }
 
     public function findAll(): array
@@ -50,5 +56,16 @@ class TrickService
             firstIndex: $offset + 1,
             totalCount: $count
         );
+    }
+
+    private function makeSlug(Trick $trick): string
+    {
+        $name = $trick->getName();
+
+        $slug = strtolower($name);
+        $slug = preg_replace(" ", "-", $slug);
+        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
+
+        return $slug;
     }
 }
