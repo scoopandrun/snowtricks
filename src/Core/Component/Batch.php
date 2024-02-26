@@ -2,7 +2,7 @@
 
 namespace App\Core\Component;
 
-use App\Core\Interface\BatchInterface;
+use App\Core\Interfaces\BatchInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
