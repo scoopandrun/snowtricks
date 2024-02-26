@@ -9,7 +9,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomepageController extends AbstractController
 {
-    #[Route('/', name: 'homepage')]
+    #[Route(
+        '/',
+        name: 'homepage',
+        methods: ["GET"]
+    )]
     public function index(TrickService $trickService): Response
     {
         $batch = $trickService->getBatch();
@@ -20,7 +24,11 @@ class HomepageController extends AbstractController
         );
     }
 
-    #[Route('/homepage-tricks-batch-{batchNumber}', name: 'homepage-tricks-batch')]
+    #[Route(
+        '/homepage-tricks-batch-{batchNumber}',
+        name: 'homepage-tricks-batch',
+        methods: ["GET"]
+    )]
     public function tricksBatch(TrickService $trickService, int $batchNumber): Response
     {
         $batch = $trickService->getBatch($batchNumber);
