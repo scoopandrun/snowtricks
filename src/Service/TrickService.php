@@ -2,9 +2,8 @@
 
 namespace App\Service;
 
-use App\Component\Batch;
+use App\Core\Component\Batch;
 use App\Repository\TrickRepository;
-use RuntimeException;
 
 class TrickService
 {

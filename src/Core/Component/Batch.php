@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Component;
+namespace App\Core\Component;
 
 use App\Core\Interface\BatchInterface;
 use Doctrine\Common\Collections\Collection;

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Component\Batch;
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
