@@ -19,12 +19,15 @@
         <h1 class="main-media__trick-name">{{ trick.name }}</h1>
       </div>
       <div class="main-media__edit-overlay rounded">
-        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" title="Edit">
+        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="delete" title="Edit">
           <i data-feather="edit"></i>
         </a>
-        <a href="/tricks/{{ trick.id }}/delete" class="text-decoration-none" title="Delete">
-          <i data-feather="trash-2"></i>
-        </a>
+        <form action="{{ path('trick.delete', {id: trick.id}) }}">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
+            <i data-feather="trash-2"></i>
+          </button>
+        </form>
       </div>
     </div>
   </header>

@@ -31,11 +31,11 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.main-media__edit-overlay > a,
-.main-media__edit-overlay > a:visited {
+.main-media__edit-overlay :is(a, button),
+.main-media__edit-overlay a:visited {
   color: hsl(0, 0%, 85%);
 }
 
-.main-media__edit-overlay > a:hover {
+.main-media__edit-overlay :is(a, button):hover {
   color: white;
 }

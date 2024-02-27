@@ -34,6 +34,18 @@ export default class extends Controller {
 
       feather.replace();
 
+      grid.querySelectorAll("[data-action='delete']").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const deleteConfirmed = confirm(
+            "Are you sure that you want to delete this?"
+          );
+
+          if (!deleteConfirmed) {
+            e.preventDefault();
+          }
+        });
+      });
+
       const newNextPageNumber = parseInt(outerHTML.dataset.nextPageNumber);
 
       if (newNextPageNumber) {
