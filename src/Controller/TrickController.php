@@ -143,7 +143,7 @@ class TrickController extends AbstractController
         name: 'trick.batch',
         methods: ["GET"]
     )]
-    public function tricksBatch(int $batchNumber): Response
+    public function batch(int $batchNumber): Response
     {
         $batch = $this->trickService->getBatch($batchNumber);
 
