@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ trick.name }}{% endblock %}
+{% block title trick.name %}
 
 {% block stylesheets %}
   {{ parent() }}
@@ -17,6 +17,14 @@
       >
       <div class="main-media__overlay rounded-bottom">
         <h1 class="main-media__trick-name">{{ trick.name }}</h1>
+      </div>
+      <div class="main-media__edit-overlay rounded">
+        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" title="Edit">
+          <i data-feather="edit"></i>
+        </a>
+        <a href="/tricks/{{ trick.id }}/delete" class="text-decoration-none" title="Delete">
+          <i data-feather="trash-2"></i>
+        </a>
       </div>
     </div>
   </header>

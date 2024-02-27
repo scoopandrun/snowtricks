@@ -13,7 +13,12 @@ class TrickService
     ) {
     }
 
-    public function findOne(string $slug): ?Trick
+    public function findById(int $id): ?Trick
+    {
+        return $this->trickRepository->find($id);
+    }
+
+    public function findBySlug(string $slug): ?Trick
     {
         return $this->trickRepository->findOneBy(["slug" => $slug]);
     }

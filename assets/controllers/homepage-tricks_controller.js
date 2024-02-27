@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import feather from "feather-icons";
 
 export default class extends Controller {
   static targets = ["grid", "fetchButton"];
@@ -30,6 +31,8 @@ export default class extends Controller {
       const outerHTML = fragment.firstChild;
 
       grid.lastElementChild.after(...outerHTML.children);
+
+      feather.replace();
 
       const newNextPageNumber = parseInt(outerHTML.dataset.nextPageNumber);
 

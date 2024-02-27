@@ -27,4 +27,7 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'feather-icons' => [
+        'version' => '4.29.1',
+    ],
 ];

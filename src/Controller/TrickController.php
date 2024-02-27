@@ -2,22 +2,31 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
+use App\Form\TrickType;
 use App\Service\TrickService;
+use App\Core\FlashClasses;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TrickController extends AbstractController
 {
+    public function __construct(private TrickService $trickService)
+    {
+    }
+
     #[Route(
         '/tricks',
-        name: 'trick_archive',
+        name: 'trick.archive',
         methods: ["GET"]
     )]
-    public function archive(TrickService $trickService): Response
+    public function archive(): Response
     {
-        $tricks = $trickService->findAll();
+        $tricks = $this->trickService->findAll();
 
         return $this->render(
             'trick/archive.html.twig',
@@ -26,16 +35,27 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/{slug}',
-        name: 'trick_single',
-        methods: ["GET"]
+        '/tricks/{id}-{slug}',
+        name: 'trick.single',
+        methods: ["GET"],
+        requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+']
     )]
-    public function single(TrickService $trickService, string $slug): Response
+    public function single(int $id, string $slug): Response
     {
-        $trick = $trickService->findOne($slug);
+        $trick = $this->trickService->findById($id);
 
         if (!$trick) {
             throw new NotFoundHttpException("Trick not found");
+        }
+
+        if ($trick->getSlug() !== $slug) {
+            return $this->redirectToRoute(
+                "trick.single",
+                [
+                    "id" => $id,
+                    "slug" => $trick->getSlug()
+                ]
+            );
         }
 
         return $this->render(
@@ -45,13 +65,47 @@ class TrickController extends AbstractController
     }
 
     #[Route(
+        '/tricks/{id}/edit',
+        name: 'trick.edit',
+        methods: ["GET", "POST"],
+        requirements: ["id" => "\d+"]
+    )]
+    public function edit(
+        Trick $trick,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $form = $this->createForm(TrickType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
+
+            return $this->redirectToRoute(
+                "trick.single",
+                [
+                    "id" => $trick->getId(),
+                    "slug" => $trick->getSlug()
+                ]
+            );
+        }
+
+        return $this->render(
+            'trick/edit.html.twig',
+            compact("trick", "form")
+        );
+    }
+
+    #[Route(
         '/tricks-batch-{batchNumber}',
-        name: 'trick_batch',
+        name: 'trick.batch',
         methods: ["GET"]
     )]
-    public function tricksBatch(TrickService $trickService, int $batchNumber): Response
+    public function tricksBatch(int $batchNumber): Response
     {
-        $batch = $trickService->getBatch($batchNumber);
+        $batch = $this->trickService->getBatch($batchNumber);
 
         return $this->render(
             'trick/batch.html.twig',
