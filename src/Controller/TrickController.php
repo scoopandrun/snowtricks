@@ -79,9 +79,49 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setUpdatedAt(new \DateTimeImmutable());
+
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
+
+            return $this->redirectToRoute(
+                "trick.single",
+                [
+                    "id" => $trick->getId(),
+                    "slug" => $trick->getSlug()
+                ]
+            );
+        }
+
+        return $this->render(
+            'trick/edit.html.twig',
+            compact("trick", "form")
+        );
+    }
+
+    #[Route(
+        '/tricks/create',
+        name: 'trick.create',
+        methods: ["GET", "POST"]
+    )]
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $trick = new Trick();
+
+        $form = $this->createForm(TrickType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $trick->makeSlug();
+            $trick->setSlug($slug);
+
+            $entityManager->persist($trick);
+            $entityManager->flush();
+
+            $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully created.");
 
             return $this->redirectToRoute(
                 "trick.single",

@@ -46,6 +46,7 @@ class Trick
     public function __construct()
     {
         $this->mediaCollection = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
