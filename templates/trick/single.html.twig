@@ -19,7 +19,7 @@
         <h1 class="main-media__trick-name">{{ trick.name }}</h1>
       </div>
       <div class="main-media__edit-overlay rounded">
-        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="delete" title="Edit">
+        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
           <i data-feather="edit"></i>
         </a>
         <form action="{{ path('trick.delete', {id: trick.id}) }}">
