@@ -1,5 +1,9 @@
 {% extends "base.html.twig" %}
 
+{% block title %}
+  {{ trick.name ? trick.name ~ " - Edit" : "New trick" }}
+{% endblock %}
+
 {% block stylesheets %}
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
