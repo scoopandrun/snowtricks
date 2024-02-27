@@ -148,7 +148,7 @@ class TrickController extends AbstractController
         $batch = $this->trickService->getBatch($batchNumber);
 
         return $this->render(
-            'trick/batch.html.twig',
+            'trick/_batch.html.twig',
             compact("batch")
         );
     }
