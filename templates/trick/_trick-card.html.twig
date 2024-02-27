@@ -1,4 +1,4 @@
-<div class="card mb-3">
+<div class="card mb-3 trick-card">
   <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" title="{{ trick.name }}">
     <img
       src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-640.jpg') }}"
@@ -14,10 +14,10 @@
       </a>
 
       <div class="d-flex">
-        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" title="Edit">
+        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
           <i data-feather="edit"></i>
         </a>
-        <a href="/tricks/{{ trick.id }}/delete" class="text-decoration-none" title="Delete">
+        <a href="{{ path('trick.delete', {id: trick.id}) }}" class="text-decoration-none" data-action="delete" title="Delete">
           <i data-feather="trash-2"></i>
         </a>
       </div>
