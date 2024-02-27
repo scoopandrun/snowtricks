@@ -1,11 +1,11 @@
-.trick-card a[data-action] {
+.trick-card [data-action] {
   color: var(--bs-gray-600, lightgray);
 }
 
-a[data-action="edit"]:hover {
+.trick-card [data-action="edit"]:hover {
   color: var(--bs-blue, lightskyblue);
 }
 
-a[data-action="delete"]:hover {
+.trick-card [data-action="delete"]:hover {
   color: var(--bs-red, red);
 }

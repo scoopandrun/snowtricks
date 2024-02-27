@@ -17,9 +17,12 @@
         <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
           <i data-feather="edit"></i>
         </a>
-        <a href="{{ path('trick.delete', {id: trick.id}) }}" class="text-decoration-none" data-action="delete" title="Delete">
-          <i data-feather="trash-2"></i>
-        </a>
+        <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
+            <i data-feather="trash-2"></i>
+          </button>
+        </form>
       </div>
     </div>
 

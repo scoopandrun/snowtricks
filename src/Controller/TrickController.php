@@ -10,7 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TrickController extends AbstractController
@@ -35,6 +34,21 @@ class TrickController extends AbstractController
     }
 
     #[Route(
+        '/tricks-batch-{batchNumber}',
+        name: 'trick.batch',
+        methods: ["GET"]
+    )]
+    public function batch(int $batchNumber): Response
+    {
+        $batch = $this->trickService->getBatch($batchNumber);
+
+        return $this->render(
+            'trick/_batch.html.twig',
+            compact("batch")
+        );
+    }
+
+    #[Route(
         '/tricks/{id}-{slug}',
         name: 'trick.single',
         methods: ["GET"],
@@ -43,10 +57,6 @@ class TrickController extends AbstractController
     public function single(int $id, string $slug): Response
     {
         $trick = $this->trickService->findById($id);
-
-        if (!$trick) {
-            throw new NotFoundHttpException("Trick not found");
-        }
 
         if ($trick->getSlug() !== $slug) {
             return $this->redirectToRoute(
@@ -90,7 +100,8 @@ class TrickController extends AbstractController
                 [
                     "id" => $trick->getId(),
                     "slug" => $trick->getSlug()
-                ]
+                ],
+                303
             );
         }
 
@@ -128,7 +139,8 @@ class TrickController extends AbstractController
                 [
                     "id" => $trick->getId(),
                     "slug" => $trick->getSlug()
-                ]
+                ],
+                201
             );
         }
 
@@ -139,17 +151,18 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks-batch-{batchNumber}',
-        name: 'trick.batch',
-        methods: ["GET"]
+        "/tricks/{id}",
+        name: "trick.delete",
+        requirements: ["id" => "\d+"],
+        methods: ["DELETE"]
     )]
-    public function batch(int $batchNumber): Response
+    public function delete(Trick $trick, EntityManagerInterface $entityManager): Response
     {
-        $batch = $this->trickService->getBatch($batchNumber);
+        $entityManager->remove($trick);
+        $entityManager->flush();
 
-        return $this->render(
-            'trick/_batch.html.twig',
-            compact("batch")
-        );
+        $this->addFlash(FlashClasses::SUCCESS, "The trick has been deleted.");
+
+        return $this->redirectToRoute("trick.archive", status: 303);
     }
 }

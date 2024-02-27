@@ -10,4 +10,16 @@ app.register("homepage-tricks", HomepageTricks);
 
 document.addEventListener("turbo:load", () => {
   feather.replace();
+
+  document.querySelectorAll("[data-action='delete']").forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const deleteConfirmed = confirm(
+        "Are you sure that you want to delete this?"
+      );
+
+      if (!deleteConfirmed) {
+        e.preventDefault();
+      }
+    });
+  });
 });
