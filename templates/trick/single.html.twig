@@ -33,6 +33,16 @@
   </header>
 
   <main>
+    <div class="container mb-4">
+      <div class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto">
+        {% for i in range(0, 12) %}
+          <div class="mx-3 my-2">
+            <img src="{{ asset('images/fallback-trick-image-640.jpg') }}" height="100" alt="">
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
     <div class="container mb-5">
       {{ trick.description }}
     </div>
@@ -41,6 +51,10 @@
       <div class="d-flex justify-content-center">
         {% if trick.category %}
           <div class="badge bg-secondary mx-1">{{ trick.category.name }}</div>
+        {% endif %}
+
+        {% if trick.author %}
+          <div class="badge bg-secondary mx-1">Added by {{ trick.author.username }}</div>
         {% endif %}
   
         <div class="badge bg-secondary mx-1">Created {{ trick.createdAt|format_date("full", locale = "en-US") }}</div>
