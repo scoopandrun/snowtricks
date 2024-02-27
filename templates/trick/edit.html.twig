@@ -31,8 +31,30 @@
   </header>
 
   <main>
-    <div class="container">
-      {{ form(form) }}
+    <div class="container mb-5">
+      {{ form(form, {'attr': {'id': form.vars.id} }) }}
+      
+      <div class="d-flex">
+        <input
+          type="submit"
+          value="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
+          form="{{ form.vars.id }}"
+          class="btn btn-primary"
+        >
+
+        {% if trick.id %}
+          <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <button
+              class="btn btn-danger ms-3"
+              type="submit"
+              value="Delete"
+              data-action="delete"
+            >Delete</button>
+          </form>
+        {% endif %}
+      </div>
+
     </div>
   </main>
 {% endblock %}

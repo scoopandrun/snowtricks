@@ -140,7 +140,7 @@ class TrickController extends AbstractController
                     "id" => $trick->getId(),
                     "slug" => $trick->getSlug()
                 ],
-                201
+                303
             );
         }
 
