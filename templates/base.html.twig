@@ -68,6 +68,10 @@
       </div>
     </nav>
 
+    <div class="container my-3">
+      {{ include("includes/flashes.html.twig") }}
+    </div>
+
     {% block body %}{% endblock %}
   </body>
 </html>
