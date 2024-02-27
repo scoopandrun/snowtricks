@@ -79,9 +79,12 @@ class Trick
 
     public function makeSlug(): string
     {
-        $slug = strtolower($this->name);
-        $slug = preg_replace(" ", "-", $slug);
-        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
+        $slug = \Transliterator::create("Any-Latin; Latin-ASCII")->transliterate($this->name);
+        $slug = strtolower($slug);
+        $slug = trim($slug);
+        $slug = preg_replace("/ /", "-", $slug);
+        $slug = preg_replace("/[^a-z0-9-]/", "", $slug);
+        $slug = trim($slug, "-");
 
         return $slug;
     }
