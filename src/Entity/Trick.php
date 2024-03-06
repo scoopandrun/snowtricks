@@ -46,7 +46,8 @@ class Trick
     public function __construct()
     {
         $this->mediaCollection = new ArrayCollection();
-        $this->createdAt = new \DateTimeImmutable();
+
+        $this->setCreatedAt(new \DateTimeImmutable());
     }
 
     public function getId(): ?int
@@ -76,18 +77,6 @@ class Trick
         $this->slug = $slug;
 
         return $this;
-    }
-
-    public function makeSlug(): string
-    {
-        $slug = \Transliterator::create("Any-Latin; Latin-ASCII")->transliterate($this->name);
-        $slug = strtolower($slug);
-        $slug = trim($slug);
-        $slug = preg_replace("/ /", "-", $slug);
-        $slug = preg_replace("/[^a-z0-9-]/", "", $slug);
-        $slug = trim($slug, "-");
-
-        return $slug;
     }
 
     public function getDescription(): ?string

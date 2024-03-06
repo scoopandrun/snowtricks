@@ -89,8 +89,6 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setUpdatedAt(new \DateTimeImmutable());
-
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
@@ -126,9 +124,6 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $slug = $trick->makeSlug();
-            $trick->setSlug($slug);
-
             $entityManager->persist($trick);
             $entityManager->flush();
 
