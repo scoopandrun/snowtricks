@@ -7,40 +7,57 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[UniqueEntity('name')]
 class Trick
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('int')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50, unique: true)]
-    private ?string $slug = null;
-
     #[ORM\Column(length: 50)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 5, max: 50)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 50)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    private ?string $slug = null;
+
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[Assert\Type(Category::class)]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[Assert\Type(User::class)]
     private ?User $author = null;
 
     #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick', orphanRemoval: true)]
+    #[Assert\Type(Collection::class)]
     private Collection $mediaCollection;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Assert\Type(Media::class)]
     private ?Media $mainMedia = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()

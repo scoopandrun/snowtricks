@@ -3,14 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Category;
-use App\Entity\Media;
 use App\Entity\Trick;
-use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\Event\PostSubmitEvent;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
@@ -19,11 +18,16 @@ class TrickType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('description')
+            ->add('name', TextType::class, [
+                'required' => true,
+            ])
+            ->add('description', TextType::class, [
+                'required' => true,
+            ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'required' => true,
             ])
             ->addEventListener(FormEvents::POST_SUBMIT, $this->onPostSubmit(...));
     }
