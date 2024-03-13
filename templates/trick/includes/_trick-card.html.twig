@@ -1,7 +1,7 @@
 <div class="card mb-3 trick-card">
   <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" title="{{ trick.name }}">
     <img
-      src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-640.jpg') }}"
+      src="{{ trick.thumbnail.url ?? asset('images/fallback-trick-image-640.jpg') }}"
       class="w-100 rounded-top"
       alt="{{ trick.name }}"
     >

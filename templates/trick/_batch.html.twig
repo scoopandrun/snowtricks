@@ -1,5 +1,5 @@
 <div class="grid mx-3" data-homepage-tricks-target="grid" data-next-page-number="{{ batch.nextPageNumber ?: 0 }}">
   {% for trick in batch.items %}
-    {{ include("trick/_trick-card.html.twig") }}
+    {{ include("trick/includes/_trick-card.html.twig") }}
   {% endfor %}
 </div>
