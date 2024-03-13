@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener\Doctrine;
+namespace App\EntityListener;
 
 use App\Entity\Picture;
 use Doctrine\ORM\Events;
