@@ -50,7 +50,7 @@ class PictureListener
     public function onPostRemove(
         Picture $picture,
         PostRemoveEventArgs $postRemoveEventArgs,
-    ) {
+    ): void {
         $uploadDirectory = $this->trickPicturesUploadDirectory;
 
         $filename = $picture->getFilename();
