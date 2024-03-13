@@ -10,6 +10,13 @@ export default class extends Controller {
     addButton.textContent = "Add a picture";
     addButton.addEventListener("click", this.addItem.bind(this));
 
+    /** @type {HTMLDivElement} */
+    const wrapper = this.element;
+
+    for (const fieldset of wrapper.children) {
+      this.addRemoveButton(fieldset);
+    }
+
     this.element.appendChild(addButton);
   }
 
