@@ -2,16 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
 use App\Entity\Trick;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\Event\PostSubmitEvent;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class TrickType extends AbstractType
 {
@@ -21,30 +20,26 @@ class TrickType extends AbstractType
             ->add('name', TextType::class, [
                 'required' => true,
             ])
-            ->add('description', TextType::class, [
+            ->add('description', TextareaType::class, [
                 'required' => true,
+            ])
+            ->add('pictures', CollectionType::class, [
+                'entry_type' => PictureType::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'attr' => [
+                    'data-controller' => 'trick-edit'
+                ]
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'required' => true,
-            ])
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->onPostSubmit(...));
-    }
-
-    private function onPostSubmit(PostSubmitEvent $event): void
-    {
-        /** @var Trick */
-        $trick = $event->getData();
-
-        // Existing trick
-        if (!is_null($trick->getId())) {
-            $trick->setUpdatedAt(new \DateTimeImmutable());
-        }
-
-        $slugger = new AsciiSlugger();
-        $slug = strtolower($slugger->slug((string) $trick->getName()));
-        $trick->setSlug($slug);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

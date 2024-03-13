@@ -7,20 +7,21 @@
 {% block stylesheets %}
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
+  <link rel="stylesheet" href="{{ asset('styles/trick/edit.css') }}">
 {% endblock %}
 
 {% block body %}
 
   <header>
     {% if trick.id %}
-      <div class="container mx-3 mx-sm-auto my-5 text-center main-media">
+      <div class="container mx-3 mx-sm-auto my-5 text-center thumbnail">
         <img
-        src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
-        class="main-media__image rounded"
+        src="{{ trick.thumbnail.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
+        class="thumbnail__image rounded"
         alt="{{ trick.name }}"
         >
-        <div class="main-media__overlay rounded-bottom">
-          <h1 class="main-media__trick-name">{{ trick.name }}</h1>
+        <div class="thumbnail__overlay rounded-bottom">
+          <h1 class="thumbnail__trick-name">{{ trick.name }}</h1>
         </div>
       </div>
     {% else %}

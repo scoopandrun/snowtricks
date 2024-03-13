@@ -2,16 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\TrickRepository;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity('name')]
+#[ORM\HasLifecycleCallbacks]
 class Trick
 {
     #[ORM\Id]
@@ -28,7 +32,6 @@ class Trick
 
     #[ORM\Column(length: 50)]
     #[Assert\Type('string')]
-    #[Assert\NotBlank]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -44,13 +47,20 @@ class Trick
     #[Assert\Type(User::class)]
     private ?User $author = null;
 
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick', orphanRemoval: true)]
-    #[Assert\Type(Collection::class)]
-    private Collection $mediaCollection;
+    #[ORM\OneToMany(
+        targetEntity: Picture::class,
+        mappedBy: 'trick',
+        orphanRemoval: true,
+        cascade: ['persist', 'remove']
+    )]
+    #[Assert\All(
+        new Assert\Type(Picture::class)
+    )]
+    private Collection $pictures;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Assert\Type(Media::class)]
-    private ?Media $mainMedia = null;
+    #[ORM\OneToOne]
+    #[Assert\Type(Picture::class)]
+    private ?Picture $thumbnail = null;
 
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     #[Assert\Type(\DateTimeImmutable::class)]
@@ -62,7 +72,7 @@ class Trick
 
     public function __construct()
     {
-        $this->mediaCollection = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
 
         $this->setCreatedAt(new \DateTimeImmutable());
     }
@@ -132,42 +142,42 @@ class Trick
         return $this;
     }
 
-    public function getMainMedia(): ?Media
+    public function getThumbnail(): ?Picture
     {
-        return $this->mainMedia;
+        return $this->thumbnail;
     }
 
-    public function setMainMedia(?Media $mainMedia): static
+    public function setThumbnail(?Picture $thumbnail): static
     {
-        $this->mainMedia = $mainMedia;
+        $this->thumbnail = $thumbnail;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Media>
+     * @return Collection<int, Picture>
      */
-    public function getMedia(): Collection
+    public function getPictures(): Collection
     {
-        return $this->mediaCollection;
+        return $this->pictures;
     }
 
-    public function addMedia(Media $media): static
+    public function addPicture(Picture $picture): static
     {
-        if (!$this->mediaCollection->contains($media)) {
-            $this->mediaCollection->add($media);
-            $media->setTrick($this);
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures->add($picture);
+            $picture->setTrick($this);
         }
 
         return $this;
     }
 
-    public function removeMedia(Media $media): static
+    public function removePicture(Picture $picture): static
     {
-        if ($this->mediaCollection->removeElement($media)) {
+        if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
-            if ($media->getTrick() === $this) {
-                $media->setTrick(null);
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
             }
         }
 
@@ -196,5 +206,35 @@ class Trick
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    private function makeSlug(): void
+    {
+        $slugger = new AsciiSlugger();
+        $slug = strtolower($slugger->slug((string) $this->getName()));
+        $this->setSlug($slug);
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(PrePersistEventArgs $eventArgs): void
+    {
+        $this->makeSlug();
+
+        $this->setCreatedAt(new \DateTimeImmutable());
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(PreUpdateEventArgs $eventArgs): void
+    {
+        $this->makeSlug();
+
+        $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(): void
+    {
+        // Necessary to avoid a cycle in Doctrine
+        $this->setThumbnail(null);
     }
 }

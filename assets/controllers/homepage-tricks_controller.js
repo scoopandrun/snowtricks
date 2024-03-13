@@ -26,9 +26,9 @@ export default class extends Controller {
 
       const html = await response.text();
 
-      const fragment = document.createElement("div");
-      fragment.innerHTML = html;
-      const outerHTML = fragment.firstChild;
+      const outerHTML = document
+        .createRange()
+        .createContextualFragment(html).firstElementChild;
 
       grid.lastElementChild.after(...outerHTML.children);
 

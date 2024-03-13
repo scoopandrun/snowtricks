@@ -9,16 +9,16 @@
 
 {% block body %}
   <header>
-    <div class="container mx-3 mx-sm-auto my-5 text-center main-media">
+    <div class="container mx-3 mx-sm-auto my-5 text-center thumbnail">
       <img
-        src="{{ trick.mainMedia.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
-        class="main-media__image rounded"
+        src="{{ trick.thumbnail.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
+        class="thumbnail__image rounded"
         alt="{{ trick.name }}"
       >
-      <div class="main-media__overlay rounded-bottom">
-        <h1 class="main-media__trick-name">{{ trick.name }}</h1>
+      <div class="thumbnail__overlay rounded-bottom">
+        <h1 class="thumbnail__trick-name">{{ trick.name }}</h1>
       </div>
-      <div class="main-media__edit-overlay rounded">
+      <div class="thumbnail__edit-overlay rounded">
         <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
           <i data-feather="edit"></i>
         </a>
@@ -35,10 +35,12 @@
   <main>
     <div class="container mb-4">
       <div class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto">
-        {% for i in range(0, 12) %}
+        {% for picture in trick.pictures %}
           <div class="mx-3 my-2">
-            <img src="{{ asset('images/fallback-trick-image-640.jpg') }}" height="100" alt="">
+            <img src="{{ picture.url }}" height="100" alt="{{ picture.description }}">
           </div>
+        {% else %}
+          <div class="mx-3 my-2">No picture was added to this trick. Add one!</div>
         {% endfor %}
       </div>
     </div>

@@ -52,7 +52,7 @@ class TrickController extends AbstractController
         '/tricks/{id}-{slug}',
         name: 'trick.single',
         methods: ["GET"],
-        requirements: ['id' => '\d+', 'slug' => '[a-z0-9-]+']
+        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+']
     )]
     public function single(int $id, string $slug): Response
     {
@@ -89,6 +89,13 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $picturesForms = $form->get('pictures');
+            $picturesSaved = $this->trickService->savePictures($picturesForms, $trick);
+
+            if (!$picturesSaved) {
+                $this->addFlash(FlashClasses::WARNING, "The pictures have not been saved.");
+            }
+
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
@@ -124,6 +131,13 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $picturesForms = $form->get('pictures');
+            $picturesSaved = $this->trickService->savePictures($picturesForms, $trick);
+
+            if (!$picturesSaved) {
+                $this->addFlash(FlashClasses::WARNING, "The pictures have not been saved.");
+            }
+
             $entityManager->persist($trick);
             $entityManager->flush();
 

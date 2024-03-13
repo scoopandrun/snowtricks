@@ -2,14 +2,21 @@
 
 namespace App\Service;
 
-use App\Core\Component\Batch;
+use App\Entity\Picture;
 use App\Entity\Trick;
+use Psr\Log\LoggerInterface;
+use App\Core\Component\Batch;
 use App\Repository\TrickRepository;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class TrickService
 {
     public function __construct(
-        private TrickRepository $trickRepository
+        private TrickRepository $trickRepository,
+        private string $trickPicturesUploadDirectory,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -61,5 +68,51 @@ class TrickService
             firstIndex: $offset + 1,
             totalCount: $count
         );
+    }
+
+    /**
+     * Save trick pictures.
+     * 
+     * @param FormInterface  $picturesForms 
+     * @param Trick          $trick
+     * 
+     * @return bool `true` if the pictures have been saved, `false` in case of an error
+     */
+    public function savePictures(FormInterface $picturesForms, Trick $trick): bool
+    {
+        $uploadDirectory = $this->trickPicturesUploadDirectory;
+
+        for ($i = 0; $i < count($picturesForms->getData()); $i++) {
+            $pictureForm = $picturesForms->get("$i");
+
+            /** @var UploadedFile $file */
+            $file = $pictureForm->get('file')->getData();
+
+            /** @var string $description */
+            $description = $pictureForm->get('description')->getData();
+
+            $safeFilename = hash('md5', $file->getContent()) . '-' . uniqid() . '.' . $file->guessExtension();
+
+            try {
+
+                $file->move($uploadDirectory, $safeFilename);
+
+                $picture = (new Picture())
+                    ->setFilename($safeFilename)
+                    ->setDescription($description);
+
+                $trick->addPicture($picture);
+
+                if (is_null($trick->getThumbnail())) {
+                    $trick->setThumbnail($picture);
+                }
+            } catch (FileException $e) {
+                $this->logger->error($e);
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }
