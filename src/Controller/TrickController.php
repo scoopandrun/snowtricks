@@ -89,13 +89,6 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $picturesForms = $form->get('pictures');
-            $picturesSaved = $this->trickService->savePictures($picturesForms, $trick);
-
-            if (!$picturesSaved) {
-                $this->addFlash(FlashClasses::WARNING, "The pictures have not been saved.");
-            }
-
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
@@ -131,13 +124,6 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $picturesForms = $form->get('pictures');
-            // $picturesSaved = $this->trickService->savePictures($picturesForms, $trick);
-
-            // if (!$picturesSaved) {
-            //     $this->addFlash(FlashClasses::WARNING, "The pictures have not been saved.");
-            // }
-
             $entityManager->persist($trick);
             $entityManager->flush();
 
