@@ -9,16 +9,16 @@ use Doctrine\ORM\Event\PostRemoveEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 
-#[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: Picture::class)]
-#[AsEntityListener(event: Events::postLoad, method: 'postLoad', entity: Picture::class)]
-#[AsEntityListener(event: Events::postRemove, method: 'postRemove', entity: Picture::class)]
+#[AsEntityListener(event: Events::prePersist, method: 'onPrePersist', entity: Picture::class)]
+#[AsEntityListener(event: Events::postLoad, method: 'onPostLoad', entity: Picture::class)]
+#[AsEntityListener(event: Events::postRemove, method: 'onPostRemove', entity: Picture::class)]
 class PictureListener
 {
     public function __construct(private readonly string $trickPicturesUploadDirectory)
     {
     }
 
-    public function prePersist(
+    public function onPrePersist(
         Picture $picture,
         PrePersistEventArgs $prePersistEventArgs,
     ): void {
@@ -33,7 +33,7 @@ class PictureListener
         $file->move($uploadDirectory, $safeFilename);
     }
 
-    public function postLoad(
+    public function onPostLoad(
         Picture $picture,
         PostLoadEventArgs $postLoadEventArgs,
     ): void {
@@ -47,7 +47,7 @@ class PictureListener
         $picture->setUrl($url);
     }
 
-    public function postRemove(
+    public function onPostRemove(
         Picture $picture,
         PostRemoveEventArgs $postRemoveEventArgs,
     ) {

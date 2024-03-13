@@ -5,11 +5,8 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TrickRepository;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PrePersistEventArgs;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -59,6 +56,7 @@ class Trick
     private Collection $pictures;
 
     #[ORM\OneToOne]
+    #[ORM\JoinColumn(onDelete: "SET NULL")]
     #[Assert\Type(Picture::class)]
     private ?Picture $thumbnail = null;
 
@@ -206,35 +204,5 @@ class Trick
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    private function makeSlug(): void
-    {
-        $slugger = new AsciiSlugger();
-        $slug = strtolower($slugger->slug((string) $this->getName()));
-        $this->setSlug($slug);
-    }
-
-    #[ORM\PrePersist]
-    public function onPrePersist(PrePersistEventArgs $eventArgs): void
-    {
-        $this->makeSlug();
-
-        $this->setCreatedAt(new \DateTimeImmutable());
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(PreUpdateEventArgs $eventArgs): void
-    {
-        $this->makeSlug();
-
-        $this->setUpdatedAt(new \DateTimeImmutable());
-    }
-
-    #[ORM\PreRemove]
-    public function onPreRemove(): void
-    {
-        // Necessary to avoid a cycle in Doctrine
-        $this->setThumbnail(null);
     }
 }
