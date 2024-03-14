@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Core\Component;
+namespace App\Component;
 
-use App\Core\Interfaces\BatchInterface;
+use App\Interfaces\BatchInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 

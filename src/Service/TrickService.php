@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\Picture;
 use App\Entity\Trick;
 use Psr\Log\LoggerInterface;
-use App\Core\Component\Batch;
+use App\Component\Batch;
 use App\Repository\TrickRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
