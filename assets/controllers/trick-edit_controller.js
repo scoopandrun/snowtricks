@@ -13,8 +13,10 @@ export default class extends Controller {
     /** @type {HTMLDivElement} */
     const wrapper = this.element;
 
-    for (const fieldset of wrapper.children) {
-      this.addRemoveButton(fieldset);
+    for (const child of wrapper.children) {
+      if (child.tagName.toLowerCase() === "fieldset") {
+        this.addRemoveButton(child);
+      }
     }
 
     this.element.appendChild(addButton);

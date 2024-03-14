@@ -2,14 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\Picture;
 use App\Entity\Trick;
+use App\Entity\Picture;
 use Psr\Log\LoggerInterface;
 use App\Component\Batch;
 use App\Repository\TrickRepository;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class TrickService
 {
@@ -17,6 +14,7 @@ class TrickService
         private TrickRepository $trickRepository,
         private string $trickPicturesUploadDirectory,
         private LoggerInterface $logger,
+        private SlugService $slugService,
     ) {
     }
 
@@ -68,5 +66,25 @@ class TrickService
             firstIndex: $offset + 1,
             totalCount: $count
         );
+    }
+
+    public function setSlug(Trick $trick): void
+    {
+        $slug = $this->slugService->makeSlug($trick->getName());
+        $trick->setSlug($slug);
+    }
+
+    public function setThumbnail(Trick $trick): void
+    {
+        $currentThumbnail = $trick->getThumbnail();
+
+        $currentThumbnailIsInCollection = $trick->getPictures()->contains($currentThumbnail);
+
+        if (!$currentThumbnail || $currentThumbnailIsInCollection === false) {
+            /** @var Picture|false $firstPicture */
+            $firstPicture = $trick->getPictures()->first();
+
+            $trick->setThumbnail($firstPicture ?: null);
+        }
     }
 }

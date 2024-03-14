@@ -4,18 +4,23 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Form\TrickType;
-use App\Service\TrickService;
 use App\Core\FlashClasses;
+use App\Service\TrickService;
+use App\Event\TrickCreatedEvent;
+use App\Event\TrickUpdatedEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TrickController extends AbstractController
 {
-    public function __construct(private TrickService $trickService)
-    {
+    public function __construct(
+        private TrickService $trickService,
+        private EventDispatcherInterface $dispatcher,
+    ) {
     }
 
     #[Route(
@@ -89,6 +94,8 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->dispatcher->dispatch(new TrickUpdatedEvent($trick));
+
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
@@ -124,6 +131,8 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->dispatcher->dispatch(new TrickCreatedEvent($trick));
+
             $entityManager->persist($trick);
             $entityManager->flush();
 

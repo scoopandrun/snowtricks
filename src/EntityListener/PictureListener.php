@@ -22,6 +22,7 @@ class PictureListener
         Picture $picture,
         PrePersistEventArgs $prePersistEventArgs,
     ): void {
+        // Save the file
         $uploadDirectory = $this->trickPicturesUploadDirectory;
 
         $file = $picture->getFile();
@@ -51,6 +52,7 @@ class PictureListener
         Picture $picture,
         PostRemoveEventArgs $postRemoveEventArgs,
     ): void {
+        // Delete the file
         $uploadDirectory = $this->trickPicturesUploadDirectory;
 
         $filename = $picture->getFilename();

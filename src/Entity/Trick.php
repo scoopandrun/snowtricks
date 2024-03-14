@@ -55,7 +55,7 @@ class Trick
     )]
     private Collection $pictures;
 
-    #[ORM\OneToOne]
+    #[ORM\OneToOne(fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: "SET NULL")]
     #[Assert\Type(Picture::class)]
     private ?Picture $thumbnail = null;
