@@ -56,11 +56,18 @@
         <input
           type="submit"
           value="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
+          title="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
           form="{{ form.vars.id }}"
           class="btn btn-primary"
         >
 
         {% if trick.id %}
+          <a
+            href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}"
+            class="btn btn-secondary ms-3"
+            title="Cancel modifications"
+          >Cancel</a>
+
           <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
             <input type="hidden" name="_method" value="DELETE">
             <button
@@ -68,6 +75,7 @@
               type="submit"
               value="Delete"
               data-action="delete"
+              title="Delete the trick"
             >Delete</button>
           </form>
         {% endif %}
