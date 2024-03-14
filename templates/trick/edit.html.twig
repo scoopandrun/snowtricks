@@ -8,28 +8,10 @@
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
   <link rel="stylesheet" href="{{ asset('styles/trick/edit.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-
-  {# <header>
-    {% if trick.id %}
-      <div class="container mx-3 mx-sm-auto my-5 text-center thumbnail">
-        <img
-        src="{{ trick.thumbnail.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
-        class="thumbnail__image rounded"
-        alt="{{ trick.name }}"
-        >
-        <div class="thumbnail__overlay rounded-bottom">
-          <h1 class="thumbnail__trick-name">{{ trick.name }}</h1>
-        </div>
-      </div>
-    {% else %}
-      <div class="container text-center">
-        <h1>Create trick</h1>    
-      </div>
-    {% endif %}
-  </header> #}
 
   <header>
     <div class="container text-center">
@@ -39,11 +21,17 @@
 
   <main>
     <div class="container mb-5">
-      {# {{ form(form, {'attr': {'id': form.vars.id} }) }} #}
-
-      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form'} }) }}
+      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form', 'data-controller': 'trick-edit-form'} }) }}
 
         {{ form_row(form.name) }}
+
+        <div class="mb-3">
+          <label for="trick_description" class="form-label required">Description</label>
+          <textarea id="trick_description" name="trick[description]" required="required" class="form-control">{{ trick.description }}</textarea>
+          <div id="quill-editor"></div>
+        </div>
+
+        {% do form.description.setRendered %}
 
         <fieldset
           class="mb-3"
