@@ -3,6 +3,7 @@
 namespace App\EntityListener;
 
 use App\Entity\Picture;
+use App\Service\FileUploader;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Event\PostRemoveEventArgs;
@@ -22,16 +23,13 @@ class PictureListener
         Picture $picture,
         PrePersistEventArgs $prePersistEventArgs,
     ): void {
-        // Save the file
-        $uploadDirectory = $this->trickPicturesUploadDirectory;
+        $fileUploader = new FileUploader();
 
         $file = $picture->getFile();
 
-        $safeFilename = hash('md5', $file->getContent()) . '-' . uniqid() . '.' . $file->guessExtension();
+        $filename = $fileUploader->save($file, $this->trickPicturesUploadDirectory);
 
-        $picture->setFilename($safeFilename);
-
-        $file->move($uploadDirectory, $safeFilename);
+        $picture->setFilename($filename);
     }
 
     public function onPostLoad(
