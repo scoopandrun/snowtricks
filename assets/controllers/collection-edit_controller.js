@@ -7,7 +7,7 @@ export default class extends Controller {
     const addButton = document.createElement("button");
     addButton.classList.add("btn", "btn-secondary");
     addButton.setAttribute("type", "button");
-    addButton.textContent = "Add a picture";
+    addButton.textContent = this.element.dataset.addButtonText || "Add";
     addButton.addEventListener("click", this.addItem.bind(this));
 
     /** @type {HTMLDivElement} */
@@ -49,7 +49,8 @@ export default class extends Controller {
     const removeButton = document.createElement("button");
     removeButton.classList.add("btn", "btn-secondary");
     removeButton.setAttribute("type", "button");
-    removeButton.textContent = "Remove";
+    removeButton.textContent =
+      this.element.dataset.removeButtonText || "Remove";
     removeButton.addEventListener("click", () => item.remove());
 
     item.appendChild(removeButton);

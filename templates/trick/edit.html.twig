@@ -45,14 +45,15 @@
 
         {{ form_row(form.name) }}
 
-        {{ form_row(form.description) }}
-
-
-        <fieldset class="mb-3" data-prototype="{{ form_widget(form.pictures.vars.prototype)|e('html_attr') }}" data-controller="trick-edit">
+        <fieldset
+          class="mb-3"
+          data-prototype="{{ form_widget(form.pictures.vars.prototype)|e('html_attr') }}"
+          data-controller="{{ form.pictures.vars.attr['data-controller'] }}"
+          data-add-button-text="{{ form.pictures.vars.attr['data-add-button-text'] }}"
+        >
           <legend>Pictures</legend>
 
           {% for picture in form.pictures %}
-            {# {{ dump(picture) }} #}
             {{ include('trick/includes/_picture-form.html.twig') }}
           {% endfor %}
         </fieldset>

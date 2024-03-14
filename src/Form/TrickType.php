@@ -32,6 +32,8 @@ class TrickType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'attr' => [
+                    'data-controller' => 'collection-edit',
+                    'data-add-button-text' => 'Add a picture',
                     'data-controller' => 'trick-edit'
                 ]
             ])
