@@ -80,7 +80,7 @@ class TrickService
 
         $currentThumbnailIsInCollection = $trick->getPictures()->contains($currentThumbnail);
 
-        if (!$currentThumbnail || $currentThumbnailIsInCollection === false) {
+        if (is_null($currentThumbnail) || false === $currentThumbnailIsInCollection) {
             /** @var Picture|false $firstPicture */
             $firstPicture = $trick->getPictures()->first();
 
