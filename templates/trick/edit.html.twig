@@ -12,7 +12,7 @@
 
 {% block body %}
 
-  <header>
+  {# <header>
     {% if trick.id %}
       <div class="container mx-3 mx-sm-auto my-5 text-center thumbnail">
         <img
@@ -29,11 +29,39 @@
         <h1>Create trick</h1>    
       </div>
     {% endif %}
+  </header> #}
+
+  <header>
+    <div class="container text-center">
+      <h1>{{ trick.id ? "Edit trick" : "Create trick" }}</h1>    
+    </div>
   </header>
 
   <main>
     <div class="container mb-5">
-      {{ form(form, {'attr': {'id': form.vars.id} }) }}
+      {# {{ form(form, {'attr': {'id': form.vars.id} }) }} #}
+
+      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form'} }) }}
+
+        {{ form_row(form.name) }}
+
+        {{ form_row(form.description) }}
+
+
+        <fieldset class="mb-3" data-prototype="{{ form_widget(form.pictures.vars.prototype)|e('html_attr') }}" data-controller="trick-edit">
+          <legend>Pictures</legend>
+
+          {% for picture in form.pictures %}
+            {# {{ dump(picture) }} #}
+            {{ include('trick/includes/_picture-form.html.twig') }}
+          {% endfor %}
+        </fieldset>
+
+        {% do form.pictures.setRendered %}
+        
+        {{ form_row(form.category) }}
+
+      {{ form_end(form) }}
       
       <div class="d-flex">
         <input
