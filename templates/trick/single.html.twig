@@ -10,8 +10,9 @@
 {% block body %}
   <header>
     <div class="container mx-3 mx-sm-auto my-5 text-center thumbnail">
+      {% set fallbackThumbnail = asset('images/fallback-trick-image-1920.jpg') %}
       <img
-        src="{{ trick.thumbnail.url ?? asset('images/fallback-trick-image-1920.jpg') }}"
+        src="{{ image('tricks', trick.thumbnail)|default(fallbackThumbnail) }}"
         class="thumbnail__image rounded"
         alt="{{ trick.name }}"
       >
@@ -37,10 +38,16 @@
       <div class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto">
         {% for picture in trick.pictures %}
           <div class="mx-3 my-2">
-            <img src="{{ picture.url }}" height="100" alt="{{ picture.description }}">
+            <img src="{{ image('tricks', picture) }}" height="100" alt="{{ picture.description }}">
           </div>
         {% else %}
           <div class="mx-3 my-2">No picture was added to this trick. Add one!</div>
+        {% endfor %}
+
+        {% for video in trick.videos %}
+          <div class="mx-3 my-2">
+            {{ video.iframe|raw }}
+          </div>
         {% endfor %}
       </div>
     </div>

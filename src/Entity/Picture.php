@@ -26,8 +26,6 @@ class Picture implements \Stringable
     #[Assert\NotBlank]
     private ?string $filename = null;
 
-    private ?string $url = null;
-
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     private ?string $description = null;
@@ -73,18 +71,6 @@ class Picture implements \Stringable
         return $this;
     }
 
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
-
-    public function setUrl(string $url): static
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -99,6 +85,6 @@ class Picture implements \Stringable
 
     public function __toString(): string
     {
-        return $this->getUrl() ?? "";
+        return $this->getFilename() ?? "no_filename";
     }
 }
