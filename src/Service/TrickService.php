@@ -4,17 +4,19 @@ namespace App\Service;
 
 use App\Entity\Trick;
 use App\Entity\Picture;
-use Psr\Log\LoggerInterface;
 use App\Component\Batch;
+use App\Service\FileManager;
+use Psr\Log\LoggerInterface;
 use App\Repository\TrickRepository;
 
 class TrickService
 {
     public function __construct(
         private TrickRepository $trickRepository,
-        private string $trickPicturesUploadDirectory,
+        private readonly string $tricksPicturesUploadsDirectory,
         private LoggerInterface $logger,
         private SlugService $slugService,
+        private FileManager $fileManager,
     ) {
     }
 
@@ -86,5 +88,27 @@ class TrickService
 
             $trick->setThumbnail($firstPicture ?: null);
         }
+    }
+
+    public function saveTrickPicture(Picture $picture): bool
+    {
+        $file = $picture->getFile();
+
+        $filename = $this->fileManager->save($file, $this->tricksPicturesUploadsDirectory);
+
+        $picture->setFilename($filename);
+
+        return (bool) $filename;
+    }
+
+    public function deleteTrickPicture(Picture $picture): bool
+    {
+        $uploadDirectory = $this->tricksPicturesUploadsDirectory;
+
+        $filename = $picture->getFilename();
+
+        $fullPath = $uploadDirectory . '/' . $filename;
+
+        return $this->fileManager->delete($fullPath);
     }
 }
