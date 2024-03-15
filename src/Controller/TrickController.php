@@ -59,15 +59,13 @@ class TrickController extends AbstractController
         methods: ["GET"],
         requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+']
     )]
-    public function single(int $id, string $slug): Response
+    public function single(Trick $trick, string $slug): Response
     {
-        $trick = $this->trickService->findById($id);
-
         if ($trick->getSlug() !== $slug) {
             return $this->redirectToRoute(
                 "trick.single",
                 [
-                    "id" => $id,
+                    "id" => $trick->getId(),
                     "slug" => $trick->getSlug()
                 ]
             );
