@@ -71,17 +71,17 @@ class TrickService
         $trick->setSlug($slug);
     }
 
-    public function setThumbnail(Trick $trick): void
+    public function setMainPicture(Trick $trick): void
     {
-        $currentThumbnail = $trick->getThumbnail();
+        $currentMainPicture = $trick->getMainPicture();
 
-        $currentThumbnailIsInCollection = $trick->getPictures()->contains($currentThumbnail);
+        $currentMainPictureIsInCollection = $trick->getPictures()->contains($currentMainPicture);
 
-        if (is_null($currentThumbnail) || false === $currentThumbnailIsInCollection) {
+        if (is_null($currentMainPicture) || false === $currentMainPictureIsInCollection) {
             /** @var Picture|false $firstPicture */
             $firstPicture = $trick->getPictures()->first();
 
-            $trick->setThumbnail($firstPicture ?: null);
+            $trick->setMainPicture($firstPicture ?: null);
         }
     }
 

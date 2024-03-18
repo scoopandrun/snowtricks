@@ -18,7 +18,7 @@ class TrickSubscriber implements EventSubscriberInterface
         $trick = $event->getTrick();
 
         $this->trickService->setSlug($trick);
-        $this->trickService->setThumbnail($trick);
+        $this->trickService->setMainPicture($trick);
         $trick->setCreatedAt(new \DateTimeImmutable());
     }
 
@@ -27,7 +27,7 @@ class TrickSubscriber implements EventSubscriberInterface
         $trick = $event->getTrick();
 
         $this->trickService->setSlug($trick);
-        $this->trickService->setThumbnail($trick);
+        $this->trickService->setMainPicture($trick);
         $trick->setUpdatedAt(new \DateTimeImmutable());
     }
 

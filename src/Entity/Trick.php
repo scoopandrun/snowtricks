@@ -58,7 +58,7 @@ class Trick
     #[ORM\OneToOne(fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: "SET NULL")]
     #[Assert\Type(Picture::class)]
-    private ?Picture $thumbnail = null;
+    private ?Picture $mainPicture = null;
 
     #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
     #[Assert\Type(\DateTimeImmutable::class)]
@@ -140,14 +140,14 @@ class Trick
         return $this;
     }
 
-    public function getThumbnail(): ?Picture
+    public function getMainPicture(): ?Picture
     {
-        return $this->thumbnail;
+        return $this->mainPicture;
     }
 
-    public function setThumbnail(?Picture $thumbnail): static
+    public function setMainPicture(?Picture $picture): static
     {
-        $this->thumbnail = $thumbnail;
+        $this->mainPicture = $picture;
 
         return $this;
     }

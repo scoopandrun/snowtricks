@@ -1,27 +1,27 @@
-.thumbnail {
+.main-picture {
   position: relative;
   width: fit-content;
   padding: 0;
 }
 
-.thumbnail__image {
+.main-picture__image {
   max-width: 100%;
   max-height: 60vh;
 }
 
-.thumbnail__overlay {
+.main-picture__overlay {
   position: absolute;
   width: 100%;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.thumbnail__trick-name {
+.main-picture__trick-name {
   color: white;
   padding: 1rem;
 }
 
-.thumbnail__edit-overlay {
+.main-picture__edit-overlay {
   position: absolute;
   display: flex;
   width: fit-content;
@@ -31,11 +31,11 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.thumbnail__edit-overlay :is(a, button),
-.thumbnail__edit-overlay a:visited {
+.main-picture__edit-overlay :is(a, button),
+.main-picture__edit-overlay a:visited {
   color: hsl(0, 0%, 85%);
 }
 
-.thumbnail__edit-overlay :is(a, button):hover {
+.main-picture__edit-overlay :is(a, button):hover {
   color: white;
 }
