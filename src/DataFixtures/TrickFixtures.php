@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\Trick;
+use App\Entity\Video;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -35,6 +36,11 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
                 "name" => "Ollie",
                 "description" => "A simple trick where the boarder pops the snowboard by digging into the tail and then up into the air.",
                 "category" => "Air",
+                "videos" => [
+                    "https://www.youtube.com/watch?v=D5sEJRx6QUY",
+                    "https://www.dailymotion.com/video/xggf2a",
+                    "https://vimeo.com/11823266",
+                ]
             ],
             [
                 "name" => "Frontside Grab",
@@ -93,12 +99,21 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             ],
         ];
 
-        $tricks = array_map(function ($trick) {
-            return (new Trick)
-                ->setName($trick["name"])
-                ->setSlug(strtolower($this->slugger->slug($trick["name"])))
-                ->setCategory($this->getReference($trick["category"]))
-                ->setDescription($trick["description"]);
+        $tricks = array_map(function ($trickData) {
+            $trick = (new Trick)
+                ->setName($trickData["name"])
+                ->setSlug(strtolower($this->slugger->slug($trickData["name"])))
+                ->setCategory($this->getReference($trickData["category"]))
+                ->setDescription($trickData["description"]);
+
+            $videos = $trickData["videos"] ?? [];
+
+            foreach ($videos as $url) {
+                $video = (new Video())->setUrl($url);
+                $trick->addVideo($video);
+            }
+
+            return $trick;
         }, $tricksData);
 
         return $tricks;
