@@ -61,22 +61,24 @@
         {% endfor %}
 
         {% for video in trick.videos %}
-          <button
-            type="button"
-            class="btn mx-3 my-2 thumbnail"
-            data-trick-media-target="media"
-            data-type="video"
-            data-iframe="{{ video.iframe }}"
-            data-caption="{{ video.title }}"
-            >
-            <img
-              src="{{ video.thumbnailUrl }}"
-              height="100"
-              title="{{ video.title }}"
-              alt="{{ video.title }}"
-              class="video-thumbnail"
-            >
-          </button>
+          {% if video.iframe %}
+            <button
+              type="button"
+              class="btn mx-3 my-2 thumbnail"
+              data-trick-media-target="media"
+              data-type="video"
+              data-iframe="{{ video.iframe }}"
+              data-caption="{{ video.title }}"
+              >
+              <img
+                src="{{ video.thumbnailUrl }}"
+                height="100"
+                title="{{ video.title }}"
+                alt="{{ video.title }}"
+                class="video-thumbnail"
+              >
+            </button>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
