@@ -2,25 +2,32 @@
 
 namespace App\Entity;
 
-use App\Repository\MediaRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: MediaRepository::class)]
-class Media
+#[ORM\Entity(repositoryClass: PictureRepository::class)]
+class Picture implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mediaCollection')]
+    #[ORM\ManyToOne(inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trick $trick = null;
 
+    #[Assert\Image]
+    private ?File $file = null;
+
     #[ORM\Column(length: 2048)]
-    private ?string $url = null;
+    #[Assert\NotBlank]
+    private ?string $filename = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     public function getId(): ?int
@@ -40,14 +47,26 @@ class Media
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getFile(): ?File
     {
-        return $this->url;
+        return $this->file;
     }
 
-    public function setUrl(string $url): static
+    public function setFile(File $file): static
     {
-        $this->url = $url;
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(string $filename): static
+    {
+        $this->filename = $filename;
 
         return $this;
     }
@@ -62,5 +81,10 @@ class Media
         $this->description = $description;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFilename() ?? "no_filename";
     }
 }

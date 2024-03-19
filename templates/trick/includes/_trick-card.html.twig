@@ -1,0 +1,34 @@
+<div class="card mb-3 trick-card">
+  <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" title="{{ trick.name }}">
+    {% set fallbackMainPicture = asset('images/fallback-trick-image-640.jpg') %}
+    <img
+      src="{{ image('tricks', trick.mainPicture)|default(fallbackMainPicture) }}"
+      class="w-100 rounded-top"
+      alt="{{ trick.name }}"
+    >
+  </a>
+  
+  <div class="card-body text-muted">
+    <div class="d-flex justify-content-between">
+      <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" class="text-decoration-none" title="{{ trick.name }}">
+        <h5 class="card-title">{{ trick.name }}</h5>
+      </a>
+
+      <div class="d-flex">
+        <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
+          <i data-feather="edit"></i>
+        </a>
+        <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
+            <i data-feather="trash-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% if trick.category.id %}
+      <p class="badge bg-secondary">{{ trick.category.name|lower }}</p>
+    {% endif %}
+  </div>
+</div>

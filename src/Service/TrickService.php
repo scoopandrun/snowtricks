@@ -2,18 +2,25 @@
 
 namespace App\Service;
 
-use App\Core\Component\Batch;
 use App\Entity\Trick;
+use App\Entity\Picture;
+use App\Component\Batch;
+use App\Service\FileManager;
+use Psr\Log\LoggerInterface;
 use App\Repository\TrickRepository;
 
 class TrickService
 {
     public function __construct(
-        private TrickRepository $trickRepository
+        private TrickRepository $trickRepository,
+        private readonly string $tricksPicturesUploadsDirectory,
+        private LoggerInterface $logger,
+        private SlugService $slugService,
+        private FileManager $fileManager,
     ) {
     }
 
-    public function findOne(string $slug): ?Trick
+    public function findBySlug(string $slug): ?Trick
     {
         return $this->trickRepository->findOneBy(["slug" => $slug]);
     }
@@ -56,5 +63,47 @@ class TrickService
             firstIndex: $offset + 1,
             totalCount: $count
         );
+    }
+
+    public function setSlug(Trick $trick): void
+    {
+        $slug = $this->slugService->makeSlug($trick->getName());
+        $trick->setSlug($slug);
+    }
+
+    public function setMainPicture(Trick $trick): void
+    {
+        $currentMainPicture = $trick->getMainPicture();
+
+        $currentMainPictureIsInCollection = $trick->getPictures()->contains($currentMainPicture);
+
+        if (is_null($currentMainPicture) || false === $currentMainPictureIsInCollection) {
+            /** @var Picture|false $firstPicture */
+            $firstPicture = $trick->getPictures()->first();
+
+            $trick->setMainPicture($firstPicture ?: null);
+        }
+    }
+
+    public function saveTrickPicture(Picture $picture): bool
+    {
+        $file = $picture->getFile();
+
+        $filename = $this->fileManager->save($file, $this->tricksPicturesUploadsDirectory);
+
+        $picture->setFilename($filename);
+
+        return (bool) $filename;
+    }
+
+    public function deleteTrickPicture(Picture $picture): bool
+    {
+        $uploadDirectory = $this->tricksPicturesUploadsDirectory;
+
+        $filename = $picture->getFilename();
+
+        $fullPath = $uploadDirectory . '/' . $filename;
+
+        return $this->fileManager->delete($fullPath);
     }
 }

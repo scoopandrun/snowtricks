@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import feather from "feather-icons";
 
 export default class extends Controller {
   static targets = ["grid", "fetchButton"];
@@ -25,11 +26,25 @@ export default class extends Controller {
 
       const html = await response.text();
 
-      const fragment = document.createElement("div");
-      fragment.innerHTML = html;
-      const outerHTML = fragment.firstChild;
+      const outerHTML = document
+        .createRange()
+        .createContextualFragment(html).firstElementChild;
 
       grid.lastElementChild.after(...outerHTML.children);
+
+      feather.replace();
+
+      grid.querySelectorAll("[data-action='delete']").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const deleteConfirmed = confirm(
+            "Are you sure that you want to delete this?"
+          );
+
+          if (!deleteConfirmed) {
+            e.preventDefault();
+          }
+        });
+      });
 
       const newNextPageNumber = parseInt(outerHTML.dataset.nextPageNumber);
 

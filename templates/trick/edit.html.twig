@@ -1,0 +1,89 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+  {{ trick.name ? trick.name ~ " - Edit" : "Create trick" }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
+  <link rel="stylesheet" href="{{ asset('styles/trick/edit.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
+  {% endblock %}
+
+{% block body %}
+
+  <header>
+    <div class="container text-center">
+      <h1>{{ trick.id ? "Edit trick" : "Create trick" }}</h1>    
+    </div>
+  </header>
+
+  <main>
+    <div class="container mb-5">
+      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form', 'data-controller': 'trick-edit-form'} }) }}
+
+        {{ form_row(form.name) }}
+        
+        <div class="mb-3">
+          <label for="trick_description" class="form-label required">Description</label>
+          <textarea id="trick_description" name="trick[description]" required="required" class="form-control">{{ trick.description }}</textarea>
+          <div id="quill-editor"></div>
+        </div>
+
+        {% do form.description.setRendered %}
+
+        <fieldset
+          class="mb-3"
+          data-prototype="{{ form_widget(form.pictures.vars.prototype)|e('html_attr') }}"
+          data-controller="{{ form.pictures.vars.attr['data-controller'] }}"
+          data-add-button-text="{{ form.pictures.vars.attr['data-add-button-text'] }}"
+        >
+          <legend>Pictures</legend>
+
+          {% for picture in form.pictures %}
+            {{ include('trick/includes/_picture-form.html.twig') }}
+          {% endfor %}
+        </fieldset>
+
+        {% do form.pictures.setRendered %}
+
+        {{ form_row(form.videos) }}
+        
+        {{ form_row(form.category) }}
+
+      {{ form_end(form) }}
+      
+      <div class="d-flex">
+        <input
+          type="submit"
+          value="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
+          title="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
+          form="{{ form.vars.id }}"
+          class="btn btn-primary"
+        >
+
+        {% if trick.id %}
+          <a
+            href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}"
+            class="btn btn-secondary ms-3"
+            title="Cancel modifications"
+          >Cancel</a>
+
+          <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE">
+            <button
+              class="btn btn-danger ms-3"
+              type="submit"
+              value="Delete"
+              data-action="delete"
+              title="Delete the trick"
+            >Delete</button>
+          </form>
+        {% endif %}
+      </div>
+
+    </div>
+  </main>
+
+{% endblock %}

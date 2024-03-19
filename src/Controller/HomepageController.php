@@ -11,7 +11,7 @@ class HomepageController extends AbstractController
 {
     #[Route(
         '/',
-        name: 'homepage',
+        name: 'homepage.index',
         methods: ["GET"]
     )]
     public function index(TrickService $trickService): Response

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Core\Interfaces;
+namespace App\Interfaces;
 
 use Doctrine\Common\Collections\Collection;
 
 /**
  * An interface to easily handle a subset of database items.
  * 
- * @package App\Core\Interface
+ * @package App\Interface
  * 
  * @method Collection getItems()
  * @method int        getBatchSize()

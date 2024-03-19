@@ -24,7 +24,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">Snowtricks</a>
+        <a class="navbar-brand" href="{{ path('homepage.index') }}">Snowtricks</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -49,24 +49,44 @@
           </form> #}
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" href="/"
-                >Home
-                <span class="visually-hidden">(current)</span>
+              <a
+                href="{{ path('homepage.index') }}"
+                class="nav-link {{ app.current_route == 'homepage.index' ? 'active' }}"
+              >Home
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/tricks">Tricks</a>
+              <a
+                href="{{ path('trick.archive') }}"
+                class="nav-link {{ app.current_route starts with 'trick' and app.current_route != 'trick.create' ? 'active' }}"
+              >Tricks</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/login">Sign in</a>
+              <a
+                href="{{ path('trick.create') }}"
+                class="nav-link {{ app.current_route == 'trick.create' ? 'active' }}"
+              >Create trick</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/signup">Sign up</a>
+              <a
+                href="/login"
+                class="nav-link {{ app.current_route == 'login' ? 'active' }}"
+              >Sign in</a>
+            </li>
+            <li class="nav-item">
+              <a
+                href="/signup"
+                class="nav-link {{ app.current_route == 'signup' ? 'active' }}"
+              >Sign up</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
+
+    <div class="container my-3">
+      {{ include("includes/flashes.html.twig") }}
+    </div>
 
     {% block body %}{% endblock %}
   </body>

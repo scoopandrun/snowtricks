@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240226123255 extends AbstractMigration
+final class Version20240313155404 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,14 +20,14 @@ final class Version20240226123255 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE trick ADD slug VARCHAR(50) NOT NULL');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_D8F0A91E989D9B62 ON trick (slug)');
+        $this->addSql('ALTER TABLE trick DROP FOREIGN KEY FK_D8F0A91EFDFF2E92');
+        $this->addSql('ALTER TABLE trick ADD CONSTRAINT FK_D8F0A91EFDFF2E92 FOREIGN KEY (thumbnail_id) REFERENCES picture (id) ON DELETE SET NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP INDEX UNIQ_D8F0A91E989D9B62 ON trick');
-        $this->addSql('ALTER TABLE trick DROP slug');
+        $this->addSql('ALTER TABLE trick DROP FOREIGN KEY FK_D8F0A91EFDFF2E92');
+        $this->addSql('ALTER TABLE trick ADD CONSTRAINT FK_D8F0A91EFDFF2E92 FOREIGN KEY (thumbnail_id) REFERENCES picture (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
     }
 }

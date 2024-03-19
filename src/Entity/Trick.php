@@ -2,50 +2,89 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
+#[UniqueEntity('name')]
+#[ORM\HasLifecycleCallbacks]
 class Trick
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('int')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50, unique: true)]
-    private ?string $slug = null;
-
     #[ORM\Column(length: 50)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 5, max: 50)]
     private ?string $name = null;
 
+    #[ORM\Column(length: 50)]
+    #[Assert\Type('string')]
+    private ?string $slug = null;
+
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[Assert\Type(Category::class)]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'tricks')]
+    #[Assert\Type(User::class)]
     private ?User $author = null;
 
-    #[ORM\OneToMany(targetEntity: Media::class, mappedBy: 'trick', orphanRemoval: true)]
-    private Collection $mediaCollection;
+    #[ORM\OneToMany(
+        targetEntity: Picture::class,
+        mappedBy: 'trick',
+        orphanRemoval: true,
+        cascade: ['persist', 'remove']
+    )]
+    #[Assert\All(
+        new Assert\Type(Picture::class)
+    )]
+    private Collection $pictures;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Media $mainMedia = null;
+    #[ORM\OneToMany(
+        targetEntity: Video::class,
+        mappedBy: 'trick',
+        orphanRemoval: true,
+        cascade: ['persist', 'remove']
+    )]
+    #[Assert\All(
+        new Assert\Type(Video::class)
+    )]
+    private Collection $videos;
 
-    #[ORM\Column]
+    #[ORM\OneToOne(fetch: 'EAGER')]
+    #[ORM\JoinColumn(onDelete: "SET NULL")]
+    #[Assert\Type(Picture::class)]
+    private ?Picture $mainPicture = null;
+
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
-        $this->mediaCollection = new ArrayCollection();
+        $this->pictures = new ArrayCollection();
+
+        $this->setCreatedAt(new \DateTimeImmutable());
+        $this->videos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,15 +114,6 @@ class Trick
         $this->slug = $slug;
 
         return $this;
-    }
-
-    public function makeSlug(): string
-    {
-        $slug = strtolower($this->name);
-        $slug = preg_replace(" ", "-", $slug);
-        $slug = preg_replace("/[\"'\(\)\[\]\{\}#]/", "", $slug);
-
-        return $slug;
     }
 
     public function getDescription(): ?string
@@ -122,42 +152,72 @@ class Trick
         return $this;
     }
 
-    public function getMainMedia(): ?Media
+    public function getMainPicture(): ?Picture
     {
-        return $this->mainMedia;
+        return $this->mainPicture;
     }
 
-    public function setMainMedia(?Media $mainMedia): static
+    public function setMainPicture(?Picture $picture): static
     {
-        $this->mainMedia = $mainMedia;
+        $this->mainPicture = $picture;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Media>
+     * @return Collection<int, Picture>
      */
-    public function getMedia(): Collection
+    public function getPictures(): Collection
     {
-        return $this->mediaCollection;
+        return $this->pictures;
     }
 
-    public function addMedia(Media $media): static
+    public function addPicture(Picture $picture): static
     {
-        if (!$this->mediaCollection->contains($media)) {
-            $this->mediaCollection->add($media);
-            $media->setTrick($this);
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures->add($picture);
+            $picture->setTrick($this);
         }
 
         return $this;
     }
 
-    public function removeMedia(Media $media): static
+    public function removePicture(Picture $picture): static
     {
-        if ($this->mediaCollection->removeElement($media)) {
+        if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
-            if ($media->getTrick() === $this) {
-                $media->setTrick(null);
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Video>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Video $video): static
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos->add($video);
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Video $video): static
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
             }
         }
 
