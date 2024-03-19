@@ -35,11 +35,27 @@
 
   <main>
     <div class="container mb-4">
-      <div class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto">
+      <div
+        class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto"
+        data-controller="trick-media"
+      >
+        {{ include('trick/includes/_media-overlay.html.twig') }}
+
         {% for picture in trick.pictures %}
-          <div class="mx-3 my-2">
-            <img src="{{ image('tricks', picture) }}" height="100" alt="{{ picture.description }}">
-          </div>
+          <button
+            type="button"
+            class="btn mx-3 my-2 thumbnail"
+            data-trick-media-target="media"
+            data-type="picture"
+            data-caption="{{ picture.description }}"
+          >
+            <img
+              src="{{ image('tricks', picture) }}"
+              height="100"
+              title="{{ picture.description }}"
+              alt="{{ picture.description }}"
+            >
+          </button>
         {% else %}
           <div class="mx-3 my-2">No picture was added to this trick. Add one!</div>
         {% endfor %}
