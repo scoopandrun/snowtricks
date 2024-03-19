@@ -34,7 +34,19 @@ class TrickType extends AbstractType
                 'attr' => [
                     'data-controller' => 'collection-edit',
                     'data-add-button-text' => 'Add a picture',
-                    'data-controller' => 'trick-edit'
+                ]
+            ])
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoType::class,
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'by_reference' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'attr' => [
+                    'data-controller' => 'collection-edit',
+                    'data-add-button-text' => 'Add a video',
                 ]
             ])
             ->add('category', EntityType::class, [

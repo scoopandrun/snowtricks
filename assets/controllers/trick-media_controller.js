@@ -45,10 +45,13 @@ export default class extends Controller {
     /** @type {HTMLButtonElement} */
     const button = this.mediaTargets[this.index];
 
-    /** @type {"picture"} */
+    /** @type {"picture"|"video"} */
     const mediaType = button.dataset.type;
     const caption = button.dataset.caption;
-    const src = button.firstElementChild.src;
+    const src =
+      mediaType === "picture"
+        ? button.firstElementChild.src
+        : button.dataset.iframe;
     const content = this.makeContent(mediaType, src);
 
     const overlay = this.overlay;
@@ -77,7 +80,7 @@ export default class extends Controller {
   }
 
   /**
-   * @param {"picture"} type
+   * @param {"picture"|"video"} type
    * @param {string} src
    */
   makeContent(type, src) {
@@ -92,5 +95,11 @@ export default class extends Controller {
 
       return container;
     }
+
+    if (type === "video") {
+      const iframe = document.createRange().createContextualFragment(src);
+
+      return iframe;
     }
   }
+}

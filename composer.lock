@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5853299be51b0c2a9e8c0e8909ea72e6",
+    "content-hash": "d70b612957489f4cf900f49c05f25981",
     "packages": [
         {
             "name": "composer/semver",
@@ -1713,6 +1713,76 @@
                 }
             ],
             "time": "2023-10-27T15:32:31+00:00"
+        },
+        {
+            "name": "mpratt/embera",
+            "version": "2.0.37",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mpratt/Embera.git",
+                "reference": "540e7a38ab1dd208aafe1f63dc09489e6665ff80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mpratt/Embera/zipball/540e7a38ab1dd208aafe1f63dc09489e6665ff80",
+                "reference": "540e7a38ab1dd208aafe1f63dc09489e6665ff80",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "ext-curl": "Fetch data using curl instead of using file_get_contents"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Embera\\": "src/Embera"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Pratt",
+                    "email": "yo@michael-pratt.com",
+                    "homepage": "http://www.michael-pratt.com",
+                    "role": "Author/Developer"
+                }
+            ],
+            "description": "Oembed consumer library. Converts urls into their html embed code. Supports 150+ sites, such as Youtube, Twitter, vimeo, Instagram etc.",
+            "homepage": "https://github.com/mpratt/Embera",
+            "keywords": [
+                "Auto embed",
+                "Embed Text",
+                "Responsive Embeds",
+                "Url Embed",
+                "embed",
+                "instagram",
+                "oembed",
+                "twitter",
+                "vimeo",
+                "vine",
+                "youtube"
+            ],
+            "support": {
+                "issues": "https://github.com/mpratt/Embera/issues",
+                "source": "https://github.com/mpratt/Embera/tree/2.0.37"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/mtpratt",
+                    "type": "paypal"
+                }
+            ],
+            "time": "2024-03-13T04:46:40+00:00"
         },
         {
             "name": "nadar/quill-delta-parser",
