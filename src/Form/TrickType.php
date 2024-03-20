@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class TrickType extends AbstractType
 {
@@ -44,6 +45,9 @@ class TrickType extends AbstractType
                 'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'constraints' => [
+                    new Valid(),
+                ],
                 'attr' => [
                     'data-controller' => 'collection-edit',
                     'data-add-button-text' => 'Add a video',
