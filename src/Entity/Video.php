@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\VideoRepository;
-use App\Service\VideoService;
 use App\Validator as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,10 +23,15 @@ class Video implements \Stringable
 
     #[ORM\Column(length: 2048)]
     #[Assert\NotBlank]
-    #[AppAssert\Oembed]
+    #[Assert\Type('string')]
+    #[AppAssert\SupportedVideoURL]
     private ?string $url = null;
 
-    private ?VideoService $videoService = null;
+    private ?string $thumbnailUrl = null;
+
+    private ?string $iframe = null;
+
+    private ?string $title = null;
 
     public function getId(): ?int
     {
@@ -60,32 +64,38 @@ class Video implements \Stringable
 
     public function getIframe(): ?string
     {
-        $videoService = $this->getVideoService();
+        return $this->iframe;
+    }
 
-        return $videoService->getIframeTag($this);
+    public function setIframe(?string $iframe): static
+    {
+        $this->iframe = $iframe;
+
+        return $this;
     }
 
     public function getThumbnailUrl(): ?string
     {
-        $videoService = $this->getVideoService();
+        return $this->thumbnailUrl;
+    }
 
-        return $videoService->getThumbnailUrl();
+    public function setThumbnailUrl(?string $url): static
+    {
+        $this->thumbnailUrl = $url;
+
+        return $this;
     }
 
     public function getTitle(): string
     {
-        $videoService = $this->getVideoService();
-
-        return $videoService->getTitle();
+        return $this->title;
     }
 
-    private function getVideoService(): VideoService
+    public function setTitle(?string $title): static
     {
-        if (is_null($this->videoService)) {
-            $this->videoService = new VideoService($this);
-        }
+        $this->title = $title;
 
-        return $this->videoService;
+        return $this;
     }
 
     public function __toString(): string

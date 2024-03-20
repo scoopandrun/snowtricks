@@ -3,79 +3,228 @@
 namespace App\Service;
 
 use App\Entity\Video;
-use Embera\Embera;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class VideoService
 {
-    private Embera $embera;
-    private ?string $url = null;
-    private ?Video $video = null;
-    private ?array $urlData = null;
+    private static array $oembedData = [];
+    private static array $providerInfo = [];
 
-    public function __construct(Video|string $videoOrUrl)
-    {
-        if (is_string($videoOrUrl)) {
-            $this->url = $videoOrUrl;
-        }
-
-        if ($videoOrUrl instanceof Video) {
-            $this->video = $videoOrUrl;
-            $this->url = $this->video->getUrl();
-        }
-
-        $this->embera = new Embera();
+    public function __construct(
+        private HttpClientInterface $httpClient,
+    ) {
     }
 
-    private function getUrlData(string $property = ""): mixed
+    /**
+     * Fill in the iFrame tag, thumbnail URL and title for a video.
+     * 
+     * @param Video $video 
+     * 
+     * @return void 
+     */
+    public function populateInfo(Video $video): void
     {
-        if (is_null($this->urlData)) {
-            $urlData = $this->embera->getUrlData($this->url);
-            $this->urlData = $urlData[$this->url] ?? [];
+        $url = $video->getUrl();
+
+        $video
+            ->setIframe($this->getIframeTag($url))
+            ->setThumbnailUrl($this->getThumbnailUrl($url))
+            ->setTitle($this->getTitle($url));
+    }
+
+    private function getOembedData(string $url, string $property = ""): mixed
+    {
+        if (is_null(self::$oembedData[$url] ?? null)) {
+            $oembedUrl = $this->getProviderInfo($url)["oembedUrl"];
+            $oembedData = $this->fetchOembedData($oembedUrl);
+            self::$oembedData[$url] = $oembedData;
         }
 
         if ("" === $property) {
-            return $this->urlData;
+            return self::$oembedData[$url];
         }
 
-        if (empty($this->urlData)) {
+        if (is_null(self::$oembedData[$url])) {
             return null;
         }
 
-        return $this->urlData[$property] ?? null;
+        return self::$oembedData[$url][$property] ?? null;
+    }
+
+    private function fetchOembedData(string $url): ?array
+    {
+        try {
+            $response = $this->httpClient->request('GET', $url);
+
+            $statusCode = $response->getStatusCode();
+
+            if ($statusCode >= 400) {
+                return null;
+            }
+
+            return $response->toArray();
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     /**
      * Get the iFrame string with the Oembed library.
      * 
-     * @return string The iFrame HTML string.
+     * @return string|false The iFrame HTML string or false if the URL isn't suported.
      */
-    public function getIframeTag(): string
+    private function getIframeTag(string $url): string|false
     {
-        $loading = "lazy"; // "lazy" or "eager"
+        $providerInfo = $this->getProviderInfo($url);
 
-        $this->embera->addFilter(static function ($response) use ($loading) {
-            if (!empty($response['html'])) {
-                $response['html'] = str_replace('<iframe', "<iframe loading=\"{$loading}\"", $response['html']);
+        if (is_null($providerInfo)) {
+            return false;
+        }
+
+        $embedUrl = $providerInfo["embedUrl"];
+
+        $iframeTemplate = '<iframe src="<url>" loading="lazy" frameborder="0" allow="fullscreen; accelerometer; gyroscope; encrypted-media; picture-in-picture; web-share"></iframe>';
+
+        $iframeTag = preg_replace("/<url>/", $embedUrl, $iframeTemplate);
+
+        return $iframeTag;
+    }
+
+    /**
+     * Get the thumbnail URL for a video URL.
+     * 
+     * @return null|string 
+     */
+    private function getThumbnailUrl(string $url): ?string
+    {
+        return $this->getOembedData($url, 'thumbnail_url');
+    }
+
+    private function getTitle(string $url): string
+    {
+        return $this->getOembedData($url, 'title') ?? "Video";
+    }
+
+    private function getProviderInfo(string $url): array|null
+    {
+        if (self::$providerInfo[$url] ?? null) {
+            return self::$providerInfo[$url];
+        }
+
+        $providers = [
+            "YouTube" => [
+                "urlTemplates" => [
+                    "https://www.youtube.com/watch?v=<id>",
+                    "https://m.youtube.com/watch?v=<id>",
+                    "https://youtu.be/<id>",
+                ],
+                "normalizedUrlTemplate" => "https://www.youtube.com/watch?v=<id>",
+                "embedUrlTemplate" => "https://www.youtube.com/embed/<id>",
+                "oembedUrlTemplate" => "https://www.youtube.com/oembed?url=<normalizedUrl>",
+                "videoIdRegex" => "\w+",
+            ],
+            "Dailymotion" => [
+                "urlTemplates" => [
+                    "https://www.dailymotion.com/video/<id>",
+                    "https://dai.ly/<id>",
+                ],
+                "normalizedUrlTemplate" => "https://www.dailymotion.com/video/<id>",
+                "embedUrlTemplate" => "https://www.dailymotion.com/embed/video/<id>",
+                "oembedUrlTemplate" => "https://www.dailymotion.com/services/oembed?url=<normalizedUrl>",
+                "videoIdRegex" => "\w+",
+            ],
+            "Vimeo" => [
+                "urlTemplates" => [
+                    "https://vimeo.com/<id>",
+                ],
+                "normalizedUrlTemplate" => "https://vimeo.com/<id>",
+                "embedUrlTemplate" => "https://player.vimeo.com/video/<id>",
+                "oembedUrlTemplate" => "https://vimeo.com/api/oembed.json?url=<normalizedUrl>",
+                "videoIdRegex" => "\d+",
+            ],
+        ];
+
+        /** @var ?string */
+        $providerName = null;
+
+        /** @var ?string */
+        $urlTemplate = null;
+
+        /** @var ?string */
+        $normalizedUrlTemplate = null;
+
+        /** @var ?string */
+        $embedUrlTemplate = null;
+
+        /** @var ?string */
+        $oembedUrlTemplate = null;
+
+        /** @var ?string */
+        $videoIdRegex = null;
+
+        foreach ($providers as $name => $data) {
+            $templateFound = false;
+
+            $urlTemplates = $data["urlTemplates"];
+
+            foreach ($urlTemplates as $template) {
+                if (preg_match('#' . preg_quote(str_replace("<id>", "", $template), '/') . '#', $url)) {
+                    $providerName = $name;
+                    $urlTemplate = $template;
+                    $normalizedUrlTemplate = $data["normalizedUrlTemplate"];
+                    $embedUrlTemplate = $data["embedUrlTemplate"];
+                    $oembedUrlTemplate = $data["oembedUrlTemplate"];
+                    $videoIdRegex = $data["videoIdRegex"];
+                    $templateFound = true;
+                    break;
+                }
             }
+            if ($templateFound) break;
+        }
 
-            return $response;
-        });
+        if (false === $templateFound) {
+            return null;
+        }
 
-        return $this->getUrlData('html') ?? "";
+        $regex = str_replace(
+            preg_quote("<id>"),
+            '(' . $videoIdRegex . ')',
+            preg_quote($urlTemplate)
+        );
+
+        preg_match(
+            '#' . $regex . '#i',
+            $url,
+            $matches
+        );
+
+        $videoId = $matches[1] ?? null;
+
+        $normalizedUrl = str_replace("<id>", $videoId, $normalizedUrlTemplate);
+
+        $embedUrl = str_replace("<id>", $videoId, $embedUrlTemplate);
+
+        $oembedUrl = str_replace("<normalizedUrl>", urlencode($normalizedUrl), $oembedUrlTemplate);
+
+        $providerInfo = [
+            "name" => $providerName,
+            "videoId" => $videoId,
+            "normalizedUrl" => $normalizedUrl,
+            "embedUrl" => $embedUrl,
+            "oembedUrl" => $oembedUrl,
+        ];
+
+        self::$providerInfo[$url] = $providerInfo;
+
+        return $providerInfo;
     }
 
-    public function getThumbnailUrl(): ?string
+    public function isSupported(string $url): bool
     {
-        return $this->getUrlData('thumbnail_url');
-    }
+        if (!filter_var($url, \FILTER_VALIDATE_URL)) {
+            return false;
+        };
 
-    public function getTitle(): string
-    {
-        return $this->getUrlData('title') ?? "Video";
-    }
-
-    public function isVideo(): bool
-    {
-        return $this->getUrlData('type') === 'video';
+        return $this->getOembedData($url, 'type') === 'video';
     }
 }

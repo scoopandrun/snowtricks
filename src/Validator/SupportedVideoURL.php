@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraint;
  * @package App\Validator
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class Oembed extends Constraint
+class SupportedVideoURL extends Constraint
 {
     public function __construct(
         public string $message = 'This URL is not supported.',
