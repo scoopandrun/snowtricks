@@ -61,16 +61,24 @@
                 class="nav-link {{ app.current_route starts with 'trick' and app.current_route != 'trick.create' ? 'active' }}"
               >Tricks</a>
             </li>
+            {% if app.user %}
             <li class="nav-item">
               <a
                 href="{{ path('trick.create') }}"
                 class="nav-link {{ app.current_route == 'trick.create' ? 'active' }}"
               >Create trick</a>
             </li>
+              <li class="nav-item">
+                <a
+                  href="{{ path('auth.logout') }}"
+                  class="nav-link"
+                >Logout</a>
+              </li> 
+            {% else %}
             <li class="nav-item">
               <a
-                href="/login"
-                class="nav-link {{ app.current_route == 'login' ? 'active' }}"
+                  href="{{ path('auth.login') }}"
+                  class="nav-link {{ app.current_route == 'auth.login' ? 'active' }}"
               >Sign in</a>
             </li>
             <li class="nav-item">
@@ -79,6 +87,7 @@
                 class="nav-link {{ app.current_route == 'signup' ? 'active' }}"
               >Sign up</a>
             </li>
+            {% endif %}
           </ul>
         </div>
       </div>

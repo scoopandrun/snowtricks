@@ -12,8 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TrickController extends AbstractController
 {
@@ -83,6 +82,7 @@ class TrickController extends AbstractController
         methods: ["GET", "POST"],
         requirements: ["id" => "\d+"]
     )]
+    #[IsGranted('ROLE_USER')]
     public function edit(
         Trick $trick,
         Request $request,
@@ -119,6 +119,7 @@ class TrickController extends AbstractController
         name: 'trick.create',
         methods: ["GET", "POST"]
     )]
+    #[IsGranted('ROLE_USER')]
     public function create(
         Request $request,
         EntityManagerInterface $entityManager
@@ -158,8 +159,11 @@ class TrickController extends AbstractController
         requirements: ["id" => "\d+"],
         methods: ["DELETE"]
     )]
-    public function delete(Trick $trick, EntityManagerInterface $entityManager): Response
-    {
+    #[IsGranted('ROLE_USER')]
+    public function delete(
+        Trick $trick,
+        EntityManagerInterface $entityManager,
+    ): Response {
         $entityManager->remove($trick);
         $entityManager->flush();
 
