@@ -27,11 +27,13 @@ class Video implements \Stringable
     #[AppAssert\SupportedVideoURL]
     private ?string $url = null;
 
+    #[ORM\Column(length: 2048)]
     private ?string $thumbnailUrl = null;
 
-    private ?string $iframe = null;
-
+    #[ORM\Column(length: 255)]
     private ?string $title = null;
+
+    private ?string $iframe = null;
 
     public function getId(): ?int
     {
@@ -93,7 +95,7 @@ class Video implements \Stringable
 
     public function setTitle(?string $title): static
     {
-        $this->title = $title;
+        $this->title = substr($title, 0, 255);
 
         return $this;
     }

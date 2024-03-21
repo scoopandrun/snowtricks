@@ -27,7 +27,7 @@ class VideoService
         $url = $video->getUrl();
 
         $video
-            ->setIframe($this->getIframeTag($url))
+            ->setUrl($this->getNormalizedUrl($url))
             ->setThumbnailUrl($this->getThumbnailUrl($url))
             ->setTitle($this->getTitle($url));
     }
@@ -71,14 +71,16 @@ class VideoService
     /**
      * Get the iFrame string with the Oembed library.
      * 
-     * @return string|false The iFrame HTML string or false if the URL isn't suported.
+     * @param string $url The normalized URL of the video.
+     * 
+     * @return ?string The iFrame HTML string or null if the URL isn't suported.
      */
-    private function getIframeTag(string $url): string|false
+    public function getIframeTag(string $url): ?string
     {
         $providerInfo = $this->getProviderInfo($url);
 
         if (is_null($providerInfo)) {
-            return false;
+            return null;
         }
 
         $embedUrl = $providerInfo["embedUrl"];
@@ -88,6 +90,11 @@ class VideoService
         $iframeTag = preg_replace("/<url>/", $embedUrl, $iframeTemplate);
 
         return $iframeTag;
+    }
+
+    private function getNormalizedUrl(string $url): ?string
+    {
+        return $this->getProviderInfo($url)["normalizedUrl"];
     }
 
     /**
