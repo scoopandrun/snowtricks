@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Trick;
-use App\Form\TrickType;
 use App\Core\FlashClasses;
-use App\Service\TrickService;
+use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
+use App\Form\TrickType;
+use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -27,9 +29,9 @@ class TrickController extends AbstractController
         name: 'trick.archive',
         methods: ["GET"]
     )]
-    public function archive(): Response
+    public function archive(EntityManagerInterface $entityManager): Response
     {
-        $tricks = $this->trickService->findAll();
+        $tricks = $entityManager->getRepository(Trick::class)->findAll();
 
         return $this->render(
             'trick/archive.html.twig',
@@ -86,7 +88,7 @@ class TrickController extends AbstractController
     public function edit(
         Trick $trick,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
@@ -122,7 +124,7 @@ class TrickController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function create(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $trick = new Trick();
 

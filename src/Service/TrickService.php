@@ -2,12 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\Trick;
-use App\Entity\Picture;
 use App\Component\Batch;
+use App\Entity\Picture;
+use App\Entity\Trick;
+use App\Repository\TrickRepository;
 use App\Service\FileManager;
 use Psr\Log\LoggerInterface;
-use App\Repository\TrickRepository;
 
 class TrickService
 {
@@ -18,21 +18,6 @@ class TrickService
         private SlugService $slugService,
         private FileManager $fileManager,
     ) {
-    }
-
-    public function findBySlug(string $slug): ?Trick
-    {
-        return $this->trickRepository->findOneBy(["slug" => $slug]);
-    }
-
-    public function findAll(): array
-    {
-        return $this->trickRepository->findAll();
-    }
-
-    public function getCount(): int
-    {
-        return $this->trickRepository->count();
     }
 
     /**
