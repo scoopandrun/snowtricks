@@ -16,7 +16,7 @@ class VideoService
     }
 
     /**
-     * Fill in the iFrame tag, thumbnail URL and title for a video.
+     * Fill in the normalized URL, thumbnail URL and title for a video.
      * 
      * @param Video $video 
      * 
