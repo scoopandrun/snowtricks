@@ -21,7 +21,7 @@ class VideoListener
     public function onPrePersist(
         Video $video,
         PrePersistEventArgs $prePersistEventArgs,
-    ) {
+    ): void {
         $this->videoService->populateInfo($video);
     }
 
