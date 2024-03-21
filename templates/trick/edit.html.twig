@@ -21,17 +21,11 @@
 
   <main>
     <div class="container mb-5">
-      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form', 'data-controller': 'trick-edit-form'} }) }}
+      {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form'} }) }}
 
         {{ form_row(form.name) }}
-        
-        <div class="mb-3">
-          <label for="trick_description" class="form-label required">Description</label>
-          <textarea id="trick_description" name="trick[description]" required="required" class="form-control">{{ trick.description }}</textarea>
-          <div id="quill-editor"></div>
-        </div>
 
-        {% do form.description.setRendered %}
+        {{ form_row(form.description) }}
 
         <fieldset
           class="mb-3"

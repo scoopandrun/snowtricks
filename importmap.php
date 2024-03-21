@@ -28,7 +28,4 @@ return [
     'feather-icons' => [
         'version' => '4.29.1',
     ],
-    'quill' => [
-        'version' => '1.3.7',
-    ],
 ];
