@@ -20,7 +20,7 @@
         <h1 class="main-picture__trick-name">{{ trick.name }}</h1>
       </div>
 
-      {% if is_granted('ROLE_VERIFIED') %}
+      {% if is_granted(UserRoles.verified) %}
         <div class="main-picture__edit-overlay rounded">
           <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
             <i data-feather="edit"></i>

@@ -14,7 +14,7 @@
         <h5 class="card-title">{{ trick.name }}</h5>
       </a>
 
-      {% if is_granted('ROLE_VERIFIED') %}
+      {% if is_granted(UserRoles.verified) %}
         <div class="d-flex">
           <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
             <i data-feather="edit"></i>
