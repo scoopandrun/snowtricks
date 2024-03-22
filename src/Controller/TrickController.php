@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
 use App\Form\TrickType;
+use App\Security\UserRoles;
 use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,7 +85,7 @@ class TrickController extends AbstractController
         methods: ["GET", "POST"],
         requirements: ["id" => "\d+"]
     )]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted(UserRoles::VERIFIED)]
     public function edit(
         Trick $trick,
         Request $request,
@@ -121,7 +122,7 @@ class TrickController extends AbstractController
         name: 'trick.create',
         methods: ["GET", "POST"]
     )]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted(UserRoles::VERIFIED)]
     public function create(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -161,7 +162,7 @@ class TrickController extends AbstractController
         requirements: ["id" => "\d+"],
         methods: ["DELETE"]
     )]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted(UserRoles::VERIFIED)]
     public function delete(
         Trick $trick,
         EntityManagerInterface $entityManager,
