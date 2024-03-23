@@ -48,12 +48,6 @@ class UserController extends AbstractController
 
             $entityManager->flush();
 
-            // // Clear password fields
-            // $userInformation->currentPassword = "";
-            // $userInformation->newPassword = "";
-
-            // $form = $this->createForm(UserInformationType::class, $userInformation);
-
             $this->addFlash(FlashClasses::SUCCESS, "Your user information has been successfully modified.");
 
             return $this->redirectToRoute('auth.user');
