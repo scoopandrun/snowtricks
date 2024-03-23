@@ -4,7 +4,6 @@ namespace App\DTO;
 
 use App\Security\PasswordPolicy;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 class UserInformation
@@ -32,7 +31,7 @@ class UserInformation
         #[Assert\NotBlank(groups: ['registration'])]
         #[Assert\Type('string')]
         #[Assert\Length(min: PasswordPolicy::MIN_LENGTH, max: PasswordPolicy::MAX_LENGTH)]
-        #[Assert\PasswordStrength(minScore: PasswordStrength::STRENGTH_MEDIUM)]
+        #[Assert\PasswordStrength(minScore: PasswordPolicy::MIN_STRENGTH)]
         #[Assert\NotCompromisedPassword()]
         public ?string $newPassword = null,
     ) {
