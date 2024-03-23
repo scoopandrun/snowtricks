@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
+use App\DTO\UserInformation;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -13,7 +14,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
@@ -30,22 +30,18 @@ class RegistrationController extends AbstractController
     )]
     public function register(
         Request $request,
-        UserPasswordHasherInterface $userPasswordHasher,
         Security $security,
         EntityManagerInterface $entityManager,
+        UserService $userService,
     ): Response {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $userInformation = new UserInformation();
+        $form = $this->createForm(RegistrationFormType::class, $userInformation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            $user = new User();
+
+            $userService->fillInUserEntityFromUserInformationDTO($userInformation, $user);
 
             $this->userService->sendVerificationEmail($user);
 

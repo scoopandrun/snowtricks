@@ -3,32 +3,60 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
-use App\Form\UserType;
+use App\DTO\UserInformation;
+use App\Form\UserAccountType;
 use App\Security\UserRoles;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
-    #[Route('/user', name: 'auth.user')]
+    #[Route(
+        '/user',
+        name: 'auth.user',
+        methods: ['GET', 'POST']
+    )]
     #[IsGranted(UserRoles::USER)]
     public function index(
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserService $userService,
+        Request $request,
     ): Response {
         $user = $security->getUser();
 
-        $form = $this->createForm(UserType::class, $user);
+        $userInformation = $userService->makeUserInformationDTOFromEntity($user);
+
+        $form = $this->createForm(UserAccountType::class, $userInformation);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var UserInformation */
+            $userInformation = $form->getData();
+
+            $userService->fillInUserEntityFromUserInformationDTO(
+                $userInformation,
+                $user
+            );
+
             $entityManager->flush();
 
+            // // Clear password fields
+            // $userInformation->currentPassword = "";
+            // $userInformation->newPassword = "";
+
+            // $form = $this->createForm(UserInformationType::class, $userInformation);
+
             $this->addFlash(FlashClasses::SUCCESS, "Your user information has been successfully modified.");
+
+            return $this->redirectToRoute('auth.user');
         }
 
         return $this->render('auth/user.html.twig', [

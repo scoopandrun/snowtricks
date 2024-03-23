@@ -1,12 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  connect() {
+  async sendVerificationEmail() {
     /** @type {HTMLFormElement} */
     this.element;
-  }
 
-  async sendVerificationEmail() {
     /** @type {HTMLAnchorElement} */
     const sendVerificationEmailLink = this.element.querySelector(
       "#sendVerificationEmail"

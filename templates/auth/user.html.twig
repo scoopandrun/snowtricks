@@ -8,16 +8,26 @@
 
     {{ form_start(form, {'attr': {'data-controller': 'user'} }) }}
 
-      {{ form_row(form.username)}}
+      {{ form_row(form.username) }}
 
-      {{ form_row(form.email)}}
+      {{ form_row(form.email) }}
       {% if app.user.isVerified %}
         <small class="text-success">Email address verified</small>
       {% else %}
         <small>Email address not verified (<a href="/sendVerificationEmail" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
       {% endif %}
 
-      {{ form_row(form.plainPassword)}}
+      <div class="mt-5 fs-5">
+        <p class="m-0">Password change (leave empty to keep unmodified)</p>
+      </div>
+
+
+      {{ form_row(form.currentPassword) }}
+
+      {{ form_row(form.newPassword) }}
+
+      <!-- Submit Button-->
+      <button class="btn btn-primary text-uppercase mt-4" id="submitButton" type="submit">Save</button>
 
     {{ form_end(form) }}
   </div>
