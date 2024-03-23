@@ -65,7 +65,7 @@ class UserService
             ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
             ->to($user->getEmail())
             ->subject("Validate your email address")
-            ->htmlTemplate("email/accountVerification.html.twig")
+            ->htmlTemplate("email/account-verification.html.twig")
             ->context([
                 "username" => $user->getUsername(),
                 "verificationURL" => $verificationURL,
