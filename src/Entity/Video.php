@@ -102,6 +102,6 @@ class Video implements \Stringable
 
     public function __toString(): string
     {
-        return $this->getUrl();
+        return (string) $this->getUrl();
     }
 }
