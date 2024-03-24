@@ -26,9 +26,9 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks',
+        path: '/tricks',
         name: 'trick.archive',
-        methods: ["GET"]
+        methods: ['GET'],
     )]
     public function archive(EntityManagerInterface $entityManager): Response
     {
@@ -41,9 +41,9 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks-batch-{batchNumber}',
+        path: '/tricks-batch-{batchNumber}',
         name: 'trick.batch',
-        methods: ["GET"]
+        methods: ['GET'],
     )]
     public function batch(int $batchNumber): Response
     {
@@ -56,10 +56,10 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/{id}-{slug}',
+        path: '/tricks/{id}-{slug}',
         name: 'trick.single',
-        methods: ["GET"],
-        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+']
+        methods: ['GET'],
+        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+'],
     )]
     public function single(Trick $trick, string $slug): Response
     {
@@ -80,10 +80,10 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/{id}/edit',
+        path: '/tricks/{id}/edit',
         name: 'trick.edit',
         methods: ["GET", "POST"],
-        requirements: ["id" => "\d+"]
+        requirements: ["id" => "\d+"],
     )]
     #[IsGranted(UserRoles::VERIFIED)]
     public function edit(
@@ -118,9 +118,9 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/create',
+        path: '/tricks/create',
         name: 'trick.create',
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
     )]
     #[IsGranted(UserRoles::VERIFIED)]
     public function create(
@@ -157,10 +157,10 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        "/tricks/{id}",
+        path: "/tricks/{id}",
         name: "trick.delete",
+        methods: ["DELETE"],
         requirements: ["id" => "\d+"],
-        methods: ["DELETE"]
     )]
     #[IsGranted(UserRoles::VERIFIED)]
     public function delete(

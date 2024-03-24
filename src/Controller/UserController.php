@@ -18,9 +18,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class UserController extends AbstractController
 {
     #[Route(
-        '/user',
+        path: '/user',
         name: 'auth.user',
-        methods: ['GET', 'POST']
+        methods: ['GET', 'POST'],
     )]
     #[IsGranted(UserRoles::USER)]
     public function index(
@@ -58,7 +58,11 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/sendVerificationEmail')]
+    #[Route(
+        path: '/send-verification-email',
+        name: 'auth.send-verification-email',
+        methods: ['GET'],
+    )]
     #[IsGranted(UserRoles::USER)]
     public function sendVerificationEmail(
         Security $security,

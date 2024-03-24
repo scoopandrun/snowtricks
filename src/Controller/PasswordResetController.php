@@ -16,7 +16,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PasswordResetController extends AbstractController
 {
-    #[Route('/password-reset', name: 'auth.password-reset-step-1')]
+    #[Route(
+        path: '/password-reset',
+        name: 'auth.password-reset-step-1',
+        methods: ['GET', 'POST'],
+    )]
     public function step1email(
         UserService $userService,
         UserRepository $userRepository,
@@ -57,7 +61,11 @@ class PasswordResetController extends AbstractController
         ]);
     }
 
-    #[Route('/password-reset/{token}', name: 'auth.password-reset-step-2')]
+    #[Route(
+        '/password-reset/{token}',
+        name: 'auth.password-reset-step-2',
+        methods: ['GET', 'POST'],
+    )]
     public function step2password(
         string $token,
         UserRepository $userRepository,

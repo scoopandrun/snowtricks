@@ -24,7 +24,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route(
-        '/signup',
+        path: '/signup',
         name: 'auth.signup',
         methods: ['GET', 'POST']
     )]
@@ -62,7 +62,11 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/verifyEmail/{token}', name: 'auth.verify-email')]
+    #[Route(
+        path: '/verify-email/{token}',
+        name: 'auth.verify-email',
+        methods: ['GET'],
+    )]
     public function verifyUserEmail(
         string $token,
         UserRepository $userRepository,

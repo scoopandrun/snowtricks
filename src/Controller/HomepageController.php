@@ -10,9 +10,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomepageController extends AbstractController
 {
     #[Route(
-        '/',
+        path: '/',
         name: 'homepage.index',
-        methods: ["GET"]
+        methods: ['GET'],
     )]
     public function index(TrickService $trickService): Response
     {
