@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity('name')]
 #[ORM\HasLifecycleCallbacks]
-class Trick
+class Trick implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -246,5 +246,10 @@ class Trick
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
     }
 }
