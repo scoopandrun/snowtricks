@@ -32,7 +32,7 @@ class TrickController extends AbstractController
     )]
     public function archive(EntityManagerInterface $entityManager): Response
     {
-        $tricks = $entityManager->getRepository(Trick::class)->findAll();
+        $tricks = $entityManager->getRepository(Trick::class)->findTrickCards();
 
         return $this->render(
             'trick/archive.html.twig',
