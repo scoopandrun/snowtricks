@@ -18,9 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(
-        private UserService $userService,
-    ) {
+    public function __construct()
+    {
     }
 
     #[Route(
@@ -31,8 +30,8 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         Security $security,
-        EntityManagerInterface $entityManager,
         UserService $userService,
+        EntityManagerInterface $entityManager,
     ): Response {
         $userInformation = new UserInformation();
         $form = $this->createForm(RegistrationFormType::class, $userInformation);
@@ -43,7 +42,7 @@ class RegistrationController extends AbstractController
 
             $userService->fillInUserEntityFromUserInformationDTO($userInformation, $user);
 
-            $this->userService->sendVerificationEmail($user);
+            $userService->sendVerificationEmail($user);
 
             // Flush after setting the verification token
             $entityManager->persist($user);
@@ -70,6 +69,7 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(
         string $token,
         UserRepository $userRepository,
+        UserService $userService,
         EntityManagerInterface $entityManager,
     ): Response {
         $user = $userRepository->findOneBy(['emailVerificationToken' => $token]);
@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $this->userService->verifyEmail($user);
+        $userService->verifyEmail($user);
 
         $entityManager->flush();
 
