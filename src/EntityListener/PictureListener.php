@@ -13,10 +13,8 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 #[AsEntityListener(event: Events::postRemove, method: 'onPostRemove', entity: Picture::class)]
 class PictureListener
 {
-    public function __construct(
-        private TrickService $trickService,
-        private readonly string $tricksPicturesUploadsDirectory
-    ) {
+    public function __construct(private TrickService $trickService)
+    {
     }
 
     public function onPrePersist(
