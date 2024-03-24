@@ -1,0 +1,16 @@
+{% extends "email/base.html.twig" %}
+
+{% block header %}
+    Hi {{ username }}! Please confirm your email!
+{% endblock %}
+
+{% block body %}    
+    <p>
+        Please confirm your email address by clicking the following link: <br><br>
+        <a href="{{ verificationURL }}">Confirm my Email</a>.
+    </p>
+
+    <p>
+        Ride safely!
+    </p>
+{% endblock %}

@@ -2,18 +2,20 @@
 
 namespace App\Controller;
 
-use App\Entity\Trick;
-use App\Form\TrickType;
 use App\Core\FlashClasses;
-use App\Service\TrickService;
+use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
+use App\Form\TrickType;
+use App\Security\UserRoles;
+use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TrickController extends AbstractController
 {
@@ -24,13 +26,13 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks',
+        path: '/tricks',
         name: 'trick.archive',
-        methods: ["GET"]
+        methods: ['GET'],
     )]
-    public function archive(): Response
+    public function archive(EntityManagerInterface $entityManager): Response
     {
-        $tricks = $this->trickService->findAll();
+        $tricks = $entityManager->getRepository(Trick::class)->findAll();
 
         return $this->render(
             'trick/archive.html.twig',
@@ -39,9 +41,9 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks-batch-{batchNumber}',
+        path: '/tricks-batch-{batchNumber}',
         name: 'trick.batch',
-        methods: ["GET"]
+        methods: ['GET'],
     )]
     public function batch(int $batchNumber): Response
     {
@@ -54,10 +56,10 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/{id}-{slug}',
+        path: '/tricks/{id}-{slug}',
         name: 'trick.single',
-        methods: ["GET"],
-        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+']
+        methods: ['GET'],
+        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+'],
     )]
     public function single(Trick $trick, string $slug): Response
     {
@@ -78,15 +80,16 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/{id}/edit',
+        path: '/tricks/{id}/edit',
         name: 'trick.edit',
         methods: ["GET", "POST"],
-        requirements: ["id" => "\d+"]
+        requirements: ["id" => "\d+"],
     )]
+    #[IsGranted(UserRoles::VERIFIED)]
     public function edit(
         Trick $trick,
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
@@ -115,13 +118,14 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        '/tricks/create',
+        path: '/tricks/create',
         name: 'trick.create',
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
     )]
+    #[IsGranted(UserRoles::VERIFIED)]
     public function create(
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $trick = new Trick();
 
@@ -153,13 +157,16 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        "/tricks/{id}",
+        path: "/tricks/{id}",
         name: "trick.delete",
+        methods: ["DELETE"],
         requirements: ["id" => "\d+"],
-        methods: ["DELETE"]
     )]
-    public function delete(Trick $trick, EntityManagerInterface $entityManager): Response
-    {
+    #[IsGranted(UserRoles::VERIFIED)]
+    public function delete(
+        Trick $trick,
+        EntityManagerInterface $entityManager,
+    ): Response {
         $entityManager->remove($trick);
         $entityManager->flush();
 
