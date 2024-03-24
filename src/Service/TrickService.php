@@ -8,11 +8,13 @@ use App\Entity\Trick;
 use App\Repository\TrickRepository;
 use App\Service\FileManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class TrickService
 {
     public function __construct(
         private TrickRepository $trickRepository,
+        #[Autowire('%app.uploads.pictures%/tricks')]
         private readonly string $tricksPicturesUploadsDirectory,
         private LoggerInterface $logger,
         private SlugService $slugService,

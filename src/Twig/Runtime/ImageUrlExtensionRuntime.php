@@ -2,12 +2,14 @@
 
 namespace App\Twig\Runtime;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private readonly string $tricksPicturesUploadsDirectory,
+        #[Autowire('%app.uploads.pictures%/')]
+        private readonly string $picturesUploadsDirectory,
     ) {
         // Inject dependencies if needed
     }
@@ -18,7 +20,7 @@ class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
 
         // Try directory mapping
         $directory = match ($library) {
-            'tricks' => $this->tricksPicturesUploadsDirectory,
+            'tricks' => $this->picturesUploadsDirectory . 'tricks',
             default => null,
         };
 
