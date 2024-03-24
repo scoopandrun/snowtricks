@@ -16,7 +16,9 @@ class HomepageController extends AbstractController
     )]
     public function index(TrickService $trickService): Response
     {
-        $batch = $trickService->getBatch();
+        $batchSize = 4;
+
+        $batch = $trickService->getBatch(batchSize: $batchSize);
 
         return $this->render(
             'homepage/index.html.twig',

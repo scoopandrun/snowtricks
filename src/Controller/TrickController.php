@@ -47,7 +47,9 @@ class TrickController extends AbstractController
     )]
     public function batch(int $batchNumber): Response
     {
-        $batch = $this->trickService->getBatch($batchNumber);
+        $batchSize = 4;
+
+        $batch = $this->trickService->getBatch($batchNumber, $batchSize);
 
         return $this->render(
             'trick/_batch.html.twig',

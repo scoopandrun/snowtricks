@@ -28,7 +28,7 @@ class TrickService
      * 
      * @return Batch<App\DTO\TrickCardDTO>
      */
-    public function getBatch(int $batchNumber = 1, int $batchSize = 4): Batch
+    public function getBatch(int $batchNumber = 1, int $batchSize = 10): Batch
     {
         $count = $this->trickRepository->count();
 
