@@ -94,130 +94,44 @@ class UserService
         $user->setEmailVerificationToken(null);
     }
 
-    // public function checkPasswordResetEmailFormData(array $formData): array
-    // {
-    //     $emailIsString = is_string($email ?? null);
+    /**
+     * @return bool `true` on success, `false` on failure.
+     */
+    public function sendPasswordResetEmail(User $user): bool
+    {
+        $token = $this->tokenGenerator->generateToken();
 
-    //     $email = $emailIsString ? $formData["email"] : "";
+        $passwordResetURL = "http://snowtricks.localhost/password-reset/$token";
 
-    //     $emailMissing = !$email;
-    //     $emailInvalid = $email && !preg_match("/.*@.*\.[a-z]+/", $email);
+        $user->setPasswordResetToken($token);
 
-    //     $errorMessage = $emailMissing
-    //         ? "L'adresse e-mail est requise."
-    //         : (
-    //             $emailInvalid
-    //             ? "L'adresse e-mail est invalide."
-    //             : ""
-    //         );
+        $email = (new TemplatedEmail())
+            ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
+            ->to($user->getEmail())
+            ->subject("Reset your password")
+            ->htmlTemplate("email/password-reset.html.twig")
+            ->context([
+                "username" => $user->getUsername(),
+                "passwordResetURL" => $passwordResetURL,
+            ]);
 
-    //     $formResult = [
-    //         "error" => $errorMessage,
-    //     ];
+        try {
+            $this->mailer->send($email);
 
-    //     return $formResult;
-    // }
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            $this->logger->error($e);
+            return false;
+        }
+    }
 
-    // /**
-    //  * @return bool `true` on success, `false` on failure.
-    //  */
-    // public function sendPasswordResetEmail(array $formData): bool
-    // {
-    //     /** @var string */
-    //     $email = $formData["email"];
-
-    //     $passwordResetToken = $this->tokenGenerator->generateToken();
-
-    //     $tokenIsSet = $this->userRepository->setPasswordResetToken($email, $passwordResetToken);
-
-    //     // If an error uccroed during token setting, return false
-    //     if ($tokenIsSet === false) {
-    //         return false;
-    //     }
-
-    //     // If no error occured but the e-mail in unknown to the database
-    //     // return true without sending the e-mail (=> obfuscation)
-    //     if ($tokenIsSet === 0) {
-    //         return true;
-    //     }
-
-    //     // If a token really has been set, send the e-mail
-
-    //     $emailService = new EmailService();
-
-    //     $subject = "Réinitialisation de mot de passe";
-
-    //     $template = "password-reset";
-
-    //     $context = compact("passwordResetToken");
-
-    //     $emailSent = $emailService
-    //         ->setFrom($_ENV["MAIL_SENDER_EMAIL"], $_ENV["MAIL_SENDER_NAME"])
-    //         ->addTo($email)
-    //         ->setSubject($subject)
-    //         ->setTemplate($template)
-    //         ->setContext($context)
-    //         ->send();
-
-    //     return $emailSent;
-    // }
-
-    // public function verifyPasswordResetToken(string $token): bool
-    // {
-    //     return $this->userRepository->checkIfPasswordResetTokenIsRegistered($token);
-    // }
-
-
-    // public function checkPasswordResetFormData(array $formData): array
-    // {
-    //     $newPasswordIsString = is_string($formData["new-password"] ?? null);
-    //     $passwordConfirmIsString = is_string($formData["password-confirm"] ?? null);
-
-    //     $newPassword = $newPasswordIsString ? $formData["new-password"] : "";
-    //     $passwordConfirm = $passwordConfirmIsString ? $formData["password-confirm"] : "";
-
-    //     $newPasswordMissing = !$newPassword;
-    //     $newPasswordTooShort = $newPassword && mb_strlen($newPassword < Security::MINIMUM_PASSWORD_LENGTH);
-    //     $passwordConfirmMissing = !$passwordConfirm;
-    //     $passwordMismatch = $newPassword !== $passwordConfirm;
-
-    //     $errorMessage = "";
-
-    //     switch (true) {
-    //         case $newPasswordMissing:
-    //             $errorMessage = "Le mot de passe est obligatoire.";
-    //             break;
-
-    //         case $newPasswordTooShort:
-    //             $errorMessage =
-    //                 "Le mot de passe doit être supérieur à "
-    //                 . Security::MINIMUM_PASSWORD_LENGTH
-    //                 . " caractères.";
-    //             break;
-
-    //         case $passwordConfirmMissing:
-    //             $errorMessage = "Le mot de passe doit être retapé.";
-    //             break;
-
-    //         case $passwordMismatch:
-    //             $errorMessage = "Le mot de passe n'a pas été correctement retapé.";
-    //             break;
-
-    //         default:
-    //             break;
-    //     }
-
-    //     $formResult = [
-    //         "error" => $errorMessage,
-    //     ];
-
-    //     return $formResult;
-    // }
-
-    // public function resetPassword(string $token, string $password): bool
-    // {
-    //     $hashedPassword = (new User())->setPassword($password)->getPassword();
-
-    //     return $this->userRepository->resetPassword($token, $hashedPassword);
-    // }
+    public function resetPassword(User $user, UserInformation $userInformation): void
+    {
+        $user->setPassword(
+            $this->userPasswordHasher->hashPassword(
+                $user,
+                $userInformation->newPassword
+            )
+        );
+    }
 }

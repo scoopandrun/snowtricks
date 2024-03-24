@@ -9,11 +9,11 @@ use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 class UserInformation
 {
     public function __construct(
-        #[Assert\NotBlank()]
+        #[Assert\NotBlank(groups: ['registration'])]
         #[Assert\Type('string')]
         public ?string $username = null,
 
-        #[Assert\NotBlank()]
+        #[Assert\NotBlank(groups: ['registration', 'password_reset_step_1'])]
         #[Assert\Email()]
         public ?string $email = null,
 
@@ -28,7 +28,7 @@ class UserInformation
         )]
         public ?string $currentPassword = null,
 
-        #[Assert\NotBlank(groups: ['registration'])]
+        #[Assert\NotBlank(groups: ['registration', 'password_reset_step_2'])]
         #[Assert\Type('string')]
         #[Assert\Length(min: PasswordPolicy::MIN_LENGTH, max: PasswordPolicy::MAX_LENGTH)]
         #[Assert\PasswordStrength(minScore: PasswordPolicy::MIN_STRENGTH)]
