@@ -1,5 +1,7 @@
 # Snowtricks
 
+[![SymfonyInsight](https://insight.symfony.com/projects/c5984add-ba28-4fd6-8062-b6e3ff7abed0/big.svg)](https://insight.symfony.com/projects/c5984add-ba28-4fd6-8062-b6e3ff7abed0)
+
 This project is a community website exercise for the PHP course at OpenClassrooms.  
 It is not meant to be used in production nor is it meant to be a showcase.
 
@@ -10,8 +12,8 @@ This repository is primarily a way of sharing code with the tutor.
 This project uses [Composer](https://getcomposer.org) with PHP `>= 8.1`.
 
 Configure your database and email server in a `.env.local` file at the root of the project.
-Copy a `DATABASE_URL` line from the `.env` file a modify it to fit your configuration.
-Copy a `MAILER_DSN` line from the `.env` file a modify it to fit your configuration.
+Copy a `DATABASE_URL` line from the `.env` file and modify it to fit your configuration.
+Copy a `MAILER_DSN` line from the `.env` file and modify it to fit your configuration.
 
 Clone and install the project.
 
