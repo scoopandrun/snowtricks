@@ -25,6 +25,8 @@ class TrickService
      * 
      * @param int $batchNumber 
      * @param int $batchSize   Number of tricks to show in the batch.
+     * 
+     * @return Batch<App\DTO\TrickCardDTO>
      */
     public function getBatch(int $batchNumber = 1, int $batchSize = 4): Batch
     {
@@ -40,7 +42,7 @@ class TrickService
 
         $offset = ($batchNumber - 1) * $batchSize;
 
-        $tricks = $this->trickRepository->findBy([], offset: $offset, limit: $batchSize);
+        $tricks = $this->trickRepository->findTrickCards(offset: $offset, limit: $batchSize);
 
         return new Batch(
             $tricks,

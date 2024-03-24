@@ -29,8 +29,8 @@
       {% endif %}
     </div>
 
-    {% if trick.category.id %}
-      <p class="badge bg-secondary">{{ trick.category.name|lower }}</p>
+    {% if trick.category %}
+      <p class="badge bg-secondary">{{ trick.category|lower }}</p>
     {% endif %}
   </div>
 </div>
