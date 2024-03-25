@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
  * @package App\Interface
  * 
  * @method Collection getItems()
- * @method int        getBatchSize()
+ * @method int        getSize()
  * @method int        getTotalCount()
  * @method bool       hasNextItems()
  */
@@ -28,7 +28,7 @@ interface BatchInterface
      * 
      * @return int 
      */
-    public function getBatchSize(): int;
+    public function getSize(): int;
 
     /**
      * Get the total number of items in the database.
@@ -36,6 +36,13 @@ interface BatchInterface
      * @return int 
      */
     public function getTotalCount(): int;
+
+    /**
+     * Get whether previous items can be fetched from the database or not.
+     * 
+     * @return bool 
+     */
+    public function hasPreviousItems(): bool;
 
     /**
      * Get whether additional items can be fetched from the database or not.
@@ -50,6 +57,14 @@ interface BatchInterface
      * @return int 
      */
     public function getPageNumber(): int;
+
+    /**
+     * Get the page number for the previous batch
+     * or false if there is no previous page (i.e. the current page is the first one).
+     * 
+     * @return int|false 
+     */
+    public function getPreviousPageNumber(): int|false;
 
     /**
      * Get the page number for the next batch

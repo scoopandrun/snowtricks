@@ -33,7 +33,7 @@ class Batch implements BatchInterface
 
         $this->firstItemIndex = $firstIndex;
 
-        $this->lastItemIndex = $lastIndex ?: $firstIndex + count($items);
+        $this->lastItemIndex = $lastIndex ?: $firstIndex + count($items) - 1;
 
         $this->totalCount = $totalCount ?: count($items);
     }
@@ -43,7 +43,7 @@ class Batch implements BatchInterface
         return $this->items;
     }
 
-    public function getBatchSize(): int
+    public function getSize(): int
     {
         return $this->items->count();
     }
@@ -51,6 +51,11 @@ class Batch implements BatchInterface
     public function getTotalCount(): int
     {
         return $this->totalCount;
+    }
+
+    public function hasPreviousItems(): bool
+    {
+        return $this->firstItemIndex > 1;
     }
 
     public function hasNextItems(): bool
@@ -61,6 +66,11 @@ class Batch implements BatchInterface
     public function getPageNumber(): int
     {
         return $this->pageNumber;
+    }
+
+    public function getPreviousPageNumber(): int|false
+    {
+        return $this->hasPreviousItems() ? $this->pageNumber - 1 : false;
     }
 
     public function getNextPageNumber(): int|false
