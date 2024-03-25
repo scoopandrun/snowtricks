@@ -21,7 +21,10 @@
       {% endblock %}
     {% endblock %}
   </head>
+
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('homepage.index') }}">Snowtricks</a>
@@ -105,6 +108,8 @@
       {{ include("includes/flashes.html.twig") }}
     </div>
 
-    {% block body %}{% endblock %}
+    <div id="main-content">
+      {% block body %}{% endblock %}
+    </div>
   </body>
 </html>
