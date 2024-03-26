@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 class PasswordResetController extends AbstractController
 {
@@ -65,6 +66,7 @@ class PasswordResetController extends AbstractController
         '/password-reset/{token}',
         name: 'auth.password-reset-step-2',
         methods: ['GET', 'POST'],
+        requirements: ['token' => Requirement::CATCH_ALL],
     )]
     public function step2password(
         string $token,
