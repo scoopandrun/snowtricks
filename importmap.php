@@ -25,7 +25,4 @@ return [
     '@hotwired/turbo' => [
         'version' => '8.0.4',
     ],
-    'feather-icons' => [
-        'version' => '4.29.1',
-    ],
 ];

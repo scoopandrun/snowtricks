@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus";
-import feather from "feather-icons";
 
 export default class extends Controller {
   static targets = ["grid", "fetchButton"];
@@ -31,8 +30,6 @@ export default class extends Controller {
         .createContextualFragment(html).firstElementChild;
 
       grid.lastElementChild.after(...outerHTML.children);
-
-      feather.replace();
 
       grid.querySelectorAll("[data-action='delete']").forEach((button) => {
         button.addEventListener("click", (e) => {
