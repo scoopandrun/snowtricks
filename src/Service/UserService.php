@@ -10,6 +10,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class UserService
@@ -19,6 +20,7 @@ class UserService
         private MailerInterface $mailer,
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $userPasswordHasher,
+        private RouterInterface $router,
     ) {
     }
 
@@ -57,7 +59,11 @@ class UserService
     {
         $token = $this->tokenGenerator->generateToken();
 
-        $verificationURL = "http://snowtricks.localhost/verifyEmail/$token";
+        $verificationURL = $this->router->generate(
+            'auth.verify-email',
+            ['token' => $token],
+            $this->router::ABSOLUTE_URL
+        );
 
         $user->setEmailVerificationToken($token);
 
@@ -101,7 +107,11 @@ class UserService
     {
         $token = $this->tokenGenerator->generateToken();
 
-        $passwordResetURL = "http://snowtricks.localhost/password-reset/$token";
+        $passwordResetURL = $this->router->generate(
+            'auth.password-reset-step-2',
+            ['token' => $token],
+            $this->router::ABSOLUTE_URL
+        );
 
         $user->setPasswordResetToken($token);
 

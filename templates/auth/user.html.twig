@@ -14,7 +14,7 @@
       {% if app.user.isVerified %}
         <small class="text-success">Email address verified</small>
       {% else %}
-        <small>Email address not verified (<a href="/sendVerificationEmail" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
+        <small>Email address not verified (<a href="{{ path('auth.user.send-verification-email') }}" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
       {% endif %}
 
       <div class="mt-5 fs-5">
