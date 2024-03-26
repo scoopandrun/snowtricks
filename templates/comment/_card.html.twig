@@ -14,7 +14,7 @@
             {% endif %}
           </div>
   
-          {% if comment.author == app.user %}
+          {% if app.user and comment.author == app.user %}
             <a href="{{ path('comment.edit', { id: comment.id }) }}" class="btn btn-primary btn-sm" title="Edit this comment">Edit</a>
             <form action="{{ path('comment.delete', { id: comment.id }) }}" method="POST" class="d-inline ms-2">
               <input type="hidden" name="_method" value="DELETE">

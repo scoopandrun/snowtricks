@@ -28,16 +28,21 @@ class CommentVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User */
+        // Everyone can view comments
+        if ($attribute === self::VIEW) {
+            return true;
+        }
+
+        /** @var ?User */
         $user = $token->getUser();
+
+        // Deny create/edit access to non-authenticated visitors
+        if (!$user instanceof User) {
+            return false;
+        }
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::VIEW:
-                // everyone can view comments
-                return true;
-                break;
-
             case self::CREATE:
                 return $user->isVerified();
                 break;
