@@ -82,7 +82,9 @@ class TrickController extends AbstractController
 
         return $this->render(
             'trick/single.html.twig',
-            compact("trick")
+            [
+                'trick' => $trick,
+            ]
         );
     }
 

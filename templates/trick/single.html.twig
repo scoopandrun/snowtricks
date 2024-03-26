@@ -107,5 +107,15 @@
         {% endif %}
       </div>
     </div>
+
+    {# Comments #}
+    <div class="container px-4 px-lg-5 mb-4">
+      <h2>Comments</h2>
+
+      {{ render(path('comment.create', { trickId: trick.id })) }}
+
+      {{ render(path('comment.list', { trickId: trick.id, page: 1 })) }}
+		</div>
+
   </main>
 {% endblock %}
