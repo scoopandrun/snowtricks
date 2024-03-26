@@ -1,0 +1,44 @@
+<turbo-frame id="comment-form">
+  {% if app.user %}
+    {% if is_granted(UserRoles.verified) %}
+      <div class="row gx-4 gx-lg-5 my-4">
+        {% if commentPosted ?? false %}
+          <div>
+            <span class="text-success">Your comment has been posted</span>
+          </div>
+    
+          <div>
+            <a href="{{ path('comment.create', { trickId: comment.trick.id }) }}">Post a new comment</a>
+          </div>
+    
+          <turbo-stream action="prepend" target="comment-list">
+            <template>
+              {{ include('comment/_card.html.twig') }}
+            </template>
+          </turbo-stream>
+        {% else %}
+          {{ form_start(form, { action: path('comment.create', { trickId: comment.trick.id }) }) }}
+    
+            {{ form_row(form.text) }}
+    
+            <!-- Submit Button-->
+            <div class="text-center">
+              <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">Send</button>
+            </div>
+    
+          {{ form_end(form) }}
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="text-center my-3">You must verifiy your email address to post comments.</div>
+      <div class="text-center">
+        <a class="btn btn-primary text-uppercase my-2" href="{{ path('auth.user') }}" target="_top">Go to your account page</a>
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="text-center my-3">You must be logged in to post comments.</div>
+    <div class="text-center">
+      <a class="btn btn-primary text-uppercase my-2" href="{{ path('auth.login') }}" target="_top">Sign in</a>
+    </div>
+  {% endif %}
+</turbo-frame>

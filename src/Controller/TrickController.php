@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TrickController extends AbstractController
@@ -44,6 +45,7 @@ class TrickController extends AbstractController
         path: '/tricks-batch-{batchNumber}',
         name: 'trick.batch',
         methods: ['GET'],
+        requirements: ['batchNumber' => Requirement::POSITIVE_INT]
     )]
     public function batch(int $batchNumber): Response
     {
@@ -61,7 +63,10 @@ class TrickController extends AbstractController
         path: '/tricks/{id}-{slug}',
         name: 'trick.single',
         methods: ['GET'],
-        requirements: ['id' => '\d+', 'slug' => '[a-zA-Z0-9-]+'],
+        requirements: [
+            'id' => Requirement::DIGITS,
+            'slug' => Requirement::ASCII_SLUG,
+        ],
     )]
     public function single(Trick $trick, string $slug): Response
     {
@@ -77,7 +82,9 @@ class TrickController extends AbstractController
 
         return $this->render(
             'trick/single.html.twig',
-            compact("trick")
+            [
+                'trick' => $trick,
+            ]
         );
     }
 
@@ -85,7 +92,7 @@ class TrickController extends AbstractController
         path: '/tricks/{id}/edit',
         name: 'trick.edit',
         methods: ["GET", "POST"],
-        requirements: ["id" => "\d+"],
+        requirements: ["id" => Requirement::DIGITS],
     )]
     #[IsGranted(UserRoles::VERIFIED)]
     public function edit(
@@ -162,7 +169,7 @@ class TrickController extends AbstractController
         path: "/tricks/{id}",
         name: "trick.delete",
         methods: ["DELETE"],
-        requirements: ["id" => "\d+"],
+        requirements: ["id" => Requirement::DIGITS],
     )]
     #[IsGranted(UserRoles::VERIFIED)]
     public function delete(

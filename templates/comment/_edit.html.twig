@@ -1,0 +1,16 @@
+<turbo-frame id="comment-{{ comment.id }}">
+  <div class="row gx-4 gx-lg-5 my-4">
+    {{ form_start(form, { action: comment.id ? path('comment.edit', { id: comment.id }) : path('comment.create', { trickId: comment.trick.id }) }) }}
+
+      {{ form_row(form.text) }}
+
+      <!-- Submit Button-->
+      <div class="text-center">
+        <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">
+          {{ comment.id ? 'Update' : 'Send' }}
+        </button>
+      </div>
+
+    {{ form_end(form) }}
+  </div>
+</turbo-frame>

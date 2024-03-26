@@ -1,0 +1,34 @@
+<turbo-frame id="comments">
+  {% if comments.size > 0 %}
+    <div class="p-3">
+      <span id="comment-count">{{ comments.totalCount }}</span> comments
+    </div>
+    <ul class="list-group list-group-flush" id="comment-list">
+      {% for comment in comments.items %}
+        {% include('comment/_card.html.twig') %}
+      {% endfor %}
+    </ul>
+
+      <!-- Pager-->
+    <div class="d-flex justify-content-between mb-4">
+      {% if comments.previousItems %}
+        <a
+          class="btn btn-primary text-uppercase"
+          href="{{ path('comment.list', { trickId: trickId, page: comments.previousPageNumber }) }}"
+          title="Previous comments"
+          rel="prev"
+        >← Previous comments</a>
+      {% endif %}
+      {% if comments.nextItems %}
+        <a
+          class="btn btn-primary text-uppercase ms-auto"
+          href="{{ path('comment.list', { trickId: trickId, page: comments.nextPageNumber }) }}"
+          title="Next comments"
+          rel="next"
+        >Next comments →</a>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="row gx-4 gx-lg-5 justify-content-center">Nobody commented this trick.</div>
+  {% endif %}
+</turbo-frame>

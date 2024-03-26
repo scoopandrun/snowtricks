@@ -23,12 +23,12 @@
       {% if is_granted(UserRoles.verified) %}
         <div class="main-picture__edit-overlay rounded">
           <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
-            <i data-feather="edit"></i>
+            <span class="material-symbols-outlined">edit</span>
           </a>
           <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
             <input type="hidden" name="_method" value="DELETE">
             <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
-              <i data-feather="trash-2"></i>
+              <span class="material-symbols-outlined">delete</span>
             </button>
           </form>
         </div>
@@ -42,7 +42,7 @@
         class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto"
         data-controller="trick-media"
       >
-        {{ include('trick/includes/_media-overlay.html.twig') }}
+        {{ include('trick/_media-overlay.html.twig') }}
 
         {% for picture in trick.pictures %}
           <button
@@ -107,5 +107,15 @@
         {% endif %}
       </div>
     </div>
+
+    {# Comments #}
+    <div class="container px-4 px-lg-5 mb-4">
+      <h2>Comments</h2>
+
+      {{ render(path('comment.create', { trickId: trick.id })) }}
+
+      {{ render(path('comment.list', { trickId: trick.id, page: 1 })) }}
+		</div>
+
   </main>
 {% endblock %}

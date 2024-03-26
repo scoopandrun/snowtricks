@@ -15,6 +15,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 class RegistrationController extends AbstractController
 {
@@ -65,6 +66,7 @@ class RegistrationController extends AbstractController
         path: '/verify-email/{token}',
         name: 'auth.verify-email',
         methods: ['GET'],
+        requirements: ['token' => Requirement::CATCH_ALL],
     )]
     public function verifyUserEmail(
         string $token,

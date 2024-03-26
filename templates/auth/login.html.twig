@@ -11,7 +11,7 @@
         
             {% if app.user %}
                 <div class="mb-3">
-                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('logout') }}">Logout</a>
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('auth.logout') }}">Logout</a>
                 </div>
             {% endif %}
         
@@ -37,11 +37,11 @@
         </form>
 
         <div class="row gx-4 gx-lg-5 text-center mb-4">
-			<a href="/password-reset">Forgot your password? Click here.</a>
+			<a href="{{ path('auth.password-reset-step-1') }}">Forgot your password? Click here.</a>
 		</div>
 
 		<div class="row gx-4 gx-lg-5 text-center mb-4">
-			<a href="/signup">Not registered yet? Create an account.</a>
+			<a href="{{ path('auth.signup') }}">Not registered yet? Create an account.</a>
 		</div>
     </div>
 {% endblock %}

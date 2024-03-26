@@ -79,12 +79,24 @@ class Trick implements \Stringable
     #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\OneToMany(
+        targetEntity: Comment::class,
+        mappedBy: 'trick',
+        orphanRemoval: true,
+        cascade: ['remove']
+    )]
+    #[Assert\All(
+        new Assert\Type(Comment::class)
+    )]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
 
         $this->setCreatedAt(new \DateTimeImmutable());
         $this->videos = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,6 +256,36 @@ class Trick implements \Stringable
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
+            }
+        }
 
         return $this;
     }
