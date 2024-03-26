@@ -6,7 +6,7 @@ use App\Core\FlashClasses;
 use App\Entity\Comment;
 use App\Entity\Trick;
 use App\Form\CommentType;
-use App\Security\UserRoles;
+use App\Security\Voter\CommentVoter;
 use App\Service\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\TurboBundle;
 
@@ -27,7 +26,7 @@ class CommentController extends AbstractController
         methods: ['GET'],
         requirements: ['id' => Requirement::DIGITS],
     )]
-    public function single(Comment $comment): Response
+    public function redirectToTrickPage(Comment $comment): Response
     {
         $trick = $comment->getTrick();
 
@@ -46,6 +45,7 @@ class CommentController extends AbstractController
             'page' => Requirement::DIGITS,
         ],
     )]
+    #[IsGranted(CommentVoter::VIEW)]
     public function comments(
         int $trickId,
         int $page,
@@ -84,7 +84,7 @@ class CommentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted(UserRoles::VERIFIED);
+            $this->denyAccessUnlessGranted(CommentVoter::CREATE);
 
             $entityManager->persist($comment);
             $entityManager->flush();
@@ -121,7 +121,7 @@ class CommentController extends AbstractController
         methods: ["GET", "POST"],
         requirements: ["id" => Requirement::DIGITS],
     )]
-    #[IsGranted(UserRoles::VERIFIED)]
+    #[IsGranted(CommentVoter::EDIT, subject: 'comment')]
     public function edit(
         Comment $comment,
         Request $request,
@@ -163,18 +163,13 @@ class CommentController extends AbstractController
         methods: ["DELETE"],
         requirements: ["id" => Requirement::DIGITS],
     )]
-    #[IsGranted(UserRoles::VERIFIED)]
+    #[IsGranted(CommentVoter::DELETE, subject: 'comment')]
     public function delete(
         Comment $comment,
         CommentService $commentService,
         EntityManagerInterface $entityManager,
         Request $request,
-        Security $security,
     ): Response {
-        if ($security->getUser() !== $comment->getAuthor()) {
-            throw new AccessDeniedException("You are not the author of this comment. You cannot delete it.");
-        }
-
         $commentService->remove($comment);
         $entityManager->flush();
 
