@@ -8,18 +8,22 @@ const app = startStimulusApp();
 // app.register('some_controller_name', SomeImportedController);
 app.register("homepage-tricks", HomepageTricks);
 
-document.addEventListener("turbo:load", () => {
-  feather.replace();
+document.addEventListener("turbo:load", () => feather.replace());
+document.addEventListener("turbo:load", () => addDeleteConfirmations());
+document.addEventListener("turbo:frame-load", () => addDeleteConfirmations());
 
+function addDeleteConfirmations() {
   document.querySelectorAll("[data-action='delete']").forEach((button) => {
-    button.addEventListener("click", (e) => {
-      const deleteConfirmed = confirm(
-        "Are you sure that you want to delete this?"
-      );
-
-      if (!deleteConfirmed) {
-        e.preventDefault();
-      }
-    });
+    // Remove before adding to avoid duplicate listeners
+    button.removeEventListener("click", addDeleteConfirmation);
+    button.addEventListener("click", addDeleteConfirmation);
   });
-});
+}
+
+function addDeleteConfirmation(e) {
+  const deleteConfirmed = confirm("Are you sure that you want to delete this?");
+
+  if (!deleteConfirmed) {
+    e.preventDefault();
+  }
+}
