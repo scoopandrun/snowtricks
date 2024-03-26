@@ -33,19 +33,29 @@
 
   <main>
     <div class="container position-relative">
-      <div id="tricks" data-controller="homepage-tricks">
+      <div id="tricks" data-controller="homepage">
         {{ include("trick/_batch.html.twig") }}
       
-        {% if batch.nextItems %}
-          <div class="my-4 text-center">
-            <button
-              class="btn btn-primary"
-              data-next-page-number="{{ batch.nextPageNumber }}"
-              data-action="homepage-tricks#fetch"
-              data-homepage-tricks-target="fetchButton"
-            >Load more</button>
+        <div class="my-4 text-center">
+            {% if batch.nextItems %}
+              <button
+                class="btn btn-primary"
+                data-next-page-number="{{ batch.nextPageNumber }}"
+                data-action="homepage#fetch"
+                data-homepage-target="fetchButton"
+                hidden
+              >Load more</button>
+            {% endif %}
+
+            <noscript>
+              <a
+                href="{{ path('trick.archive') }}"
+                class="btn btn-primary"
+                title="See all tricks"
+              >See all tricks</a>
+            </noscript>
           </div>
-        {% endif %}
+
       </div>
   
       <div class="position-absolute bottom-0 end-0 m-2">
