@@ -22,9 +22,15 @@ class UserAccountType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'required' => true,
+                'attr' => [
+                    'autocomplete' => 'username',
+                ],
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
+                'attr' => [
+                    'autocomplete' => 'email',
+                ],
             ])
             ->add('profilePicture', FileType::class, [
                 'required' => false,
