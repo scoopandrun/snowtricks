@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Core\FlashClasses;
 use App\DTO\UserInformation;
 use App\Form\UserAccountType;
+use App\Repository\UserRepository;
 use App\Security\UserRoles;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
@@ -56,6 +58,31 @@ class UserController extends AbstractController
         return $this->render('auth/user.html.twig', [
             'form' => $form
         ]);
+    }
+
+    #[Route(
+        path: '/user',
+        name: 'auth.user.delete',
+        methods: ['DELETE'],
+    )]
+    #[IsGranted(UserRoles::USER)]
+    public function delete(
+        Security $security,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        TokenStorageInterface $tokenStorage,
+    ): Response {
+        $user = $security->getUser();
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $request->getSession()->invalidate();
+        $tokenStorage->setToken(null);
+
+        $this->addFlash(FlashClasses::WARNING, "Your account has been deleted.");
+
+        return $this->redirectToRoute('homepage.index');
     }
 
     #[Route(
