@@ -3,6 +3,7 @@
 namespace App\DTO;
 
 use App\Security\PasswordPolicy;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
@@ -16,6 +17,12 @@ class UserInformation
         #[Assert\NotBlank(groups: ['registration', 'password_reset_step_1'])]
         #[Assert\Email()]
         public ?string $email = null,
+
+        #[Assert\Image()]
+        public ?UploadedFile $profilePicture = null,
+
+        #[Assert\Type('bool')]
+        public bool $removeProfilePicture = false,
 
         #[Assert\Type('string')]
         #[Assert\When(

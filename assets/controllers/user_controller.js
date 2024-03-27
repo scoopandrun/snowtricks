@@ -1,6 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
+  static targets = ["profilePictureInput", "profilePiturePreview"];
+
   async sendVerificationEmail() {
     /** @type {HTMLFormElement} */
     this.element;
@@ -32,5 +34,27 @@ export default class extends Controller {
       sendVerificationEmailLink.href = originalLink.href;
       sendVerificationEmailLink.textContent = originalLink.text;
     }
+  }
+
+  showProfilePicturePreview() {
+    /** @type {HTMLInputElement} */
+    const fileInput = this.profilePictureInputTarget;
+
+    /** @type {HTMLImageElement} */
+    const picturePreview = this.profilePiturePreviewTarget;
+
+    console.log({ fileInput, picturePreview });
+
+    const file = fileInput.files[0];
+
+    if (!file.type.startsWith("image/")) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+
+      picturePreview.src = result;
+    };
+    reader.readAsDataURL(file);
   }
 }
