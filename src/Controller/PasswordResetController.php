@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Form\PasswordResetStep1Type;
 use App\Form\PasswordResetStep2Type;
 use App\Repository\UserRepository;
@@ -28,7 +28,7 @@ class PasswordResetController extends AbstractController
         EntityManagerInterface $entityManager,
         Request $request,
     ): Response {
-        $userInformation = new UserInformation();
+        $userInformation = new UserInformationDTO();
         $form = $this->createForm(PasswordResetStep1Type::class, $userInformation);
         $form->handleRequest($request);
 
@@ -82,7 +82,7 @@ class PasswordResetController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        $userInformation = new UserInformation();
+        $userInformation = new UserInformationDTO();
         $form = $this->createForm(PasswordResetStep2Type::class, $userInformation);
         $form->handleRequest($request);
 

@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class TrickCard
+class TrickCardDTO
 {
     public function __construct(
         public readonly int $id,

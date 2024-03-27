@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-class UserInformation
+class UserInformationDTO
 {
     public function __construct(
         #[Assert\NotBlank(groups: ['registration'])]
