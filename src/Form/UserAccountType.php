@@ -25,6 +25,7 @@ class UserAccountType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
+            ])
             ->add('profilePicture', FileType::class, [
                 'required' => false,
                 'constraints' => [
