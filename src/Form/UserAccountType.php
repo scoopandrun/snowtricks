@@ -5,12 +5,15 @@ namespace App\Form;
 use App\DTO\UserInformation;
 use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class UserAccountType extends AbstractType
 {
@@ -22,6 +25,14 @@ class UserAccountType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
+            ->add('profilePicture', FileType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Image(),
+                ]
+            ])
+            ->add('removeProfilePicture', CheckboxType::class, [
+                'required' => false,
             ])
             ->add('currentPassword', PasswordType::class, [
                 'required' => false,

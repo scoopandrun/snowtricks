@@ -6,6 +6,8 @@ use App\DTO\UserInformation;
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -21,6 +23,9 @@ class UserService
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $userPasswordHasher,
         private RouterInterface $router,
+        private FileManager $fileManager,
+        #[Autowire('%app.uploads.pictures%/users')]
+        private string $profilePictureUploadDirectory,
     ) {
     }
 
@@ -46,6 +51,45 @@ class UserService
                 )
             );
         }
+    }
+
+    public function saveProfilePicture(?UploadedFile $file, User $user): bool
+    {
+        if (is_null($file)) {
+            return true;
+        }
+
+        // Remove the old profile picture, if there is one
+        $this->deleteProfilePicture($user);
+
+        $filename = $this->fileManager->save(
+            $file,
+            $this->profilePictureUploadDirectory,
+            (string) $user->getId(),
+            true
+        );
+
+        return (bool) $filename;
+    }
+
+    public function deleteProfilePicture(User $user): bool
+    {
+        return $this->fileManager->delete(
+            directory: $this->profilePictureUploadDirectory,
+            filename: (string) $user->getId(),
+        );
+    }
+
+    public function getProfilePictureFilename(?User $user): ?string
+    {
+        if (is_null($user)) {
+            return null;
+        }
+
+        return $this->fileManager->getFullpath(
+            directory: $this->profilePictureUploadDirectory,
+            filename: (string) $user->getId(),
+        );
     }
 
     /**

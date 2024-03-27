@@ -39,18 +39,24 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var UserInformation */
-            $userInformation = $form->getData();
-
             $userService->fillInUserEntityFromUserInformationDTO(
                 $userInformation,
                 $user
             );
 
+            $profilePictureSaved = $userService->saveProfilePicture($userInformation->profilePicture, $user);
+
+            if ($userInformation->removeProfilePicture) {
+                $userService->deleteProfilePicture($user);
+            }
+
             $entityManager->flush();
 
             $this->addFlash(FlashClasses::SUCCESS, "Your user information has been successfully modified.");
+
+            if (false === $profilePictureSaved) {
+                $this->addFlash(FlashClasses::WARNING, "An issue occurred when saving the profile picture.");
+            }
 
             return $this->redirectToRoute('auth.user');
         }
@@ -71,8 +77,11 @@ class UserController extends AbstractController
         EntityManagerInterface $entityManager,
         Request $request,
         TokenStorageInterface $tokenStorage,
+        UserService $userService,
     ): Response {
         $user = $security->getUser();
+
+        $userService->deleteProfilePicture($user);
 
         $entityManager->remove($user);
         $entityManager->flush();

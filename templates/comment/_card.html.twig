@@ -5,6 +5,16 @@
     {% else %}
       {% if comment.id %}
         <div class="card-header">
+          <div class="d-inline me-1">
+            {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
+            <img
+              src="{{ image('users', comment.author)|default(fallbackProfilePicture) }}"
+              alt="Profile picture"
+              height="50"
+              width="50"
+              class="rounded-circle"
+            >
+          </div>
           <span class="text-body">{{ comment.author ?? "Account deleted" }}</span>
           -
           <div class="d-inline text-dark">
