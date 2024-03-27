@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -29,15 +29,15 @@ class UserService
     ) {
     }
 
-    public function makeUserInformationDTOFromEntity(User $user): UserInformation
+    public function makeUserInformationDTOFromEntity(User $user): UserInformationDTO
     {
-        return new UserInformation(
+        return new UserInformationDTO(
             $user->getUsername(),
             $user->getEmail(),
         );
     }
 
-    public function fillInUserEntityFromUserInformationDTO(UserInformation $userInformation, User $user): void
+    public function fillInUserEntityFromUserInformationDTO(UserInformationDTO $userInformation, User $user): void
     {
         $user
             ->setUsername($userInformation->username)
@@ -179,7 +179,7 @@ class UserService
         }
     }
 
-    public function resetPassword(User $user, UserInformation $userInformation): void
+    public function resetPassword(User $user, UserInformationDTO $userInformation): void
     {
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(

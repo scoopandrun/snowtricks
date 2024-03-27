@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\DTO\TrickCard;
+use App\DTO\TrickCardDTO;
 use App\Entity\Trick;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,14 +26,14 @@ class TrickRepository extends ServiceEntityRepository
      * @param int $offset
      * @param ?int $limit Page size.
      * 
-     * @return TrickCard[]
+     * @return TrickCardDTO[]
      */
     public function findTrickCards(int $offset = 0, ?int $limit = null): array
     {
         $builder = $this->createQueryBuilder('t')
             ->select(sprintf(
                 'NEW %s(t.id, t.slug, t.name, p.filename, c.name)',
-                TrickCard::class
+                TrickCardDTO::class
             ))
             ->leftJoin('t.mainPicture', 'p')
             ->leftJoin('t.category', 'c');

@@ -11,7 +11,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class TrickFixtures extends Fixture implements DependentFixtureInterface
+class TrickFixture extends Fixture implements DependentFixtureInterface
 {
     public function __construct(private readonly SluggerInterface $slugger)
     {
@@ -75,12 +75,12 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             }
 
             $author = $this->getReference(
-                UserFixtures::getRandomUser()->getUserIdentifier()
+                UserFixture::getRandomUser()->getUserIdentifier()
             );
 
             $trick->setAuthor($author);
 
-            foreach ($this->generateComments(rand(5, 25)) as $comment) {
+            foreach ($this->generateComments(rand(15, 25)) as $comment) {
                 $trick->addComment($comment);
             }
 
@@ -108,7 +108,7 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
             $comment = (new Comment())
                 ->setCreatedAt($commentCreatedAt)
                 ->setAuthor($this->getReference(
-                    UserFixtures::getRandomUser()->getUserIdentifier()
+                    UserFixture::getRandomUser()->getUserIdentifier()
                 ))
                 ->setText($text);
 
@@ -191,6 +191,6 @@ class TrickFixtures extends Fixture implements DependentFixtureInterface
 
     public function getDependencies(): array
     {
-        return [UserFixtures::class];
+        return [UserFixture::class];
     }
 }

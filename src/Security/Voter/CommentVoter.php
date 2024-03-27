@@ -6,7 +6,6 @@ use App\Entity\Comment;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 
 class CommentVoter extends Voter
@@ -20,7 +19,7 @@ class CommentVoter extends Voter
     {
         return
             in_array($attribute, [self::VIEW, self::CREATE]) ||
-            (in_array($attribute, [self::VIEW, self::EDIT]) && $subject instanceof \App\Entity\Comment);
+            (in_array($attribute, [self::EDIT, self::DELETE]) && $subject instanceof \App\Entity\Comment);
     }
 
     /**

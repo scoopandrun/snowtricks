@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -22,9 +22,15 @@ class UserAccountType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'required' => true,
+                'attr' => [
+                    'autocomplete' => 'username',
+                ],
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
+                'attr' => [
+                    'autocomplete' => 'email',
+                ],
             ])
             ->add('profilePicture', FileType::class, [
                 'required' => false,
@@ -68,7 +74,7 @@ class UserAccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => UserInformation::class,
+            'data_class' => UserInformationDTO::class,
             'validation_groups' => ['Default', 'password_change'],
         ]);
     }

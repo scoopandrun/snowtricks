@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -61,7 +61,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => UserInformation::class,
+            'data_class' => UserInformationDTO::class,
             'validation_groups' => ['registration'],
         ]);
     }

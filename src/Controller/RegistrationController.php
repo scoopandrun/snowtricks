@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -34,7 +34,7 @@ class RegistrationController extends AbstractController
         UserService $userService,
         EntityManagerInterface $entityManager,
     ): Response {
-        $userInformation = new UserInformation();
+        $userInformation = new UserInformationDTO();
         $form = $this->createForm(RegistrationFormType::class, $userInformation);
         $form->handleRequest($request);
 

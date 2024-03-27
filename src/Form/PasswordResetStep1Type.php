@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +22,7 @@ class PasswordResetStep1Type extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => UserInformation::class,
+            'data_class' => UserInformationDTO::class,
             'validations_groups' => ['password_reset_step_1'],
         ]);
     }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
-use App\DTO\UserInformation;
+use App\DTO\UserInformationDTO;
 use App\Form\UserAccountType;
 use App\Repository\UserRepository;
 use App\Security\UserRoles;
