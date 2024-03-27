@@ -87,7 +87,7 @@ class UserController extends AbstractController
 
     #[Route(
         path: '/send-verification-email',
-        name: 'auth.send-verification-email',
+        name: 'auth.user.send-verification-email',
         methods: ['GET'],
     )]
     #[IsGranted(UserRoles::USER)]
