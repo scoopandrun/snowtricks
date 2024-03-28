@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\DTO\UserInformationDTO;
-use App\Security\PasswordPolicy;
+use App\Validator\Constraints\PasswordRequirements;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -20,11 +20,11 @@ class PasswordResetStep2Type extends AbstractType
                 'required' => true,
                 'invalid_message' => 'The passwords do not match',
                 'first_options' => [
-                    'label' => sprintf('Password (minimum %d characters)', PasswordPolicy::MIN_LENGTH),
+                    'label' => sprintf('Password (minimum %d characters)', PasswordRequirements::MIN_LENGTH),
                     'attr' => [
                         'autocomplete' => 'new-password',
-                        'min' => PasswordPolicy::MIN_LENGTH,
-                        'max' => PasswordPolicy::MAX_LENGTH,
+                        'min' => PasswordRequirements::MIN_LENGTH,
+                        'max' => PasswordRequirements::MAX_LENGTH,
                     ],
 
                 ],
@@ -32,8 +32,8 @@ class PasswordResetStep2Type extends AbstractType
                     'label' => 'Repeat password',
                     'attr' => [
                         'autocomplete' => 'new-password',
-                        'min' => PasswordPolicy::MIN_LENGTH,
-                        'max' => PasswordPolicy::MAX_LENGTH,
+                        'min' => PasswordRequirements::MIN_LENGTH,
+                        'max' => PasswordRequirements::MAX_LENGTH,
                     ],
                 ],
             ]);
