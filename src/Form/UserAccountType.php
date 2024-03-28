@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\DTO\UserInformationDTO;
-use App\Security\PasswordPolicy;
+use App\Validator\Constraints\PasswordRequirements;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -52,11 +52,11 @@ class UserAccountType extends AbstractType
                 'required' => false,
                 'invalid_message' => 'The passwords do not match',
                 'first_options' => [
-                    'label' => sprintf('New password (minimum %d characters)', PasswordPolicy::MIN_LENGTH),
+                    'label' => sprintf('New password (minimum %d characters)', PasswordRequirements::MIN_LENGTH),
                     'attr' => [
                         'autocomplete' => 'new-password',
-                        'min' => PasswordPolicy::MIN_LENGTH,
-                        'max' => PasswordPolicy::MAX_LENGTH,
+                        'min' => PasswordRequirements::MIN_LENGTH,
+                        'max' => PasswordRequirements::MAX_LENGTH,
                     ],
 
                 ],
@@ -64,8 +64,8 @@ class UserAccountType extends AbstractType
                     'label' => 'Repeat password',
                     'attr' => [
                         'autocomplete' => 'new-password',
-                        'min' => PasswordPolicy::MIN_LENGTH,
-                        'max' => PasswordPolicy::MAX_LENGTH,
+                        'min' => PasswordRequirements::MIN_LENGTH,
+                        'max' => PasswordRequirements::MAX_LENGTH,
                     ],
                 ],
             ]);
@@ -75,7 +75,7 @@ class UserAccountType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserInformationDTO::class,
-            'validation_groups' => ['Default', 'password_change'],
+            'validation_groups' => ['account_update'],
         ]);
     }
 }
