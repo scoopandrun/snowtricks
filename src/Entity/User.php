@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use App\Security\UserRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -108,11 +107,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = UserRoles::USER;
-
-        if ($this->isVerified()) {
-            $roles[] = UserRoles::VERIFIED;
-        }
+        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -139,6 +134,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
@@ -146,6 +154,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+
+    public function getEmailVerificationToken(): ?string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    public function setEmailVerificationToken(?string $emailVerificationToken): static
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
+
+        return $this;
+    }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $passwordResetToken): static
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
     }
 
     /**
@@ -178,47 +210,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         return $this;
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function getEmailVerificationToken(): ?string
-    {
-        return $this->emailVerificationToken;
-    }
-
-    public function setEmailVerificationToken(?string $emailVerificationToken): static
-    {
-        $this->emailVerificationToken = $emailVerificationToken;
-
-        return $this;
-    }
-
-    public function getPasswordResetToken(): ?string
-    {
-        return $this->passwordResetToken;
-    }
-
-    public function setPasswordResetToken(?string $passwordResetToken): static
-    {
-        $this->passwordResetToken = $passwordResetToken;
-
-        return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getUsername() ?? "Anonymous";
-    }
-
     /**
      * @return Collection<int, Comment>
      */
@@ -247,5 +238,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getUsername() ?? "Anonymous";
     }
 }
