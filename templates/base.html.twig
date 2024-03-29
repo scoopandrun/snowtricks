@@ -66,7 +66,7 @@
               >Tricks</a>
             </li>
             {% if app.user %}
-              {% if is_granted(UserRoles.verified) %}
+              {% if is_granted('trick_create') %}
                 <li class="nav-item">
                   <a
                     href="{{ path('trick.create') }}"

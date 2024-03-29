@@ -20,17 +20,21 @@
         <h1 class="main-picture__trick-name">{{ trick.name }}</h1>
       </div>
 
-      {% if is_granted(UserRoles.verified) %}
+      {% if is_granted('trick_edit', trick) or is_granted('trick_delete', trick) %}
         <div class="main-picture__edit-overlay rounded">
+          {% if is_granted('trick_edit', trick) %}            
           <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
             <span class="material-symbols-outlined">edit</span>
           </a>
+          {% endif %}
+          {% if is_granted('trick_delete', trick) %}
           <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
             <input type="hidden" name="_method" value="DELETE">
             <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
               <span class="material-symbols-outlined">delete</span>
             </button>
           </form>
+          {% endif %}
         </div>
       {% endif %}
     </div>

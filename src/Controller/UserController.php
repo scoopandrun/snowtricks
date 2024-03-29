@@ -3,10 +3,7 @@
 namespace App\Controller;
 
 use App\Core\FlashClasses;
-use App\DTO\UserInformationDTO;
 use App\Form\UserAccountType;
-use App\Repository\UserRepository;
-use App\Security\UserRoles;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
     #[Route(
@@ -24,7 +22,6 @@ class UserController extends AbstractController
         name: 'auth.user',
         methods: ['GET', 'POST'],
     )]
-    #[IsGranted(UserRoles::USER)]
     public function index(
         Security $security,
         EntityManagerInterface $entityManager,
@@ -71,7 +68,6 @@ class UserController extends AbstractController
         name: 'auth.user.delete',
         methods: ['DELETE'],
     )]
-    #[IsGranted(UserRoles::USER)]
     public function delete(
         Security $security,
         EntityManagerInterface $entityManager,
@@ -99,7 +95,6 @@ class UserController extends AbstractController
         name: 'auth.user.send-verification-email',
         methods: ['GET'],
     )]
-    #[IsGranted(UserRoles::USER)]
     public function sendVerificationEmail(
         Security $security,
         UserService $userService,

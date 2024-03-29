@@ -24,8 +24,11 @@
             {% endif %}
           </div>
   
-          {% if app.user and comment.author == app.user %}
+          {% if is_granted('comment_edit', comment) %}
             <a href="{{ path('comment.edit', { id: comment.id }) }}" class="btn btn-primary btn-sm" title="Edit this comment">Edit</a>
+          {% endif %}
+
+          {% if is_granted('comment_delete', comment) %}              
             <form action="{{ path('comment.delete', { id: comment.id }) }}" method="POST" class="d-inline ms-2">
               <input type="hidden" name="_method" value="DELETE">
               <button class="btn btn-danger btn-sm" title="Delete this comment" data-action="delete">Delete</button>

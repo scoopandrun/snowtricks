@@ -1,6 +1,6 @@
 <turbo-frame id="comment-form">
   {% if app.user %}
-    {% if is_granted(UserRoles.verified) %}
+    {% if is_granted('comment_create') %}
       <div class="row gx-4 gx-lg-5 my-4">
         {% if commentPosted ?? false %}
           <div>
