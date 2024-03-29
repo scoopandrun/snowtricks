@@ -66,7 +66,7 @@
               >Tricks</a>
             </li>
             {% if app.user %}
-              {% if is_granted(UserRoles.verified) %}
+              {% if is_granted('trick_create') %}
                 <li class="nav-item">
                   <a
                     href="{{ path('trick.create') }}"
@@ -86,8 +86,8 @@
                   >
   
                   <a
-                    href="{{ path('auth.user') }}"
-                    class="nav-link {{ app.current_route == 'auth.user' ? 'active' }}"
+                    href="{{ path('user.index') }}"
+                    class="nav-link {{ app.current_route == 'user.index' ? 'active' }}"
                   >{{ app.user.username }}</a>
                 </div>
               </li> 

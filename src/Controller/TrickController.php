@@ -7,7 +7,7 @@ use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
 use App\Form\TrickType;
-use App\Security\UserRoles;
+use App\Security\Voter\TrickVoter;
 use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -68,6 +68,7 @@ class TrickController extends AbstractController
             'slug' => Requirement::ASCII_SLUG,
         ],
     )]
+    #[IsGranted(TrickVoter::VIEW)]
     public function single(Trick $trick, string $slug): Response
     {
         if ($trick->getSlug() !== $slug) {
@@ -89,49 +90,11 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/{id}/edit',
-        name: 'trick.edit',
-        methods: ["GET", "POST"],
-        requirements: ["id" => Requirement::DIGITS],
-    )]
-    #[IsGranted(UserRoles::VERIFIED)]
-    public function edit(
-        Trick $trick,
-        Request $request,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        $form = $this->createForm(TrickType::class, $trick);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->dispatcher->dispatch(new TrickUpdatedEvent($trick));
-
-            $entityManager->flush();
-
-            $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
-
-            return $this->redirectToRoute(
-                "trick.single",
-                [
-                    "id" => $trick->getId(),
-                    "slug" => $trick->getSlug()
-                ],
-                303
-            );
-        }
-
-        return $this->render(
-            'trick/edit.html.twig',
-            compact("trick", "form")
-        );
-    }
-
-    #[Route(
         path: '/tricks/create',
         name: 'trick.create',
         methods: ["GET", "POST"],
     )]
-    #[IsGranted(UserRoles::VERIFIED)]
+    #[IsGranted(TrickVoter::CREATE)]
     public function create(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -166,12 +129,51 @@ class TrickController extends AbstractController
     }
 
     #[Route(
+        path: '/tricks/{id}/edit',
+        name: 'trick.edit',
+        methods: ["GET", "POST"],
+        requirements: ["id" => Requirement::DIGITS],
+    )]
+    #[IsGranted(TrickVoter::EDIT, subject: 'trick')]
+    public function edit(
+        Trick $trick,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        $form = $this->createForm(TrickType::class, $trick);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->dispatcher->dispatch(new TrickUpdatedEvent($trick));
+
+            $entityManager->flush();
+
+            $this->addFlash(FlashClasses::SUCCESS, "The trick has been successfully modified.");
+
+            return $this->redirectToRoute(
+                "trick.single",
+                [
+                    "id" => $trick->getId(),
+                    "slug" => $trick->getSlug()
+                ],
+                303
+            );
+        }
+
+        return $this->render(
+            'trick/edit.html.twig',
+            compact("trick", "form")
+        );
+    }
+
+
+    #[Route(
         path: "/tricks/{id}",
         name: "trick.delete",
         methods: ["DELETE"],
         requirements: ["id" => Requirement::DIGITS],
     )]
-    #[IsGranted(UserRoles::VERIFIED)]
+    #[IsGranted(TrickVoter::DELETE, subject: 'trick')]
     public function delete(
         Trick $trick,
         EntityManagerInterface $entityManager,

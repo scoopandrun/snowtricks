@@ -11,10 +11,10 @@
       {{ form_row(form.username) }}
 
       {{ form_row(form.email) }}
-      {% if app.user.isVerified %}
+      {% if app.user.verified %}
         <small class="text-success">Email address verified</small>
       {% else %}
-        <small>Email address not verified (<a href="{{ path('auth.user.send-verification-email') }}" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
+        <small>Email address not verified (<a href="{{ path('user.send-verification-email') }}" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
       {% endif %}
 
       {% set profilePicture = image('users', app.user) %}
@@ -52,7 +52,7 @@
 
     {# Delete account button #}
     <div class="mt-3">
-      <form action="{{ path('auth.user.delete') }}" method="POST">
+      <form action="{{ path('user.delete') }}" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button class="btn btn-danger" title="Delete my account" data-action="delete">Delete account</button>
       </form>

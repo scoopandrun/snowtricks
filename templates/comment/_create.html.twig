@@ -1,6 +1,6 @@
 <turbo-frame id="comment-form">
   {% if app.user %}
-    {% if is_granted(UserRoles.verified) %}
+    {% if is_granted('comment_create') %}
       <div class="row gx-4 gx-lg-5 my-4">
         {% if commentPosted ?? false %}
           <div>
@@ -30,9 +30,9 @@
         {% endif %}
       </div>
     {% else %}
-      <div class="text-center my-3">You must verifiy your email address to post comments.</div>
+      <div class="text-center my-3">You must verify your email address to post comments.</div>
       <div class="text-center">
-        <a class="btn btn-primary text-uppercase my-2" href="{{ path('auth.user') }}" target="_top">Go to your account page</a>
+        <a class="btn btn-primary text-uppercase my-2" href="{{ path('user') }}" target="_top">Go to your account page</a>
       </div>
     {% endif %}
   {% else %}
