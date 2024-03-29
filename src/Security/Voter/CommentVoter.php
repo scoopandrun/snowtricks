@@ -10,16 +10,16 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class CommentVoter extends Voter
 {
-    public const VIEW = 'COMMENT_VIEW';
-    public const CREATE = 'COMMENT_CREATE';
-    public const EDIT = 'COMMENT_EDIT';
-    public const DELETE = 'COMMENT_DELETE';
+    public const VIEW = 'comment_view';
+    public const CREATE = 'comment_create';
+    public const EDIT = 'comment_edit';
+    public const DELETE = 'comment_delete';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         return
             in_array($attribute, [self::VIEW, self::CREATE]) ||
-            (in_array($attribute, [self::EDIT, self::DELETE]) && $subject instanceof \App\Entity\Comment);
+            (in_array($attribute, [self::EDIT, self::DELETE]) && $subject instanceof Comment);
     }
 
     /**
@@ -46,8 +46,7 @@ class CommentVoter extends Voter
                 return $user->isVerified();
                 break;
 
-            case self::EDIT:
-            case self::DELETE:
+                // Users can only edit or delete their own comments
                 return $user->isVerified() && $user === $subject->getAuthor();
                 break;
         }
