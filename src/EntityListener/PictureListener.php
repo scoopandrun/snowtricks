@@ -21,7 +21,9 @@ class PictureListener
         Picture $picture,
         PrePersistEventArgs $prePersistEventArgs,
     ): void {
-        $this->trickService->saveTrickPicture($picture);
+        if ($picture->getSaveFile()) {
+            $this->trickService->saveTrickPicture($picture);
+        }
     }
 
     public function onPostRemove(

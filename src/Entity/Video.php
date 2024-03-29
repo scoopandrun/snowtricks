@@ -27,7 +27,7 @@ class Video implements \Stringable
     #[AppAssert\SupportedVideoURL]
     private ?string $url = null;
 
-    #[ORM\Column(length: 2048)]
+    #[ORM\Column(length: 2048, nullable: true)]
     private ?string $thumbnailUrl = null;
 
     #[ORM\Column(length: 255)]

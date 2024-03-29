@@ -30,6 +30,8 @@ class Picture implements \Stringable
     #[Assert\NotBlank]
     private ?string $description = null;
 
+    private bool $saveFile = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +81,18 @@ class Picture implements \Stringable
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSaveFile(): bool
+    {
+        return $this->saveFile;
+    }
+
+    public function setSaveFile(bool $saveFile): static
+    {
+        $this->saveFile = $saveFile;
 
         return $this;
     }

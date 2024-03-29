@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
+use App\Service\FileManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -17,6 +18,7 @@ class UserFixture extends Fixture
         #[Autowire('%app.uploads.pictures%/users')]
         private string $profilePictureUploadDirectory,
         private LoggerInterface $logger,
+        private FileManager $fileManager,
     ) {
         $this->makeUsers();
     }
@@ -31,6 +33,9 @@ class UserFixture extends Fixture
 
         $manager->flush();
 
+        // Delete existing user pictures
+        $this->deleteUserPictures();
+
         $this->saveUserPictures();
     }
 
@@ -42,13 +47,6 @@ class UserFixture extends Fixture
         if (static::$users) {
             return;
         }
-
-        static::$usersData = [
-            [
-                "username" => "Jimmy",
-                "email" => "jimmy@snowtricks.localhost",
-            ],
-        ];
 
         try {
             $numberOfUsers = 10;
@@ -70,7 +68,11 @@ class UserFixture extends Fixture
             }
         } catch (\Exception $e) {
             // Manual backup in case the API call fails
-            static::$usersData = array_merge(static::$usersData, [
+            static::$usersData = [
+                [
+                    "username" => "Jimmy Sweat",
+                    "email" => "jimmy@snowtricks.localhost",
+                ],
                 [
                     "username" => "John Doe",
                     "email" => "john.doe@example.com",
@@ -87,14 +89,14 @@ class UserFixture extends Fixture
                     "username" => "Roberta Perez",
                     "email" => "roberta.perez@example.com",
                 ],
-            ]);
+            ];
         }
 
         static::$users = array_map(function ($userData) {
             return (new User())
                 ->setUsername($userData["username"])
                 ->setEmail($userData["email"])
-                ->setPassword(password_hash("superlongpassword!", PASSWORD_DEFAULT))
+                ->setPassword(password_hash(random_bytes(20), PASSWORD_DEFAULT))
                 ->setIsVerified(true);
         }, static::$usersData);
     }
@@ -103,28 +105,14 @@ class UserFixture extends Fixture
     {
         $directory = $this->profilePictureUploadDirectory;
 
-        if (!is_dir($directory)) {
-            $this->logger->debug("User pictures directory is not a directory!");
-            return;
-        }
+        $this->fileManager->clearDirectory($directory);
 
-        $directoryIterator = new \DirectoryIterator($directory);
-
-        foreach ($directoryIterator as $fileInfo) {
-            if (is_file($fileInfo->getRealPath())) {
-                unlink($fileInfo->getRealPath());
-            }
-        }
+        $this->logger->debug("User pictures deleted.");
     }
 
     private function saveUserPictures(): void
     {
-        // First, clear the existing files
-        $this->deleteUserPictures();
-
-        $this->logger->debug("User pictures deleted.");
-
-        // Then, get the pictures from the URLs and save them
+        // Get the pictures from the URLs and save them
         foreach (static::$users as $user) {
             /** @var User $user */
 
@@ -133,9 +121,13 @@ class UserFixture extends Fixture
             }))[0] ?? null;
 
             if (isset($userData['picture'])) {
-                $filename = $this->profilePictureUploadDirectory . '/' . $user->getId() . '.' . pathinfo($userData['picture'], PATHINFO_EXTENSION);
+                $filename = $this->fileManager->saveRawFile(
+                    file_get_contents($userData['picture']),
+                    $this->profilePictureUploadDirectory,
+                    $user->getId() . '.' . pathinfo($userData['picture'], PATHINFO_EXTENSION)
+                );
 
-                if (file_put_contents($filename, file_get_contents($userData['picture']))) {
+                if ($filename) {
                     $this->logger->info("Picture saved" . $filename);
                 } else {
                     $this->logger->error("Picture NOT saved: " . $filename);
