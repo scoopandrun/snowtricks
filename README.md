@@ -32,8 +32,9 @@ php bin/console doctrine:database:create
 # Execute the migrations
 php bin/console doctrine:migrations:migrate
 
-# (Optional) Load the fixtures to get a starting data set.
+# (Recommended) Load the fixtures to get a starting data set.
 # You can update the initial users information in the User data fixture.
+# This downloads pictures from the Internet, so it may take some time to complete.
 php bin/console doctrine:fixtures:load
 
 # Launch the messenger consumer (async transport for email messages)

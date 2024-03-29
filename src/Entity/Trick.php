@@ -48,7 +48,7 @@ class Trick implements \Stringable
         targetEntity: Picture::class,
         mappedBy: 'trick',
         orphanRemoval: true,
-        cascade: ['persist', 'remove']
+        cascade: ['persist', 'remove'],
     )]
     #[Assert\All(
         new Assert\Type(Picture::class)
@@ -59,7 +59,7 @@ class Trick implements \Stringable
         targetEntity: Video::class,
         mappedBy: 'trick',
         orphanRemoval: true,
-        cascade: ['persist', 'remove']
+        cascade: ['persist', 'remove'],
     )]
     #[Assert\All(
         new Assert\Type(Video::class)
@@ -83,7 +83,7 @@ class Trick implements \Stringable
         targetEntity: Comment::class,
         mappedBy: 'trick',
         orphanRemoval: true,
-        cascade: ['remove']
+        cascade: ['persist', 'remove'],
     )]
     #[Assert\All(
         new Assert\Type(Comment::class)
@@ -189,6 +189,10 @@ class Trick implements \Stringable
         if (!$this->pictures->contains($picture)) {
             $this->pictures->add($picture);
             $picture->setTrick($this);
+
+            if (!$this->getMainPicture()) {
+                $this->setMainPicture($picture);
+            }
         }
 
         return $this;

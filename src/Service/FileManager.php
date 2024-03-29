@@ -46,6 +46,68 @@ class FileManager
         }
     }
 
+    public function saveRawFile(
+        string $fileContent,
+        string $uploadDirectory,
+        string $filename,
+        bool $unique = false,
+    ): string|false {
+        try {
+            if (!is_dir($uploadDirectory)) {
+                mkdir($uploadDirectory, recursive: true);
+            }
+
+            $safeFilename = $filename;
+
+            if ($unique) {
+                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+
+                // If there is no extension, save to a temporary file and guess the MIME type
+                // Not 100% accurate, but will do the job most of the time
+                if (!$extension) {
+                    try {
+                        $tmpPath = $uploadDirectory . '/' . bin2hex(random_bytes(10));
+
+                        if (!file_put_contents($tmpPath, $fileContent)) {
+                            throw new \Exception();
+                        }
+
+                        $mime = mime_content_type($tmpPath);
+
+                        if (!$mime) {
+                            throw new \Exception();
+                        }
+
+                        $extension = explode('/', $mime)[1];
+                    } catch (\Exception) {
+                        // Unable to guess the extension
+                    } finally {
+                        if (is_file($tmpPath)) {
+                            unlink($tmpPath);
+                        }
+                    }
+                }
+
+                $safeFilename = $this->makeFilename(
+                    $fileContent,
+                    $uploadDirectory,
+                    $extension
+                );
+            }
+
+
+            if (!file_put_contents($uploadDirectory . '/' . $safeFilename, $fileContent)) {
+                return false;
+            }
+
+            return $safeFilename;
+        } catch (\Exception $e) {
+            $this->logger->error($e);
+
+            return false;
+        }
+    }
+
     public function makeFilename(
         string $fileContent,
         string $uploadDirectory,
@@ -121,5 +183,21 @@ class FileManager
 
         // File not found
         return null;
+    }
+
+    public function clearDirectory(string $directory): void
+    {
+        if (!is_dir($directory)) {
+            $this->logger->debug(sprintf("%s is not a directory!", $directory));
+            return;
+        }
+
+        $directoryIterator = new \DirectoryIterator($directory);
+
+        foreach ($directoryIterator as $fileInfo) {
+            if (is_file($fileInfo->getRealPath())) {
+                unlink($fileInfo->getRealPath());
+            }
+        }
     }
 }
