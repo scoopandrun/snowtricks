@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+use App\DTO\TrickCardDTO;
 use App\Entity\Trick;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -19,7 +20,10 @@ class TrickVoter extends Voter
     {
         return
             in_array($attribute, [self::VIEW, self::CREATE]) ||
-            (in_array($attribute, [self::EDIT, self::DELETE]) && $subject instanceof Trick);
+            (
+                in_array($attribute, [self::EDIT, self::DELETE])
+                && ($subject instanceof Trick || $subject instanceof TrickCardDTO)
+            );
     }
 
     /**

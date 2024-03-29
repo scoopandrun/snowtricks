@@ -46,6 +46,8 @@ class CommentVoter extends Voter
                 return $user->isVerified();
                 break;
 
+            case self::EDIT:
+            case self::DELETE:
                 // Users can only edit or delete their own comments
                 return $user->isVerified() && $user === $subject->getAuthor();
                 break;
