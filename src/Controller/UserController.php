@@ -19,7 +19,7 @@ class UserController extends AbstractController
 {
     #[Route(
         path: '/user',
-        name: 'auth.user',
+        name: 'user.index',
         methods: ['GET', 'POST'],
     )]
     public function index(
@@ -55,17 +55,17 @@ class UserController extends AbstractController
                 $this->addFlash(FlashClasses::WARNING, "An issue occurred when saving the profile picture.");
             }
 
-            return $this->redirectToRoute('auth.user');
+            return $this->redirectToRoute('user');
         }
 
-        return $this->render('auth/user.html.twig', [
+        return $this->render('user/index.html.twig', [
             'form' => $form
         ]);
     }
 
     #[Route(
         path: '/user',
-        name: 'auth.user.delete',
+        name: 'user.delete',
         methods: ['DELETE'],
     )]
     public function delete(
@@ -92,7 +92,7 @@ class UserController extends AbstractController
 
     #[Route(
         path: '/send-verification-email',
-        name: 'auth.user.send-verification-email',
+        name: 'user.send-verification-email',
         methods: ['GET'],
     )]
     public function sendVerificationEmail(
