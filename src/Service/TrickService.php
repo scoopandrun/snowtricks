@@ -78,7 +78,7 @@ class TrickService
     {
         $file = $picture->getFile();
 
-        $filename = $this->fileManager->save($file, $this->tricksPicturesUploadsDirectory);
+        $filename = $this->fileManager->saveUploadedFile($file, $this->tricksPicturesUploadsDirectory);
 
         $picture->setFilename($filename);
 

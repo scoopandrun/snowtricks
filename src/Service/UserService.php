@@ -62,11 +62,10 @@ class UserService
         // Remove the old profile picture, if there is one
         $this->deleteProfilePicture($user);
 
-        $filename = $this->fileManager->save(
+        $filename = $this->fileManager->saveUploadedFile(
             $file,
             $this->profilePictureUploadDirectory,
-            (string) $user->getId(),
-            true
+            (string) $user->getId()
         );
 
         return (bool) $filename;

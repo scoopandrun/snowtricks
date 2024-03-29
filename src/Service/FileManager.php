@@ -13,7 +13,7 @@ class FileManager
     }
 
     /**
-     * Save a file to the specified directory.
+     * Save an uploaded file to the specified directory.
      * 
      * @param UploadedFile $file            File to be saved.
      * @param string       $uploadDirectory Directory to save the file in.
@@ -23,30 +23,45 @@ class FileManager
      * 
      * @return string|false Returns the filename (without the path) or false on failure.
      */
-    public function save(
+    public function saveUploadedFile(
         UploadedFile $file,
         string $uploadDirectory,
-        ?string $filename = null,
-        bool $overwrite = false,
+        ?string $filename = null
     ): string|false {
         try {
-            if (false === $overwrite) {
-                // Create a safe filename and check if it's available
-                do {
-                    $safeFilename = ($filename ? $filename : md5($file->getContent())) . '-' . uniqid() . '.' . $file->guessExtension();
-                } while (is_file($uploadDirectory . '/' . $safeFilename));
-            } else {
-                $safeFilename = ($filename ? $filename : md5($file->getContent())) . '.' . $file->guessExtension();
-            }
+            $filename = $filename ?? $this->makeFilename(
+                $file->getContent(),
+                $uploadDirectory,
+                $file->guessExtension(),
+                $filename
+            );
 
-            $file->move($uploadDirectory, $safeFilename);
+            $file->move($uploadDirectory, $filename);
 
-            return $safeFilename;
+            return $filename;
         } catch (FileException $e) {
             $this->logger->error($e);
 
             return false;
         }
+    }
+
+    public function makeFilename(
+        string $fileContent,
+        string $uploadDirectory,
+        string $extension
+    ): string {
+        if (!$fileContent) {
+            throw new \InvalidArgumentException("The file content is empty.");
+        }
+
+        // Create a safe filename and check if it's available
+        $hash = md5($fileContent);
+        do {
+            $filename = $hash . '-' . uniqid() . '.' . $extension;
+        } while (is_file($uploadDirectory . '/' . $filename));
+
+        return $filename;
     }
 
     /**
