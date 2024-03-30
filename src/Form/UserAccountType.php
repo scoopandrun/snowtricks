@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\DTO\UserInformationDTO;
-use App\Validator\Constraints\PasswordRequirements;
+use App\Service\FileManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -34,9 +34,16 @@ class UserAccountType extends AbstractType
             ])
             ->add('profilePicture', FileType::class, [
                 'required' => false,
+                'label' => sprintf('Profile picture (max size %s)', FileManager::getMaxUploadSize('auto', true)),
                 'constraints' => [
-                    new Image(),
-                ]
+                    new Image(
+                        maxSize: FileManager::getMaxUploadSize(),
+                    ),
+                ],
+                'attr' => [
+                    'data-max-size' => FileManager::getMaxUploadSize('B'),
+                    'data-controller' => 'file',
+                ],
             ])
             ->add('removeProfilePicture', CheckboxType::class, [
                 'required' => false,

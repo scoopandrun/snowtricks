@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Picture;
+use App\Service\FileManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,10 +17,16 @@ class PictureType extends AbstractType
     {
         $builder
             ->add('file', FileType::class, [
-                'label' => 'Picture',
+                'label' => sprintf('Picture (max size %s)', FileManager::getMaxUploadSize('auto', true)),
                 'required' => true,
                 'constraints' => [
-                    new Image()
+                    new Image(
+                        maxSize: FileManager::getMaxUploadSize(),
+                    ),
+                ],
+                'attr' => [
+                    'data-max-size' => FileManager::getMaxUploadSize('B'),
+                    'data-controller' => 'file',
                 ],
             ])
             ->add('description', TextType::class, [

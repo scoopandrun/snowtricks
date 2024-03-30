@@ -6,6 +6,8 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function App\Core\Functions\formatQuantity;
+
 class FileManager
 {
     public function __construct(private LoggerInterface $logger)
@@ -199,5 +201,34 @@ class FileManager
                 unlink($fileInfo->getRealPath());
             }
         }
+    }
+
+    /**
+     * Get the php.ini setting `upload_max_filesize`, with the desired format.
+     * 
+     * Available units:
+     * 
+     * | format | description                 |
+     * |--------|-----------------------------|
+     * |  null  | the original php.ini value  |
+     * |   B    | value in bytes (B)          |
+     * |   K    | value in kilobytes (KB)     |
+     * |   M    | value in megabytes (MB)     |
+     * |   G    | value in gigabytes (GB)     |
+     * |  auto  | value with the closest unit |
+     * 
+     * @param null|string $unit        See table above.
+     * @param bool        $displayUnit Add the unit at the end of the value. Eg: '2MB'.
+     * 
+     * @return string Formatted max file size value.
+     */
+    public static function getMaxUploadSize(
+        ?string $unit = null,
+        bool $displayUnit = false,
+    ): string {
+        /** @var string Original php.ini value. */
+        $phpIniUploadMaxFilesize = ini_get('upload_max_filesize');
+
+        return formatQuantity($phpIniUploadMaxFilesize, $unit, $displayUnit);
     }
 }
