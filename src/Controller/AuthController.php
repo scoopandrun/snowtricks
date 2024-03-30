@@ -166,7 +166,7 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('auth.password-reset-step-1');
         }
 
-        return $this->render('auth/password-reset-step-1.html.twig', [
+        return $this->render('auth/password_reset_step_1.html.twig', [
             'form' => $form,
         ]);
     }
@@ -207,7 +207,7 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('homepage.index');
         }
 
-        return $this->render('auth/password-reset-step-2.html.twig', [
+        return $this->render('auth/password_reset_step_2.html.twig', [
             'form' => $form,
         ]);
     }
