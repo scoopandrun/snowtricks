@@ -24,6 +24,7 @@ class Comment
     private ?User $author = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "The message cannot be empty.")]
     private ?string $text = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'replies')]
