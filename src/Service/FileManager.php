@@ -2,11 +2,10 @@
 
 namespace App\Service;
 
+use App\Core\QuantityFormatter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
-use function App\Core\Functions\formatQuantity;
 
 class FileManager
 {
@@ -229,7 +228,7 @@ class FileManager
         /** @var string Original php.ini value. */
         $phpIniUploadMaxFilesize = ini_get('upload_max_filesize');
 
-        return formatQuantity($phpIniUploadMaxFilesize, $unit, $displayUnit);
+        return QuantityFormatter::formatQuantity($phpIniUploadMaxFilesize, $unit, $displayUnit);
     }
 
     /**
@@ -258,6 +257,6 @@ class FileManager
         /** @var string Original php.ini value. */
         $phpIniPostMaxSize = ini_get('post_max_size');
 
-        return formatQuantity($phpIniPostMaxSize, $unit, $displayUnit);
+        return QuantityFormatter::formatQuantity($phpIniPostMaxSize, $unit, $displayUnit);
     }
 }
