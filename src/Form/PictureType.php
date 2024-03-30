@@ -17,15 +17,15 @@ class PictureType extends AbstractType
     {
         $builder
             ->add('file', FileType::class, [
-                'label' => sprintf('Picture (max size %s)', FileManager::getMaxUploadSize('auto', true)),
+                'label' => sprintf('Picture (max size %s)', FileManager::getUploadMaxFilesize('auto', true)),
                 'required' => true,
                 'constraints' => [
                     new Image(
-                        maxSize: FileManager::getMaxUploadSize(),
+                        maxSize: FileManager::getUploadMaxFilesize(),
                     ),
                 ],
                 'attr' => [
-                    'data-max-size' => FileManager::getMaxUploadSize('B'),
+                    'data-max-size' => FileManager::getUploadMaxFilesize('B'),
                     'data-controller' => 'file',
                 ],
             ])

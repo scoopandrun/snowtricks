@@ -222,7 +222,7 @@ class FileManager
      * 
      * @return string Formatted max file size value.
      */
-    public static function getMaxUploadSize(
+    public static function getUploadMaxFilesize(
         ?string $unit = null,
         bool $displayUnit = false,
     ): string {
@@ -230,5 +230,34 @@ class FileManager
         $phpIniUploadMaxFilesize = ini_get('upload_max_filesize');
 
         return formatQuantity($phpIniUploadMaxFilesize, $unit, $displayUnit);
+    }
+
+    /**
+     * Get the php.ini setting `post_max_size`, with the desired format.
+     * 
+     * Available units:
+     * 
+     * | format | description                 |
+     * |--------|-----------------------------|
+     * |  null  | the original php.ini value  |
+     * |   B    | value in bytes (B)          |
+     * |   K    | value in kilobytes (KB)     |
+     * |   M    | value in megabytes (MB)     |
+     * |   G    | value in gigabytes (GB)     |
+     * |  auto  | value with the closest unit |
+     * 
+     * @param null|string $unit        See table above.
+     * @param bool        $displayUnit Add the unit at the end of the value. Eg: '2MB'.
+     * 
+     * @return string Formatted max file size value.
+     */
+    public static function getPostMaxSize(
+        ?string $unit = null,
+        bool $displayUnit = false,
+    ): string {
+        /** @var string Original php.ini value. */
+        $phpIniPostMaxSize = ini_get('post_max_size');
+
+        return formatQuantity($phpIniPostMaxSize, $unit, $displayUnit);
     }
 }

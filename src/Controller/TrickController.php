@@ -8,6 +8,7 @@ use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
 use App\Form\TrickType;
 use App\Security\Voter\TrickVoter;
+use App\Service\FileManager;
 use App\Service\TrickService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -101,7 +102,16 @@ class TrickController extends AbstractController
     ): Response {
         $trick = new Trick();
 
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(
+            TrickType::class,
+            $trick,
+            [
+                'attr' => [
+                    'data-max-size-bytes' => FileManager::getPostMaxSize('B'),
+                    'data-max-size-unit' => FileManager::getPostMaxSize('auto', true),
+                ]
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -140,7 +150,16 @@ class TrickController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
     ): Response {
-        $form = $this->createForm(TrickType::class, $trick);
+        $form = $this->createForm(
+            TrickType::class,
+            $trick,
+            [
+                'attr' => [
+                    'data-post-max-size-bytes' => FileManager::getPostMaxSize('B'),
+                    'data-post-max-size-unit' => FileManager::getPostMaxSize('auto', true),
+                ]
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

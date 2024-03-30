@@ -34,14 +34,14 @@ class UserAccountType extends AbstractType
             ])
             ->add('profilePicture', FileType::class, [
                 'required' => false,
-                'label' => sprintf('Profile picture (max size %s)', FileManager::getMaxUploadSize('auto', true)),
+                'label' => sprintf('Profile picture (max size %s)', FileManager::getUploadMaxFilesize('auto', true)),
                 'constraints' => [
                     new Image(
-                        maxSize: FileManager::getMaxUploadSize(),
+                        maxSize: FileManager::getUploadMaxFilesize(),
                     ),
                 ],
                 'attr' => [
-                    'data-max-size' => FileManager::getMaxUploadSize('B'),
+                    'data-max-size' => FileManager::getUploadMaxFilesize('B'),
                     'data-controller' => 'file',
                 ],
             ])
