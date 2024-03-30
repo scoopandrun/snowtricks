@@ -43,8 +43,6 @@ export default class extends Controller {
     /** @type {HTMLImageElement} */
     const picturePreview = this.profilePiturePreviewTarget;
 
-    console.log({ fileInput, picturePreview });
-
     const file = fileInput.files[0];
 
     if (!file.type.startsWith("image/")) return;
