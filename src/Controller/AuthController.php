@@ -42,6 +42,8 @@ class AuthController extends AbstractController
 
             $userService->fillInUserEntityFromUserInformationDTO($userInformation, $user);
 
+            $userInformation->eraseCredentials();
+
             $userService->sendVerificationEmail($user);
 
             // Flush after setting the verification token
@@ -129,7 +131,7 @@ class AuthController extends AbstractController
         name: 'auth.password-reset-step-1',
         methods: ['GET', 'POST'],
     )]
-    public function step1email(
+    public function passwordResetStep1email(
         UserService $userService,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
@@ -175,7 +177,7 @@ class AuthController extends AbstractController
         methods: ['GET', 'POST'],
         requirements: ['token' => Requirement::CATCH_ALL],
     )]
-    public function step2password(
+    public function passwordResetStep2password(
         string $token,
         UserRepository $userRepository,
         UserService $userService,
@@ -195,6 +197,8 @@ class AuthController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $userService->resetPassword($user, $userInformation);
+
+            $userInformation->eraseCredentials();
 
             $entityManager->flush();
 

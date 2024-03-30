@@ -41,6 +41,8 @@ class UserController extends AbstractController
                 $user
             );
 
+            $userInformation->eraseCredentials();
+
             $profilePictureSaved = $userService->saveProfilePicture($userInformation->profilePicture, $user);
 
             if ($userInformation->removeProfilePicture) {
@@ -55,7 +57,7 @@ class UserController extends AbstractController
                 $this->addFlash(FlashClasses::WARNING, "An issue occurred when saving the profile picture.");
             }
 
-            return $this->redirectToRoute('user');
+            return $this->redirectToRoute('user.index');
         }
 
         return $this->render('user/index.html.twig', [

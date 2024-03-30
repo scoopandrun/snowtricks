@@ -43,11 +43,11 @@ class UserService
             ->setUsername($userInformation->username)
             ->setEmail($userInformation->email);
 
-        if ($userInformation->newPassword) {
+        if ($userInformation->getNewPassword()) {
             $user->setPassword(
                 $this->userPasswordHasher->hashPassword(
                     $user,
-                    $userInformation->newPassword
+                    $userInformation->getNewPassword()
                 )
             );
         }
@@ -183,7 +183,7 @@ class UserService
         $user->setPassword(
             $this->userPasswordHasher->hashPassword(
                 $user,
-                $userInformation->newPassword
+                $userInformation->getNewPassword()
             )
         );
     }

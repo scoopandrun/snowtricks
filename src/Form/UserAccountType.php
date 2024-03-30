@@ -10,7 +10,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,27 +54,8 @@ class UserAccountType extends AbstractType
                     'autocomplete' => 'current-password',
                 ],
             ])
-            ->add('newPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
+            ->add('newPassword', NewPasswordType::class, [
                 'required' => false,
-                'invalid_message' => 'The passwords do not match',
-                'first_options' => [
-                    'label' => sprintf('New password (minimum %d characters)', PasswordRequirements::MIN_LENGTH),
-                    'attr' => [
-                        'autocomplete' => 'new-password',
-                        'min' => PasswordRequirements::MIN_LENGTH,
-                        'max' => PasswordRequirements::MAX_LENGTH,
-                    ],
-
-                ],
-                'second_options' => [
-                    'label' => 'Repeat password',
-                    'attr' => [
-                        'autocomplete' => 'new-password',
-                        'min' => PasswordRequirements::MIN_LENGTH,
-                        'max' => PasswordRequirements::MAX_LENGTH,
-                    ],
-                ],
             ]);
     }
 

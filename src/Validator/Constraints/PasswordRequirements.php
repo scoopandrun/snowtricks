@@ -33,7 +33,6 @@ class PasswordRequirements extends Compound
     protected function getConstraints(array $options): array
     {
         return [
-            new Assert\NotBlank(),
             new Assert\Type('string'),
             new Assert\Length(
                 min: static::MIN_LENGTH,
