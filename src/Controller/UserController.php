@@ -57,7 +57,7 @@ class UserController extends AbstractController
                 $this->addFlash(FlashClasses::WARNING, "An issue occurred when saving the profile picture.");
             }
 
-            return $this->redirectToRoute('user');
+            return $this->redirectToRoute('user.index');
         }
 
         return $this->render('user/index.html.twig', [

@@ -131,7 +131,7 @@ class AuthController extends AbstractController
         name: 'auth.password-reset-step-1',
         methods: ['GET', 'POST'],
     )]
-    public function step1email(
+    public function passwordResetStep1email(
         UserService $userService,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
@@ -177,7 +177,7 @@ class AuthController extends AbstractController
         methods: ['GET', 'POST'],
         requirements: ['token' => Requirement::CATCH_ALL],
     )]
-    public function step2password(
+    public function passwordResetStep2password(
         string $token,
         UserRepository $userRepository,
         UserService $userService,
