@@ -42,6 +42,8 @@ class AuthController extends AbstractController
 
             $userService->fillInUserEntityFromUserInformationDTO($userInformation, $user);
 
+            $userInformation->eraseCredentials();
+
             $userService->sendVerificationEmail($user);
 
             // Flush after setting the verification token
@@ -195,6 +197,8 @@ class AuthController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $userService->resetPassword($user, $userInformation);
+
+            $userInformation->eraseCredentials();
 
             $entityManager->flush();
 

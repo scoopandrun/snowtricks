@@ -41,6 +41,8 @@ class UserController extends AbstractController
                 $user
             );
 
+            $userInformation->eraseCredentials();
+
             $profilePictureSaved = $userService->saveProfilePicture($userInformation->profilePicture, $user);
 
             if ($userInformation->removeProfilePicture) {
