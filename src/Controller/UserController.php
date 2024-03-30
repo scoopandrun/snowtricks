@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Core\FlashClasses;
+use App\Utils\FlashClasses;
 use App\Form\UserAccountType;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;

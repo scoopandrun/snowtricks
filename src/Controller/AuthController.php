@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Core\FlashClasses;
+use App\Utils\FlashClasses;
 use App\DTO\UserInformationDTO;
 use App\Entity\User;
 use App\Form\PasswordResetStep1Type;
