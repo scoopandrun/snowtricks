@@ -61,7 +61,7 @@ class QuantityFormatter
 
         $displayedValue = match (strtoupper((string) $unit)) {
             null => $value,
-            'B', 'K', 'M', 'G', 'AUTO' => round($valueInBytes / pow(1024, $exponentToDisplayedValue), 0, PHP_ROUND_HALF_DOWN),
+            'B', 'K', 'M', 'G', 'AUTO' => intval($valueInBytes / pow(1024, $exponentToDisplayedValue)),
             default => $value,
         };
 
