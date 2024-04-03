@@ -41,10 +41,14 @@
   </header>
 
   <main>
-    <div class="container mb-4">
+    <div class="container mb-4" data-controller="trick-media">
+      <div class="text-center d-md-none">
+        <button type="button" data-action="trick-media#toggleCollection" class="btn btn-primary">See media</button>
+      </div>
+
       <div
-        class="d-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto"
-        data-controller="trick-media"
+        class="d-flex d-none d-md-flex flex-column flex-wrap flex-md-nowrap flex-md-row justify-content-center align-items-center overflow-auto"
+        id="trick-media"
       >
         {{ include('trick/_media_overlay.html.twig') }}
 

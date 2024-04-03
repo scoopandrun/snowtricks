@@ -102,4 +102,13 @@ export default class extends Controller {
       return iframe;
     }
   }
+
+  /**
+   * @param {MouseEvent} e
+   */
+  toggleCollection(e) {
+    const collection = document.getElementById("trick-media");
+
+    collection.classList.toggle("d-none");
+  }
 }
