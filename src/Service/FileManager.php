@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Core\QuantityFormatter;
+use App\Utils\QuantityFormatter;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

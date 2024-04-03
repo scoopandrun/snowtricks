@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Core\FlashClasses;
+use App\Utils\FlashClasses;
 use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;

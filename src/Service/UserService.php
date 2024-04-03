@@ -114,7 +114,7 @@ class UserService
             ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
             ->to($user->getEmail())
             ->subject("Validate your email address")
-            ->htmlTemplate("email/account-verification.html.twig")
+            ->htmlTemplate("email/account_verification.html.twig")
             ->context([
                 "username" => $user->getUsername(),
                 "verificationURL" => $verificationURL,
@@ -162,7 +162,7 @@ class UserService
             ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
             ->to($user->getEmail())
             ->subject("Reset your password")
-            ->htmlTemplate("email/password-reset.html.twig")
+            ->htmlTemplate("email/password_reset.html.twig")
             ->context([
                 "username" => $user->getUsername(),
                 "passwordResetURL" => $passwordResetURL,
