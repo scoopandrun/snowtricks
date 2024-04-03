@@ -33,7 +33,9 @@ export default class extends Controller {
         );
 
         if (totalFileSize > postMaxSizeBytes) {
-          const postSizeExceededMessage = `The form exceeds the maximum authorized POST size (${postMaxSizeUnit}). Please remove some pictures or choose smaller ones.`;
+          e.preventDefault();
+
+          const postSizeExceededMessage = `The total size of the pictures is too high (max ${postMaxSizeUnit}). Please remove some pictures or choose smaller ones.`;
 
           this.addFlash(postSizeExceededMessage, "danger");
 
@@ -42,8 +44,6 @@ export default class extends Controller {
         }
       } catch (error) {
         console.error(error);
-      } finally {
-        e.preventDefault();
       }
     });
   }
