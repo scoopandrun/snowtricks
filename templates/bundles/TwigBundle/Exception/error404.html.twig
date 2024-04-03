@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <h1 class="text-center my-5">Page not found</h1>
+
+    <div class="text-center my-3">The page you are looking for doesn't exist.</div>
+    
+    <div class="text-center my-3"><a href="{{ path('homepage.index') }}">Return to the homepage.</a></div>
+  </div>
+{% endblock %}
