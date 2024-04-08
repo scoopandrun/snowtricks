@@ -9,7 +9,8 @@
   top: 0;
 }
 
-.trick-card [data-action] {
+.trick-card [data-action="edit"],
+.trick-card [data-controller="delete-button"] {
   color: var(--bs-gray-600, lightgray);
 }
 
@@ -17,6 +18,6 @@
   color: var(--bs-blue, lightskyblue);
 }
 
-.trick-card [data-action="delete"]:hover {
+.trick-card [data-controller="delete-button"]:hover {
   color: var(--bs-red, red);
 }

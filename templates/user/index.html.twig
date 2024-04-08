@@ -54,7 +54,12 @@
     <div class="mt-3">
       <form action="{{ path('user.delete') }}" method="POST">
         <input type="hidden" name="_method" value="DELETE">
-        <button class="btn btn-danger" title="Delete my account" data-action="delete">Delete account</button>
+        <button
+          class="btn btn-danger"
+          title="Delete my account"
+          data-controller="delete-button"
+          data-confirmation="Are you sure that you want to delete your account?"
+        >Delete account</button>
       </form>
     </div>
   </div>
