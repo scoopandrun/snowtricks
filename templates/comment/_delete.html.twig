@@ -1,4 +1,7 @@
-<turbo-frame id="comment-{{ comment.id }}">
-  <turbo-stream action="remove" target="comment-{{ comment.id }}">
+<turbo-frame id="comment-{{ comment.id }}-frame">
+  <turbo-stream action="replace" target="comment-{{ comment.id }}-frame">
+    <template>
+      {{ include('comment/_card.html.twig', { inReplies: comment.replyTo }) }}
+    </template>
   </turbo-stream>
 </turbo-frame>

@@ -51,7 +51,10 @@ class CommentController extends AbstractController
         int $page,
         CommentService $commentService,
     ): Response {
-        $batch = $commentService->getBatch($trickId, $page);
+        $commentsPerPage = 10;
+        $includeDeleted = true;
+
+        $batch = $commentService->getBatch($trickId, $page, $commentsPerPage, $includeDeleted);
 
         return $this->render(
             'comment/_list.html.twig',
@@ -110,6 +113,60 @@ class CommentController extends AbstractController
             'comment/_create.html.twig',
             [
                 'comment' => $comment,
+                'form' => $form,
+            ]
+        );
+    }
+
+    #[Route(
+        path: '/comments/reply-to/{id}',
+        name: 'comment.reply-to',
+        methods: ['GET', 'POST'],
+        requirements: [
+            'trickId' => Requirement::DIGITS,
+        ],
+    )]
+    public function replyTo(
+        Comment $originalComment,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security,
+    ): Response {
+        $reply = (new Comment())
+            ->setTrick($originalComment->getTrick())
+            ->setAuthor($security->getUser())
+            ->setReplyTo($originalComment);
+
+        $form = $this->createForm(CommentType::class, $reply);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted(CommentVoter::CREATE);
+
+            $entityManager->persist($reply);
+            $entityManager->flush();
+
+
+            if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+                return $this->render('comment/_reply_to.html.twig', [
+                    'originalComment' => $originalComment,
+                    'reply' => $reply,
+                    'form' => $form,
+                ]);
+            }
+
+            $this->addFlash(FlashClasses::SUCCESS, "Your comment has been posted.");
+
+            return $this->redirectToRoute('trick.single', [
+                'id' => $originalComment->getTrick()->getId(),
+                'slug' => $originalComment->getTrick()->getSlug(),
+            ]);
+        }
+
+        return $this->render(
+            'comment/_reply_to.html.twig',
+            [
+                'originalComment' => $originalComment,
                 'form' => $form,
             ]
         );

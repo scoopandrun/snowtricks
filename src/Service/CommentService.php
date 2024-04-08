@@ -28,13 +28,17 @@ class CommentService
         int $batchSize = 10,
         bool $includeDeleted = false,
     ): Batch {
-        $criteria = ['trick' => $trickId];
+        $countCriteria = [
+            'trick' => $trickId,
+        ];
 
         if (false === $includeDeleted) {
-            $criteria['deletedAt'] = null;
+            $countCriteria['deletedAt'] = null;
         }
 
-        $count = $this->commentRepository->count($criteria);
+        $count = $this->commentRepository->count($countCriteria);
+
+        $batchCriteria = array_merge($countCriteria, ['replyTo' => null]);
 
         /** @var int $pageNumber Defaults to `1` in case of inconsistency. */
         $batchNumber = max((int) $batchNumber, 1);
@@ -47,7 +51,7 @@ class CommentService
         $offset = ($batchNumber - 1) * $batchSize;
 
         $comments = $this->commentRepository->findBy(
-            criteria: $criteria,
+            criteria: $batchCriteria,
             orderBy: ['createdAt' => 'DESC'],
             offset: $offset,
             limit: $batchSize,
@@ -70,7 +74,7 @@ class CommentService
     public function remove(Comment $comment): void
     {
         $comment
-            ->setAuthor(null)
+            // ->setAuthor(null)
             ->setText("")
             ->setDeletedAt(new \DateTimeImmutable());
     }

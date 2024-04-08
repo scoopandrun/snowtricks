@@ -17,7 +17,8 @@ class PictureType extends AbstractType
     {
         $builder
             ->add('file', FileType::class, [
-                'label' => sprintf('Picture (max size %s)', FileManager::getUploadMaxFilesize('auto', true)),
+                'label' => 'Picture',
+                'help' => sprintf('Max size %s', FileManager::getUploadMaxFilesize('auto', true)),
                 'required' => true,
                 'constraints' => [
                     new Image(
