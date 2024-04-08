@@ -43,24 +43,6 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks-batch-{batchNumber}',
-        name: 'trick.batch',
-        methods: ['GET'],
-        requirements: ['batchNumber' => Requirement::POSITIVE_INT]
-    )]
-    public function batch(int $batchNumber): Response
-    {
-        $batchSize = 4;
-
-        $batch = $this->trickService->getBatch($batchNumber, $batchSize);
-
-        return $this->render(
-            'trick/_batch.html.twig',
-            compact("batch")
-        );
-    }
-
-    #[Route(
         path: '/tricks/{id}-{slug}',
         name: 'trick.single',
         methods: ['GET'],

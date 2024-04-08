@@ -1,0 +1,23 @@
+{# Trick cards #}
+<turbo-stream action="append" target="tricks">
+  <template>
+    {% for trick in batch.items %}
+      {{ include("trick/_card.html.twig") }}
+    {% endfor %}
+  </template>
+</turbo-stream>
+
+{# "Load more" button #}
+<turbo-stream action="replace" target="load-more">
+  <template>
+    {% if batch.nextItems %}
+      <a
+        href="{{ path('homepage.batch', { page: batch.nextPageNumber }) }}"
+        class="btn btn-primary"
+        id="load-more"
+        data-homepage-target="fetchButton"
+        data-turbo-stream
+      >Load more</a>
+    {% endif %}
+  </template>
+</turbo-stream>
