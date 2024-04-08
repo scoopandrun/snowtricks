@@ -1,0 +1,31 @@
+<turbo-frame id="comment-reply-to-{{ originalComment.id }}-frame">
+  {% if app.user %}
+    {% if is_granted('comment_create') %}
+      {% if reply ?? null %}
+        <div>
+          <span class="text-success">Your reply has been posted</span>
+        </div>
+
+        <turbo-stream action="append" target="comment-{{ originalComment.id }}-replies">
+          <template>
+            {{ include('comment/_card.html.twig', { comment: reply, inReplies: true }) }}
+          </template>
+        </turbo-stream>
+      {% else %}
+        <label for="reply-to-{{ originalComment.id }}"><a class="reply-to-link card-link">Reply</a></label>
+        <input type="checkbox" id="reply-to-{{ originalComment.id }}" class="d-none reply-to-toggle">
+
+        {{ form_start(form, { action: path('comment.reply-to', { id: originalComment.id }) }) }}
+  
+          {{ form_row(form.text) }}
+  
+          <!-- Submit Button-->
+          <div class="text-center">
+            <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">Send</button>
+          </div>
+  
+        {{ form_end(form) }}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</turbo-frame>

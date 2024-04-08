@@ -1,14 +1,12 @@
-<turbo-frame id="comment-{{ comment.id }}">
+<turbo-frame id="comment-{{ comment.id }}-frame">
   <div class="row gx-4 gx-lg-5 my-4">
-    {{ form_start(form, { action: comment.id ? path('comment.edit', { id: comment.id }) : path('comment.create', { trickId: comment.trick.id }) }) }}
+    {{ form_start(form, { action: path('comment.edit', { id: comment.id }) }) }}
 
       {{ form_row(form.text) }}
 
       <!-- Submit Button-->
       <div class="text-center">
-        <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">
-          {{ comment.id ? 'Update' : 'Send' }}
-        </button>
+        <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">Update</button>
       </div>
 
     {{ form_end(form) }}

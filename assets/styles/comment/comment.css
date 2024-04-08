@@ -1,0 +1,11 @@
+.reply-to-link {
+  cursor: pointer;
+}
+
+.reply-to-toggle ~ form {
+  display: none;
+}
+
+.reply-to-toggle:checked ~ form {
+  display: block;
+}
