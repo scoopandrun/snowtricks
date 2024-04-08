@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Turbo\TurboBundle;
 
 class TrickController extends AbstractController
 {
@@ -178,11 +179,30 @@ class TrickController extends AbstractController
     public function delete(
         Trick $trick,
         EntityManagerInterface $entityManager,
+        Request $request,
     ): Response {
+        $id = $trick->getId();
+        $trickName = $trick->getName();
+
         $entityManager->remove($trick);
         $entityManager->flush();
 
-        $this->addFlash(FlashClasses::SUCCESS, "The trick has been deleted.");
+        $successMessage = "The trick \"{$trickName}\" has been deleted.";
+
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render(
+                'trick/_delete.stream.html.twig',
+                [
+                    'id' => $id,
+                    'message' => $successMessage,
+                    'type' => FlashClasses::SUCCESS,
+                ]
+            );
+        }
+
+        $this->addFlash(FlashClasses::SUCCESS, $successMessage);
 
         return $this->redirectToRoute("trick.archive", status: 303);
     }

@@ -64,7 +64,7 @@
             title="Cancel modifications"
           >Cancel</a>
 
-          <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
+          <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post" data-turbo="false">
             <input type="hidden" name="_method" value="DELETE">
             <button
               class="btn btn-danger ms-3"
