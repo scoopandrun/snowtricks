@@ -8,7 +8,7 @@ export default class extends Controller {
     const button = this.element;
 
     const confirmationMessage =
-      button.dataset.confirmation ??
+      button.dataset.confirmation ||
       "Are you sure that you want to delete this?";
 
     button.addEventListener("click", (e) => {

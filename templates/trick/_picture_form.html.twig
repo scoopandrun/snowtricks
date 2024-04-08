@@ -9,5 +9,7 @@
     />
     
     {{ form_row(picture.description) }}
+
+    {% do picture.setRendered %}
   </div>
 </fieldset>
