@@ -1,0 +1,30 @@
+<div
+  id="tricks"
+  class="grid mx-3"
+  data-homepage-target="grid"
+>
+  {% for trick in batch.items %}
+    {{ include("trick/_card.html.twig") }}
+  {% endfor %}
+</div>
+
+<div class="my-4 text-center">
+    {% if batch.nextItems %}
+      <a
+        href="{{ path('homepage.batch', { page: batch.nextPageNumber }) }}"
+        class="btn btn-primary"
+        id="load-more"
+        data-homepage-target="fetchButton"
+        data-turbo-stream
+        hidden
+      >Load more</a>
+    {% endif %}
+
+  <noscript>
+    <a
+      href="{{ path('trick.archive') }}"
+      class="btn btn-primary"
+      title="See all tricks"
+    >See all tricks</a>
+  </noscript>
+</div>

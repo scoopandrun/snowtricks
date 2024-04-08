@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Turbo\TurboBundle;
 
 class TrickController extends AbstractController
 {
@@ -39,24 +40,6 @@ class TrickController extends AbstractController
         return $this->render(
             'trick/archive.html.twig',
             compact("tricks")
-        );
-    }
-
-    #[Route(
-        path: '/tricks-batch-{batchNumber}',
-        name: 'trick.batch',
-        methods: ['GET'],
-        requirements: ['batchNumber' => Requirement::POSITIVE_INT]
-    )]
-    public function batch(int $batchNumber): Response
-    {
-        $batchSize = 4;
-
-        $batch = $this->trickService->getBatch($batchNumber, $batchSize);
-
-        return $this->render(
-            'trick/_batch.html.twig',
-            compact("batch")
         );
     }
 
@@ -196,11 +179,30 @@ class TrickController extends AbstractController
     public function delete(
         Trick $trick,
         EntityManagerInterface $entityManager,
+        Request $request,
     ): Response {
+        $id = $trick->getId();
+        $trickName = $trick->getName();
+
         $entityManager->remove($trick);
         $entityManager->flush();
 
-        $this->addFlash(FlashClasses::SUCCESS, "The trick has been deleted.");
+        $successMessage = "The trick \"{$trickName}\" has been deleted.";
+
+        if ($request->getPreferredFormat() === TurboBundle::STREAM_FORMAT) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+            return $this->render(
+                'trick/_delete.stream.html.twig',
+                [
+                    'id' => $id,
+                    'message' => $successMessage,
+                    'type' => FlashClasses::SUCCESS,
+                ]
+            );
+        }
+
+        $this->addFlash(FlashClasses::SUCCESS, $successMessage);
 
         return $this->redirectToRoute("trick.archive", status: 303);
     }

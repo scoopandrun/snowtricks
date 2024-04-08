@@ -1,5 +1,9 @@
-<div class="card mb-3 trick-card">
-  <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" title="{{ trick.name }}">
+<div class="card mb-3 trick-card" id="trick-{{ trick.id }}">
+  <a
+    href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}"
+    title="{{ trick.name }}"
+    target="_top"
+  >
     {% set fallbackMainPicture = asset('images/fallback-trick-image-640.jpg') %}
     <img
       src="{{ image('tricks', trick.mainPicture)|default(fallbackMainPicture) }}"
@@ -10,20 +14,30 @@
   
   <div class="card-body text-muted">
     <div class="d-flex justify-content-between">
-      <a href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}" class="text-decoration-none" title="{{ trick.name }}">
+      <a
+        href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}"
+        class="text-decoration-none"
+        title="{{ trick.name }}"
+        target="_top"
+      >
         <h5 class="card-title">{{ trick.name }}</h5>
       </a>
 
       <div class="d-flex">
         {% if is_granted('trick_edit', trick) %}
-          <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
+          <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit" target="_top">
             <span class="material-symbols-outlined">edit</span>
           </a>
         {% endif %}
         {% if is_granted('trick_delete', trick) %}
           <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post">
             <input type="hidden" name="_method" value="DELETE">
-            <button class="btn btn-link align-baseline p-0 m-0" data-action="delete" title="Delete">
+            <button
+              class="btn btn-link align-baseline p-0 m-0"
+              title="Delete the trick"
+              data-controller="delete-button"
+              data-confirmation="Are you sure that you want to delete this trick?"
+            >
               <span class="material-symbols-outlined">delete</span>
             </button>
           </form>
