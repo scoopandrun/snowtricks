@@ -40,9 +40,13 @@
           {% endfor %}
         </fieldset>
 
+        {% do form.pictures.setRendered %}
+
         {{ form_row(form.videos) }}
         
         {{ form_row(form.category) }}
+
+        {{ form_rest(form) }}
 
       {{ form_end(form) }}
       
