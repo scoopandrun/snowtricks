@@ -46,7 +46,7 @@
 
       {{ form_end(form) }}
       
-      <div class="d-flex">
+      <div class="d-flex flex-column flex-md-row align-items-center gap-2">
         <input
           type="submit"
           value="{{ trick.id ? 'Save changes' : 'Create new trick' }}"
@@ -58,14 +58,14 @@
         {% if trick.id %}
           <a
             href="{{ path('trick.single', {id: trick.id, slug: trick.slug}) }}"
-            class="btn btn-secondary ms-3"
+            class="btn btn-secondary"
             title="Cancel modifications"
           >Cancel</a>
 
           <form action="{{ path('trick.delete', {id: trick.id}) }}" method="post" data-turbo="false">
             <input type="hidden" name="_method" value="DELETE">
             <button
-              class="btn btn-danger ms-3"
+              class="btn btn-danger"
               type="submit"
               value="Delete"
               title="Delete the trick"

@@ -76,14 +76,14 @@
                 </li>
               {% endif %}
               <li class="nav-item">
-                <div class="d-flex align-items-center ms-2">
+                <div class="d-flex align-items-center">
                   {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
                   <img
                     src="{{ image('users', app.user)|default(fallbackProfilePicture) }}"
                     alt="Profile picture"
                     height="30"
                     width="30"
-                    class="rounded-circle"
+                    class="rounded-circle me-2 ms-md-2 me-md-0"
                   >
   
                   <a

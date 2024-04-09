@@ -4,18 +4,27 @@
 
 {% block body %}
   <div class="container">
-    <h1>User account</h1>
+    <h1 class="text-center text-md-start mb-4">User account</h1>
 
     {{ form_start(form, {'attr': {'data-controller': 'user'} }) }}
 
       {{ form_row(form.username) }}
 
-      {{ form_row(form.email) }}
-      {% if app.user.verified %}
-        <small class="text-success">Email address verified</small>
-      {% else %}
-        <small>Email address not verified (<a href="{{ path('user.send-verification-email') }}" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</small>
-      {% endif %}
+      <div class="mb-3">
+        {{ form_label(form.email) }}
+        
+        {{ form_widget(form.email) }}
+
+        {{ form_errors(form.email) }}
+
+        <div class="form-text mb-0 help-text">
+          {% if app.user.verified %}
+            <span class="text-success">Email address verified</span>
+          {% else %}
+            <span>Email address not verified (<a href="{{ path('user.send-verification-email') }}" id="sendVerificationEmail" data-action="user#sendVerificationEmail" data-turbo="false">send a verification link to my email address</a>)</span>
+          {% endif %}
+        </div>
+      </div>
 
       {% set profilePicture = image('users', app.user) %}
       <div class="mt-3">
@@ -46,12 +55,14 @@
       {{ form_row(form.newPassword) }}
 
       {# Submit Button #}
-      <button class="btn btn-primary text-uppercase mt-4" id="submitButton" type="submit">Save</button>
+      <div class="text-center text-md-start">
+        <button class="btn btn-primary text-uppercase mt-4" id="submitButton" type="submit">Save</button>
+      </div>
 
     {{ form_end(form) }}
 
     {# Delete account button #}
-    <div class="mt-3">
+    <div class="text-center text-md-start my-3">
       <form action="{{ path('user.delete') }}" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button
