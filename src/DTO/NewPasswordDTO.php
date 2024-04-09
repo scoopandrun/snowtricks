@@ -12,6 +12,7 @@ class NewPasswordDTO
         #[AppAssert\PasswordRequirements([
             'groups' => ['registration', 'account_update', 'password_reset_step_2']
         ])]
+        #[\SensitiveParameter]
         public ?string $password = null,
     ) {
     }

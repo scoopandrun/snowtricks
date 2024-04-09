@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\TrickService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,18 +18,9 @@ class HomepageController extends AbstractController
         name: 'homepage.index',
         methods: ['GET'],
     )]
-    public function index(TrickService $trickService): Response
+    public function index(): Response
     {
-        $batchSize = 4;
-
-        $batch = $trickService->getBatch(batchSize: $batchSize);
-
-        return $this->render(
-            'homepage/index.html.twig',
-            [
-                'batch' => $batch,
-            ]
-        );
+        return $this->render('homepage/index.html.twig');
     }
 
     #[Route(

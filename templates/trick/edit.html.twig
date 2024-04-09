@@ -27,22 +27,31 @@
 
         {{ form_row(form.description) }}
 
-        <fieldset
-          class="mb-3"
-          data-prototype="{{ form_widget(form.pictures.vars.prototype)|e('html_attr') }}"
-          data-controller="{{ form.pictures.vars.attr['data-controller'] }}"
-          data-add-button-text="{{ form.pictures.vars.attr['data-add-button-text'] }}"
-        >
-          <legend>Pictures</legend>
+        <fieldset class="mb-3">
+          {# <legend>Pictures</legend> #}
 
-          {% for picture in form.pictures %}
-            {{ include('trick/_picture_form.html.twig') }}
-          {% endfor %}
+          {{ form_label(form.pictures) }}
+
+          <div
+            id="{{ form.pictures.vars.id }}"
+            data-controller="{{ form.pictures.vars.attr['data-controller'] }}"
+            data-add-button-text="{{ form.pictures.vars.attr['data-add-button-text'] }}"
+            data-prototype="{{ form_row(form.pictures.vars.prototype)|e('html_attr') }}"
+          >
+            {% for picture in form.pictures %}
+              {{ include('trick/_picture_form.html.twig') }}
+            {% endfor %}
+          </div>
+
         </fieldset>
+
+        {% do form.pictures.setRendered %}
 
         {{ form_row(form.videos) }}
         
         {{ form_row(form.category) }}
+
+        {{ form_rest(form) }}
 
       {{ form_end(form) }}
       

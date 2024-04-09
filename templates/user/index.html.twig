@@ -6,7 +6,7 @@
   <div class="container">
     <h1 class="text-center text-md-start mb-4">User account</h1>
 
-    {{ form_start(form, {'attr': {'data-controller': 'user'} }) }}
+    {{ form_start(form, { attr: {'data-controller': 'user'} }) }}
 
       {{ form_row(form.username) }}
 
@@ -44,7 +44,7 @@
        {% do form.removeProfilePicture.setRendered %}
       {% endif %}
 
-      {{ form_row(form.profilePicture, {attr: {'data-user-target': 'profilePictureInput', 'data-action': 'change->user#showProfilePicturePreview'} }) }}
+      {{ form_row(form.profilePicture, { attr: {'data-user-target': 'profilePictureInput', 'data-action': 'change->user#showProfilePicturePreview'} }) }}
 
       <div class="mt-5 fs-5">
         <p class="m-0">Password change (leave empty to keep unmodified)</p>
@@ -59,11 +59,13 @@
         <button class="btn btn-primary text-uppercase mt-4" id="submitButton" type="submit">Save</button>
       </div>
 
+      {{ form_rest(form) }}
+
     {{ form_end(form) }}
 
     {# Delete account button #}
     <div class="text-center text-md-start my-3">
-      <form action="{{ path('user.delete') }}" method="POST">
+      <form action="{{ path('user.delete') }}" method="POST" data-turbo="false">
         <input type="hidden" name="_method" value="DELETE">
         <button
           class="btn btn-danger"

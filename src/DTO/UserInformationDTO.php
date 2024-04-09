@@ -37,6 +37,7 @@ class UserInformationDTO
                 ),
             ],
         )]
+        #[\SensitiveParameter]
         public ?string $currentPassword = null,
 
         #[Assert\Valid()]

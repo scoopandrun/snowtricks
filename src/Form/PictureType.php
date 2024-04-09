@@ -27,6 +27,7 @@ class PictureType extends AbstractType
                     ),
                 ],
                 'attr' => [
+                    'accept' => 'image/*',
                     'data-max-size' => FileManager::getUploadMaxFilesize('B'),
                     'data-controller' => 'file',
                 ],

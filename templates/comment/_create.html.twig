@@ -21,10 +21,12 @@
     
             {{ form_row(form.text) }}
     
-            <!-- Submit Button-->
+            {# Submit Button #}
             <div class="text-center">
               <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">Send</button>
             </div>
+
+            {{ form_rest(form) }}
     
           {{ form_end(form) }}
         {% endif %}
@@ -32,7 +34,7 @@
     {% else %}
       <div class="text-center my-3">You must verify your email address to post comments.</div>
       <div class="text-center">
-        <a class="btn btn-primary text-uppercase my-2" href="{{ path('user') }}" target="_top">Go to your account page</a>
+        <a class="btn btn-primary text-uppercase my-2" href="{{ path('user.index') }}" target="_top">Go to your account page</a>
       </div>
     {% endif %}
   {% else %}

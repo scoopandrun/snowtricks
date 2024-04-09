@@ -4,10 +4,12 @@
 
       {{ form_row(form.text) }}
 
-      <!-- Submit Button-->
+      {# Submit Button #}
       <div class="text-center">
         <button class="btn btn-primary text-uppercase my-2" id="submitButton" type="submit">Update</button>
       </div>
+
+      {{ form_rest(form) }}
 
     {{ form_end(form) }}
   </div>
