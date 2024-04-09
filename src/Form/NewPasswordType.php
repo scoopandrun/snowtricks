@@ -20,7 +20,8 @@ class NewPasswordType extends AbstractType
                 'required' => $options['required'],
                 'invalid_message' => 'The passwords do not match',
                 'first_options' => [
-                    'label' => sprintf('%s (minimum %d characters)', $options['label'], PasswordRequirements::MIN_LENGTH),
+                    'label' => $options['label'],
+                    'help' => sprintf('Minimum %d characters', PasswordRequirements::MIN_LENGTH),
                     'attr' => [
                         'autocomplete' => 'new-password',
                         'min' => PasswordRequirements::MIN_LENGTH,
