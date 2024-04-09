@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Utils\FlashClasses;
-use App\Form\UserAccountType;
+use App\Form\UserAccountForm;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +32,7 @@ class UserController extends AbstractController
 
         $userInformation = $userService->makeUserInformationDTOFromEntity($user);
 
-        $form = $this->createForm(UserAccountType::class, $userInformation);
+        $form = $this->createForm(UserAccountForm::class, $userInformation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

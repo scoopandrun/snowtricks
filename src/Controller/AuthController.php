@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Utils\FlashClasses;
 use App\DTO\UserInformationDTO;
 use App\Entity\User;
-use App\Form\PasswordResetStep1Type;
-use App\Form\PasswordResetStep2Type;
-use App\Form\RegistrationFormType;
+use App\Form\PasswordResetStep1Form;
+use App\Form\PasswordResetStep2Form;
+use App\Form\RegistrationForm;
 use App\Repository\UserRepository;
 use App\Security\AppAuthenticator;
 use App\Service\UserService;
@@ -34,7 +34,7 @@ class AuthController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $userInformation = new UserInformationDTO();
-        $form = $this->createForm(RegistrationFormType::class, $userInformation);
+        $form = $this->createForm(RegistrationForm::class, $userInformation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -138,7 +138,7 @@ class AuthController extends AbstractController
         Request $request,
     ): Response {
         $userInformation = new UserInformationDTO();
-        $form = $this->createForm(PasswordResetStep1Type::class, $userInformation);
+        $form = $this->createForm(PasswordResetStep1Form::class, $userInformation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -192,7 +192,7 @@ class AuthController extends AbstractController
         }
 
         $userInformation = new UserInformationDTO();
-        $form = $this->createForm(PasswordResetStep2Type::class, $userInformation);
+        $form = $this->createForm(PasswordResetStep2Form::class, $userInformation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
