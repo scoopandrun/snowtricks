@@ -4,7 +4,7 @@
 
 {% block body %}
   <div class="container">
-    <h1>Create an account</h1>
+    <h1 class="text-center text-md-start mb-4">Create an account</h1>
 
     {{ form_errors(registrationForm) }}
 
@@ -13,11 +13,14 @@
 
       {{ form_row(registrationForm.email) }}
 
-      {{ form_row(registrationForm.newPassword) }}
+      {{ form_row(registrationForm.newPassword, { label: false }) }}
 
       {{ form_row(registrationForm.agreeTerms) }}
 
-      <button type="submit" class="btn btn-primary">Sign up</button>
+      <div class="text-center text-md-start">
+        <button type="submit" class="btn btn-primary">Sign up</button>
+      </div>
+
     {{ form_end(registrationForm) }}
   </div>
 {% endblock %}
