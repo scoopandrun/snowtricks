@@ -65,7 +65,7 @@
 
     {# Delete account button #}
     <div class="text-center text-md-start my-3">
-      <form action="{{ path('user.delete') }}" method="POST">
+      <form action="{{ path('user.delete') }}" method="POST" data-turbo="false">
         <input type="hidden" name="_method" value="DELETE">
         <button
           class="btn btn-danger"

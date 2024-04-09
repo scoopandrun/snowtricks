@@ -6,6 +6,7 @@
     <div class="container">
         <h1 class="text-center text-md-start mb-4">Please sign in</h1>
 
+        <form method="post" data-turbo="false">
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}

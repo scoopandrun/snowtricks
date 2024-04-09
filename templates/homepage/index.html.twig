@@ -35,6 +35,14 @@
     <div class="container position-relative" data-controller="homepage">
       {{ render(path('homepage.batch', { page: 1})) }}
 
+      <noscript>
+        <a
+          href="{{ path('trick.archive') }}"
+          class="btn btn-primary"
+          title="See all tricks"
+        >See all tricks</a>
+      </noscript>
+
       <div class="position-absolute bottom-0 end-0 m-2">
         <a href="#tricks" class="fs-1 text-decoration-none" title="Scroll up">↑</a>
       </div>
