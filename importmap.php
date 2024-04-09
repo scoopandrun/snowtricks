@@ -25,4 +25,11 @@ return [
     '@hotwired/turbo' => [
         'version' => '8.0.4',
     ],
+    'tom-select' => [
+        'version' => '2.3.1',
+    ],
+    'tom-select/dist/css/tom-select.bootstrap5.css' => [
+        'version' => '2.3.1',
+        'type' => 'css',
+    ],
 ];
