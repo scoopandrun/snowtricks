@@ -164,7 +164,10 @@ class TrickController extends AbstractController
 
         return $this->render(
             'trick/edit.html.twig',
-            compact("trick", "form")
+            [
+                'trick' => $trick,
+                'form' => $form,
+            ]
         );
     }
 

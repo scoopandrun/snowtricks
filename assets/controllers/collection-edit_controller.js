@@ -2,24 +2,32 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   connect() {
+    /** @type {HTMLFieldSetElement} */
+    const wrapper = this.element;
+
     this.index = this.element.childElementCount;
 
-    const addButton = document.createElement("button");
-    addButton.classList.add("btn", "btn-secondary");
-    addButton.setAttribute("type", "button");
-    addButton.textContent = this.element.dataset.addButtonText || "Add";
-    addButton.addEventListener("click", this.addItem.bind(this));
-
-    /** @type {HTMLDivElement} */
-    const wrapper = this.element;
+    this.addAddButton(wrapper);
 
     for (const child of wrapper.children) {
       if (child.tagName.toLowerCase() === "fieldset") {
         this.addRemoveButton(child);
+        this.handleRadioButton(child);
       }
     }
+  }
 
-    this.element.appendChild(addButton);
+  /**
+   * @param {HTMLFieldSetElement} collection
+   */
+  addAddButton(collection) {
+    const addButton = document.createElement("button");
+    addButton.classList.add("btn", "btn-secondary");
+    addButton.setAttribute("type", "button");
+    addButton.textContent = collection.dataset.addButtonText || "Add";
+    addButton.addEventListener("click", this.addItem.bind(this));
+
+    collection.appendChild(addButton);
   }
 
   /**
@@ -36,6 +44,7 @@ export default class extends Controller {
       ).firstElementChild;
 
     this.addRemoveButton(item);
+    this.handleRadioButton(item);
 
     this.index++;
 
@@ -43,7 +52,7 @@ export default class extends Controller {
   }
 
   /**
-   * @param {HTMLFieldSetElement} item
+   * @param {HTMLElement} item
    */
   addRemoveButton(item) {
     const removeButton = document.createElement("button");
@@ -54,5 +63,30 @@ export default class extends Controller {
     removeButton.addEventListener("click", () => item.remove());
 
     item.appendChild(removeButton);
+  }
+
+  /**
+   *
+   * @param {HTMLFieldSetElement} fieldset
+   */
+  handleRadioButton(fieldset) {
+    /** @type {HTMLInputElement} */
+    const radioButton = fieldset.querySelector("input[type=radio]");
+
+    if (!radioButton) return;
+
+    /** @type {HTMLElement} */
+    const collection = this.element;
+
+    radioButton.addEventListener("change", (e) => {
+      const collectionButtons =
+        collection.querySelectorAll("input[type=radio]");
+
+      collectionButtons.forEach((/** @type {HTMLInputElement} */ button) => {
+        if (button !== e.target) {
+          button.checked = false;
+        }
+      });
+    });
   }
 }
