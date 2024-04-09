@@ -22,7 +22,7 @@ class PictureListener
     public function onPostLoad(
         Picture $picture,
         PostLoadEventArgs $postLoadEventArgs,
-    ) {
+    ): void {
         $trick = $picture->getTrick();
 
         if ($trick->getMainPicture() === $picture) {
