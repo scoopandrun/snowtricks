@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 
-class UserAccountType extends AbstractType
+class UserAccountForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

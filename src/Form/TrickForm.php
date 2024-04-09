@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
-class TrickType extends AbstractType
+class TrickForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

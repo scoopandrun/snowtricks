@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Utils\FlashClasses;
 use App\Entity\Comment;
 use App\Entity\Trick;
-use App\Form\CommentType;
+use App\Form\CommentForm;
 use App\Security\Voter\CommentVoter;
 use App\Service\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -83,7 +83,7 @@ class CommentController extends AbstractController
             ->setTrick($trick = $entityManager->getRepository(Trick::class)->find($trickId))
             ->setAuthor($security->getUser());
 
-        $form = $this->createForm(CommentType::class, $comment);
+        $form = $this->createForm(CommentForm::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -137,7 +137,7 @@ class CommentController extends AbstractController
             ->setAuthor($security->getUser())
             ->setReplyTo($originalComment);
 
-        $form = $this->createForm(CommentType::class, $reply);
+        $form = $this->createForm(CommentForm::class, $reply);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -184,7 +184,7 @@ class CommentController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
     ): Response {
-        $form = $this->createForm(CommentType::class, $comment);
+        $form = $this->createForm(CommentForm::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

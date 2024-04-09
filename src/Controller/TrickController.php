@@ -6,7 +6,7 @@ use App\Utils\FlashClasses;
 use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
-use App\Form\TrickType;
+use App\Form\TrickForm;
 use App\Security\Voter\TrickVoter;
 use App\Service\FileManager;
 use App\Service\TrickService;
@@ -86,7 +86,7 @@ class TrickController extends AbstractController
         $trick = new Trick();
 
         $form = $this->createForm(
-            TrickType::class,
+            TrickForm::class,
             $trick,
             [
                 'attr' => [
@@ -134,7 +134,7 @@ class TrickController extends AbstractController
         EntityManagerInterface $entityManager,
     ): Response {
         $form = $this->createForm(
-            TrickType::class,
+            TrickForm::class,
             $trick,
             [
                 'attr' => [

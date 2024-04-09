@@ -2,27 +2,27 @@
 
 namespace App\Form;
 
-use App\DTO\UserInformationDTO;
+use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PasswordResetStep2Type extends AbstractType
+class CommentForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('newPassword', NewPasswordType::class, [
+            ->add('text', TextareaType::class, [
                 'required' => true,
-                'label' => 'Password',
+                'label' => 'Post your comment',
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => UserInformationDTO::class,
-            'validations_groups' => ['password_reset_step_2'],
+            'data_class' => Comment::class,
         ]);
     }
 }
