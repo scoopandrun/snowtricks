@@ -62,15 +62,14 @@ class TrickService
 
     public function setMainPicture(Trick $trick): void
     {
-        $currentMainPicture = $trick->getMainPicture();
+        // Default main picture = first of collection
+        $trick->setMainPicture($trick->getPictures()->first() ?? null);
 
-        $currentMainPictureIsInCollection = $trick->getPictures()->contains($currentMainPicture);
-
-        if (is_null($currentMainPicture) || false === $currentMainPictureIsInCollection) {
-            /** @var Picture|false $firstPicture */
-            $firstPicture = $trick->getPictures()->first();
-
-            $trick->setMainPicture($firstPicture ?: null);
+        foreach ($trick->getPictures() as $picture) {
+            if (true === $picture->getSetAsMainPicture()) {
+                $trick->setMainPicture($picture);
+                break;
+            }
         }
     }
 

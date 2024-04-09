@@ -32,6 +32,8 @@ class Picture implements \Stringable
 
     private bool $saveFile = true;
 
+    private bool $setAsMainPicture = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +95,18 @@ class Picture implements \Stringable
     public function setSaveFile(bool $saveFile): static
     {
         $this->saveFile = $saveFile;
+
+        return $this;
+    }
+
+    public function getSetAsMainPicture(): bool
+    {
+        return $this->setAsMainPicture;
+    }
+
+    public function setSetAsMainPicture(bool $setAsMainPicture): static
+    {
+        $this->setAsMainPicture = $setAsMainPicture;
 
         return $this;
     }

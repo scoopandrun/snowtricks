@@ -190,7 +190,7 @@ class Trick implements \Stringable
             $this->pictures->add($picture);
             $picture->setTrick($this);
 
-            if (!$this->getMainPicture()) {
+            if (is_null($this->getMainPicture())) {
                 $this->setMainPicture($picture);
             }
         }
@@ -204,6 +204,11 @@ class Trick implements \Stringable
             // set the owning side to null (unless already changed)
             if ($picture->getTrick() === $this) {
                 $picture->setTrick(null);
+
+                // Reset the new main picture
+                if ($this->getMainPicture() === $picture) {
+                    $this->setMainPicture($this->pictures->first() ?: null);
+                }
             }
         }
 
