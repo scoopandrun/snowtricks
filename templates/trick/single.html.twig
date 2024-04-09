@@ -69,7 +69,7 @@
             <img
               src="{{ image('tricks', picture) }}"
               height="100"
-              title="{{ picture.description }}"
+              title="[Picture] {{ picture.description }}"
               alt="{{ picture.description }}"
             >
           </button>
@@ -90,7 +90,7 @@
               <img
                 src="{{ video.thumbnailUrl|default(asset('images/video-thumbnail-placeholder.gif')) }}"
                 height="100"
-                title="{{ video.title }}"
+                title="[Video] {{ video.title }}"
                 alt="{{ video.title }}"
                 class="video-thumbnail"
               >

@@ -35,7 +35,7 @@ class TrickType extends AbstractType
                 'attr' => [
                     'data-controller' => 'collection-edit',
                     'data-add-button-text' => 'Add a picture',
-                ]
+                ],
             ])
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
@@ -51,7 +51,7 @@ class TrickType extends AbstractType
                 'attr' => [
                     'data-controller' => 'collection-edit',
                     'data-add-button-text' => 'Add a video',
-                ]
+                ],
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
