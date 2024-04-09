@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   connect() {
-    /** @type {HTMLFieldSetElement} */
+    /** @type {HTMLDivElement} */
     const wrapper = this.element;
 
     this.index = this.element.childElementCount;
@@ -43,6 +43,12 @@ export default class extends Controller {
         this.element.dataset.prototype.replaceAll("__name__", this.index)
       ).firstElementChild;
 
+    if (
+      item.querySelector("input").getAttribute("accept")?.startsWith("image/")
+    ) {
+      this.addPreview(item);
+    }
+
     this.addRemoveButton(item);
     this.handleRadioButton(item);
 
@@ -52,11 +58,11 @@ export default class extends Controller {
   }
 
   /**
-   * @param {HTMLElement} item
+   * @param {HTMLFieldSetElement} item
    */
   addRemoveButton(item) {
     const removeButton = document.createElement("button");
-    removeButton.classList.add("btn", "btn-secondary");
+    removeButton.classList.add("btn", "btn-secondary", "btn-sm");
     removeButton.setAttribute("type", "button");
     removeButton.textContent =
       this.element.dataset.removeButtonText || "Remove";
@@ -75,7 +81,7 @@ export default class extends Controller {
 
     if (!radioButton) return;
 
-    /** @type {HTMLElement} */
+    /** @type {HTMLDivElement} */
     const collection = this.element;
 
     radioButton.addEventListener("change", (e) => {
@@ -87,6 +93,37 @@ export default class extends Controller {
           button.checked = false;
         }
       });
+    });
+  }
+
+  /**
+   * @param {HTMLFieldSetElement} fieldset
+   */
+  addPreview(fieldset) {
+    /** @type {HTMLInputElement} */
+    const fileInput = fieldset.querySelector("input[type=file]");
+
+    const previewDiv = document.createElement("div");
+    previewDiv.classList.add("mt-2");
+
+    const picturePreview = document.createElement("img");
+    picturePreview.height = "100";
+
+    previewDiv.appendChild(picturePreview);
+    fileInput.nextElementSibling.after(previewDiv);
+
+    fileInput.addEventListener("change", (e) => {
+      const file = fileInput.files[0];
+
+      if (!file.type.startsWith("image/")) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+
+        picturePreview.src = result;
+      };
+      reader.readAsDataURL(file);
     });
   }
 }
