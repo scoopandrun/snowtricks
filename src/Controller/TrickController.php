@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\TurboBundle;
 
+#[Route(path: '/tricks',   name: 'trick')]
 class TrickController extends AbstractController
 {
     public function __construct(
@@ -29,8 +30,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks',
-        name: 'trick.archive',
+        path: '/',
+        name: '.archive',
         methods: ['GET'],
     )]
     public function archive(EntityManagerInterface $entityManager): Response
@@ -44,8 +45,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/{id}-{slug}',
-        name: 'trick.single',
+        path: '/{id}-{slug}',
+        name: '.single',
         methods: ['GET'],
         requirements: [
             'id' => Requirement::DIGITS,
@@ -74,8 +75,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/create',
-        name: 'trick.create',
+        path: '/create',
+        name: '.create',
         methods: ["GET", "POST"],
     )]
     #[IsGranted(TrickVoter::CREATE)]
@@ -122,8 +123,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/{id}/edit',
-        name: 'trick.edit',
+        path: '/{id}/edit',
+        name: '.edit',
         methods: ["GET", "POST"],
         requirements: ["id" => Requirement::DIGITS],
     )]
@@ -173,8 +174,8 @@ class TrickController extends AbstractController
 
 
     #[Route(
-        path: "/tricks/{id}",
-        name: "trick.delete",
+        path: "/{id}",
+        name: ".delete",
         methods: ["DELETE"],
         requirements: ["id" => Requirement::DIGITS],
     )]

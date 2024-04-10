@@ -11,11 +11,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\UX\Turbo\TurboBundle;
 
+#[Route(name: 'homepage')]
 class HomepageController extends AbstractController
 {
     #[Route(
         path: '/',
-        name: 'homepage.index',
+        name: '.index',
         methods: ['GET'],
     )]
     public function index(): Response
@@ -25,7 +26,7 @@ class HomepageController extends AbstractController
 
     #[Route(
         path: '/tricks-batch-{page}',
-        name: 'homepage.batch',
+        name: '.batch',
         methods: ['GET'],
         requirements: ['batchNumber' => Requirement::POSITIVE_INT]
     )]

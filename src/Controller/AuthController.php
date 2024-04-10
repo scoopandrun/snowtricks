@@ -20,11 +20,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+#[Route(name: 'auth')]
 class AuthController extends AbstractController
 {
     #[Route(
         path: '/signup',
-        name: 'auth.signup',
+        name: '.signup',
         methods: ['GET', 'POST']
     )]
     public function signup(
@@ -65,7 +66,7 @@ class AuthController extends AbstractController
 
     #[Route(
         path: '/login',
-        name: 'auth.login',
+        name: '.login',
         methods: ['GET', 'POST'],
     )]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -90,7 +91,7 @@ class AuthController extends AbstractController
 
     #[Route(
         path: '/logout',
-        name: 'auth.logout',
+        name: '.logout',
         methods: ['GET'],
     )]
     public function logout(): void
@@ -100,7 +101,7 @@ class AuthController extends AbstractController
 
     #[Route(
         path: '/verify-email/{token}',
-        name: 'auth.verify-email',
+        name: '.verify-email',
         methods: ['GET'],
         requirements: ['token' => Requirement::CATCH_ALL],
     )]
@@ -128,7 +129,7 @@ class AuthController extends AbstractController
 
     #[Route(
         path: '/password-reset',
-        name: 'auth.password-reset-step-1',
+        name: '.password-reset-step-1',
         methods: ['GET', 'POST'],
     )]
     public function passwordResetStep1email(
@@ -173,7 +174,7 @@ class AuthController extends AbstractController
 
     #[Route(
         '/password-reset/{token}',
-        name: 'auth.password-reset-step-2',
+        name: '.password-reset-step-2',
         methods: ['GET', 'POST'],
         requirements: ['token' => Requirement::CATCH_ALL],
     )]

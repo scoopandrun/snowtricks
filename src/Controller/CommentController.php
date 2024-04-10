@@ -18,11 +18,12 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\TurboBundle;
 
+#[Route(path: '/comments', name: 'comment')]
 class CommentController extends AbstractController
 {
     #[Route(
-        path: '/comments/{id}',
-        name: 'comment.single',
+        path: '/{id}',
+        name: '.single',
         methods: ['GET'],
         requirements: ['id' => Requirement::DIGITS],
     )]
@@ -37,8 +38,8 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: '/comments/{trickId}/{page}',
-        name: 'comment.list',
+        path: '/{trickId}/{page}',
+        name: '.list',
         methods: ['GET', 'POST'],
         requirements: [
             'trickId' => Requirement::DIGITS,
@@ -66,8 +67,8 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: '/comments/{trickId}/create',
-        name: 'comment.create',
+        path: '/{trickId}/create',
+        name: '.create',
         methods: ['GET', 'POST'],
         requirements: [
             'trickId' => Requirement::DIGITS,
@@ -119,8 +120,8 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: '/comments/reply-to/{id}',
-        name: 'comment.reply-to',
+        path: '/reply-to/{id}',
+        name: '.reply-to',
         methods: ['GET', 'POST'],
         requirements: [
             'trickId' => Requirement::DIGITS,
@@ -173,8 +174,8 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: '/comments/{id}/edit',
-        name: 'comment.edit',
+        path: '/{id}/edit',
+        name: '.edit',
         methods: ["GET", "POST"],
         requirements: ["id" => Requirement::DIGITS],
     )]
@@ -215,8 +216,8 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: "/comment/{id}",
-        name: "comment.delete",
+        path: "/{id}",
+        name: ".delete",
         methods: ["DELETE"],
         requirements: ["id" => Requirement::DIGITS],
     )]
