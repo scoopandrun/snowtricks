@@ -8,6 +8,8 @@
 
     {{ form_start(form, { attr: {'data-controller': 'user'} }) }}
 
+      {{ form_errors(form) }}
+
       {{ form_row(form.username) }}
 
       <div class="mb-3">
@@ -44,7 +46,12 @@
        {% do form.removeProfilePicture.setRendered %}
       {% endif %}
 
-      {{ form_row(form.profilePicture, { attr: {'data-user-target': 'profilePictureInput', 'data-action': 'change->user#showProfilePicturePreview'} }) }}
+      {{ form_row(form.profilePicture, { 
+          attr: {
+            'data-user-target': 'profilePictureInput',
+            'data-action': 'change->user#showProfilePicturePreview change->user#checkFileSize'
+          }
+        }) }}
 
       <div class="mt-5 fs-5">
         <p class="m-0">Password change (leave empty to keep unmodified)</p>

@@ -23,6 +23,8 @@
     <div class="container mb-5">
       {{ form_start(form, {'attr': {'id': form.vars.id, 'class': 'trick-edit-form', 'data-controller': 'form'} }) }}
 
+        {{ form_errors(form) }}
+
         {{ form_row(form.name) }}
 
         {{ form_row(form.description) }}

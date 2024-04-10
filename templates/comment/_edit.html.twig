@@ -1,5 +1,7 @@
 <turbo-frame id="comment-{{ comment.id }}-frame">
   <div class="row gx-4 gx-lg-5 my-4">
+    {{ form_errors(form) }}
+
     {{ form_start(form, { action: path('comment.edit', { id: comment.id }) }) }}
 
       {{ form_row(form.text) }}

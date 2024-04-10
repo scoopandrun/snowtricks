@@ -17,6 +17,8 @@
             </template>
           </turbo-stream>
         {% else %}
+          {{ form_errors(form) }}
+          
           {{ form_start(form, { action: path('comment.create', { trickId: comment.trick.id }) }) }}
     
             {{ form_row(form.text) }}
