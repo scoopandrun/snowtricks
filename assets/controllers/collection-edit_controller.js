@@ -43,12 +43,6 @@ export default class extends Controller {
         this.element.dataset.prototype.replaceAll("__name__", this.index)
       ).firstElementChild;
 
-    if (
-      item.querySelector("input").getAttribute("accept")?.startsWith("image/")
-    ) {
-      this.addPreview(item);
-    }
-
     this.addRemoveButton(item);
     this.handleRadioButton(item);
 
@@ -93,37 +87,6 @@ export default class extends Controller {
           button.checked = false;
         }
       });
-    });
-  }
-
-  /**
-   * @param {HTMLFieldSetElement} fieldset
-   */
-  addPreview(fieldset) {
-    /** @type {HTMLInputElement} */
-    const fileInput = fieldset.querySelector("input[type=file]");
-
-    const previewDiv = document.createElement("div");
-    previewDiv.classList.add("mt-2");
-
-    const picturePreview = document.createElement("img");
-    picturePreview.height = "100";
-
-    previewDiv.appendChild(picturePreview);
-    fileInput.nextElementSibling.after(previewDiv);
-
-    fileInput.addEventListener("change", (e) => {
-      const file = fileInput.files[0];
-
-      if (!file.type.startsWith("image/")) return;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-
-        picturePreview.src = result;
-      };
-      reader.readAsDataURL(file);
     });
   }
 }
