@@ -93,7 +93,11 @@ class TrickController extends AbstractController
                 'attr' => [
                     'data-max-size-bytes' => FileManager::getPostMaxSize('B'),
                     'data-max-size-unit' => FileManager::getPostMaxSize('auto', true),
-                ]
+                ],
+                'post_max_size_message' => sprintf(
+                    "The total size of the pictures is too high (max %s). Please remove some pictures or choose smaller ones.",
+                    FileManager::getPostMaxSize('auto', true)
+                ),
             ]
         );
         $form->handleRequest($request);
@@ -141,7 +145,11 @@ class TrickController extends AbstractController
                 'attr' => [
                     'data-post-max-size-bytes' => FileManager::getPostMaxSize('B'),
                     'data-post-max-size-unit' => FileManager::getPostMaxSize('auto', true),
-                ]
+                ],
+                'post_max_size_message' => sprintf(
+                    "The total size of the pictures is too high (max %s). Please remove some pictures or choose smaller ones.",
+                    FileManager::getPostMaxSize('auto', true)
+                ),
             ]
         );
         $form->handleRequest($request);
