@@ -34,6 +34,10 @@ class AuthController extends AbstractController
         UserService $userService,
         EntityManagerInterface $entityManager,
     ): Response {
+        if ($security->getUser()) {
+            return $this->redirectToRoute('homepage.index');
+        }
+
         $userInformation = new UserInformationDTO();
         $form = $this->createForm(RegistrationForm::class, $userInformation);
         $form->handleRequest($request);
