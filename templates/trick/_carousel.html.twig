@@ -1,0 +1,38 @@
+<div id="carousel" class="carousel carousel--hidden">
+
+  <div class="carousel__top-left"></div>
+  <div class="carousel__top-center"></div>
+  <div class="carousel__top-right carousel__close">
+    <button type="button" class="carousel__button" data-action="carousel#close" title="Close">
+      <twig:ux:icon name="material-symbols:close" />
+    </button>
+  </div>
+
+  <div class="carousel__mid-left carousel__prev" >
+    <button type="button" class="carousel__button" data-action="carousel#prev" title="Previous">
+      <twig:ux:icon name="grommet-icons:previous" />
+    </button>
+  </div>
+  <div class="carousel__mid-center carousel__content"></div>
+  <div class="carousel__mid-right carousel__next" >
+    <button type="button" class="carousel__button" data-action="carousel#next" title="Next">
+      <twig:ux:icon name="grommet-icons:next" />
+    </button>
+  </div>
+
+  <div class="carousel__bottom-left"></div>
+  <div class="carousel__bottom-center">
+    <div class="carousel__caption"></div>
+    <div class="carousel__indicators">
+      <template id="indicator">
+        <button
+          type="button"
+          class="carousel__indicator carousel__button"
+          data-carousel-target="indicator"
+        ></button>
+      </template>
+    </div>
+  </div>
+  <div class="carousel__bottom-right"></div>
+
+</div>
