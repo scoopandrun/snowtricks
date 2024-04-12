@@ -14,12 +14,13 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route(name: 'user')]
 #[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
     #[Route(
         path: '/user',
-        name: 'user.index',
+        name: '.index',
         methods: ['GET', 'POST'],
     )]
     public function index(
@@ -67,7 +68,7 @@ class UserController extends AbstractController
 
     #[Route(
         path: '/user',
-        name: 'user.delete',
+        name: '.delete',
         methods: ['DELETE'],
     )]
     public function delete(
@@ -94,7 +95,7 @@ class UserController extends AbstractController
 
     #[Route(
         path: '/send-verification-email',
-        name: 'user.send-verification-email',
+        name: '.send-verification-email',
         methods: ['GET'],
     )]
     public function sendVerificationEmail(

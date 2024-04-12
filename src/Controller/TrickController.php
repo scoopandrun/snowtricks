@@ -20,6 +20,7 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Turbo\TurboBundle;
 
+#[Route(path: '/tricks',   name: 'trick')]
 class TrickController extends AbstractController
 {
     public function __construct(
@@ -29,8 +30,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks',
-        name: 'trick.archive',
+        path: '/',
+        name: '.archive',
         methods: ['GET'],
     )]
     public function archive(EntityManagerInterface $entityManager): Response
@@ -44,8 +45,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/{id}-{slug}',
-        name: 'trick.single',
+        path: '/{id}-{slug}',
+        name: '.single',
         methods: ['GET'],
         requirements: [
             'id' => Requirement::DIGITS,
@@ -74,8 +75,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/create',
-        name: 'trick.create',
+        path: '/create',
+        name: '.create',
         methods: ["GET", "POST"],
     )]
     #[IsGranted(TrickVoter::CREATE)]
@@ -92,7 +93,11 @@ class TrickController extends AbstractController
                 'attr' => [
                     'data-max-size-bytes' => FileManager::getPostMaxSize('B'),
                     'data-max-size-unit' => FileManager::getPostMaxSize('auto', true),
-                ]
+                ],
+                'post_max_size_message' => sprintf(
+                    "The total size of the pictures is too high (max %s). Please remove some pictures or choose smaller ones.",
+                    FileManager::getPostMaxSize('auto', true)
+                ),
             ]
         );
         $form->handleRequest($request);
@@ -122,8 +127,8 @@ class TrickController extends AbstractController
     }
 
     #[Route(
-        path: '/tricks/{id}/edit',
-        name: 'trick.edit',
+        path: '/{id}/edit',
+        name: '.edit',
         methods: ["GET", "POST"],
         requirements: ["id" => Requirement::DIGITS],
     )]
@@ -140,7 +145,11 @@ class TrickController extends AbstractController
                 'attr' => [
                     'data-post-max-size-bytes' => FileManager::getPostMaxSize('B'),
                     'data-post-max-size-unit' => FileManager::getPostMaxSize('auto', true),
-                ]
+                ],
+                'post_max_size_message' => sprintf(
+                    "The total size of the pictures is too high (max %s). Please remove some pictures or choose smaller ones.",
+                    FileManager::getPostMaxSize('auto', true)
+                ),
             ]
         );
         $form->handleRequest($request);
@@ -173,8 +182,8 @@ class TrickController extends AbstractController
 
 
     #[Route(
-        path: "/tricks/{id}",
-        name: "trick.delete",
+        path: "/{id}",
+        name: ".delete",
         methods: ["DELETE"],
         requirements: ["id" => Requirement::DIGITS],
     )]

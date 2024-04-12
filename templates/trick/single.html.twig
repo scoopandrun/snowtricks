@@ -5,6 +5,7 @@
 {% block stylesheets %}
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
+  <link rel="stylesheet" href="{{ asset('styles/trick/carousel.css') }}">
   <link rel="stylesheet" href="{{ asset('styles/comment/comment.css') }}">
 {% endblock %}
 
@@ -25,7 +26,7 @@
         <div class="main-picture__edit-overlay rounded">
           {% if is_granted('trick_edit', trick) %}            
             <a href="{{ path('trick.edit', {id: trick.id}) }}" class="text-decoration-none" data-action="edit" title="Edit">
-              <span class="material-symbols-outlined">edit</span>
+              <twig:ux:icon name="material-symbols:edit-outline" class="fs-4" />
             </a>
           {% endif %}
           {% if is_granted('trick_delete', trick) %}
@@ -37,7 +38,7 @@
                 data-controller="delete-button"
                 data-confirmation="Are you sure that you want to delete this trick?"
               >
-                <span class="material-symbols-outlined">delete</span>
+                <twig:ux:icon name="material-symbols:delete-outline" class="fs-4" />
               </button>
             </form>
           {% endif %}
@@ -47,22 +48,27 @@
   </header>
 
   <main>
-    <div class="container mb-4" data-controller="trick-media">
+    <div class="container mb-4" data-controller="trick-media carousel">
       <div class="text-center d-md-none">
-        <button type="button" data-action="trick-media#toggleCollection" class="btn btn-primary">See media</button>
+        <button
+          type="button"
+          data-action="trick-media#toggleCollection"
+          data-trick-media-target="toggleCollection"
+          class="btn btn-primary"
+        >See media</button>
       </div>
 
       <div
         class="d-flex d-none d-md-flex flex-column flex-wrap flex-md-row justify-content-center align-items-center overflow-auto"
         id="trick-media"
       >
-        {{ include('trick/_media_overlay.html.twig') }}
+        {{ include('trick/_carousel.html.twig') }}
 
         {% for picture in trick.pictures %}
           <button
             type="button"
             class="btn mx-3 my-2 thumbnail"
-            data-trick-media-target="media"
+            data-carousel-target="media"
             data-type="picture"
             data-caption="{{ picture.description }}"
           >
@@ -82,7 +88,7 @@
             <button
               type="button"
               class="btn mx-3 my-2 thumbnail"
-              data-trick-media-target="media"
+              data-carousel-target="media"
               data-type="video"
               data-iframe="{{ video.iframe }}"
               data-caption="{{ video.title }}"

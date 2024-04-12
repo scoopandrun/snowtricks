@@ -55,4 +55,28 @@ export default class extends Controller {
     };
     reader.readAsDataURL(file);
   }
+
+  checkFileSize() {
+    /** @type {HTMLInputElement} */
+    const fileInput = this.profilePictureInputTarget;
+
+    const file = fileInput.files[0];
+
+    // Reset custom validity
+    fileInput.setCustomValidity("");
+    fileInput.reportValidity();
+
+    const maxSize = parseInt(fileInput.dataset.maxSize);
+
+    if (maxSize === undefined) return;
+
+    if (!file) return;
+
+    const fileSize = file.size;
+
+    if (fileSize > maxSize) {
+      fileInput.setCustomValidity("This file is too large.");
+      fileInput.reportValidity();
+    }
+  }
 }
