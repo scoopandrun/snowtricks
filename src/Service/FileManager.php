@@ -3,14 +3,16 @@
 namespace App\Service;
 
 use App\Utils\QuantityFormatter;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileManager
 {
-    public function __construct(private LoggerInterface $logger)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -27,19 +29,27 @@ class FileManager
     public function saveUploadedFile(
         UploadedFile $file,
         string $uploadDirectory,
-        ?string $filename = null
+        ?string $filename = null,
+        bool $unique = true,
     ): string|false {
         try {
-            $filename = $filename ?? $this->makeFilename(
+            $safeFilename = $this->makeFilename(
                 $file->getContent(),
                 $uploadDirectory,
-                $file->guessExtension(),
-                $filename
+                $filename,
+                (string) $file->guessExtension(),
+                $unique,
             );
 
-            $file->move($uploadDirectory, $filename);
+            // Make sure we have an extension
+            // (we might not have one when saving a user profile picture as only the ID is passed to the function)
+            if (!pathinfo($filename, PATHINFO_EXTENSION)) {
+                $filename = $filename . '.' . (string) $file->guessExtension();
+            }
 
-            return $filename;
+            $file->move($uploadDirectory, $safeFilename);
+
+            return $safeFilename;
         } catch (FileException $e) {
             $this->logger->error($e);
 
@@ -47,10 +57,20 @@ class FileManager
         }
     }
 
+    /**
+     * Save a raw file (string) to disk.
+     * 
+     * @param string $fileContent 
+     * @param string $uploadDirectory 
+     * @param null|string $filename 
+     * @param bool $unique 
+     * 
+     * @return string|false Filename of the saved file of false on failure.
+     */
     public function saveRawFile(
         string $fileContent,
         string $uploadDirectory,
-        string $filename,
+        ?string $filename,
         bool $unique = false,
     ): string|false {
         try {
@@ -58,44 +78,41 @@ class FileManager
                 mkdir($uploadDirectory, recursive: true);
             }
 
-            $safeFilename = $filename;
+            $extension = pathinfo((string) $filename, PATHINFO_EXTENSION);
 
-            if ($unique) {
-                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            // If there is no extension, save to a temporary file and guess the MIME type
+            // Not 100% accurate, but will do the job most of the time
+            if (!$extension) {
+                try {
+                    $tmpPath = $uploadDirectory . '/' . bin2hex(random_bytes(10));
 
-                // If there is no extension, save to a temporary file and guess the MIME type
-                // Not 100% accurate, but will do the job most of the time
-                if (!$extension) {
-                    try {
-                        $tmpPath = $uploadDirectory . '/' . bin2hex(random_bytes(10));
+                    if (!file_put_contents($tmpPath, $fileContent)) {
+                        throw new \Exception();
+                    }
 
-                        if (!file_put_contents($tmpPath, $fileContent)) {
-                            throw new \Exception();
-                        }
+                    $mime = mime_content_type($tmpPath);
 
-                        $mime = mime_content_type($tmpPath);
+                    if (!$mime) {
+                        throw new \Exception();
+                    }
 
-                        if (!$mime) {
-                            throw new \Exception();
-                        }
-
-                        $extension = explode('/', $mime)[1];
-                    } catch (\Exception) {
-                        // Unable to guess the extension
-                    } finally {
-                        if (is_file($tmpPath)) {
-                            unlink($tmpPath);
-                        }
+                    $extension = explode('/', $mime)[1];
+                } catch (\Exception) {
+                    // Unable to guess the extension
+                } finally {
+                    if (is_file($tmpPath)) {
+                        unlink($tmpPath);
                     }
                 }
-
-                $safeFilename = $this->makeFilename(
-                    $fileContent,
-                    $uploadDirectory,
-                    $extension
-                );
             }
 
+            $safeFilename = $this->makeFilename(
+                $fileContent,
+                $uploadDirectory,
+                $filename,
+                $extension,
+                $unique
+            );
 
             if (!file_put_contents($uploadDirectory . '/' . $safeFilename, $fileContent)) {
                 return false;
@@ -109,22 +126,64 @@ class FileManager
         }
     }
 
-    public function makeFilename(
+    /**
+     * Save an image (GDImage) to WebP.
+     * 
+     * @param \GdImage $image 
+     * @param string $uploadDirectory 
+     * @param string $filename 
+     */
+    public function saveGdImageToWebp(
+        \GdImage $image,
+        string $uploadDirectory,
+        string $filename,
+    ): void {
+        if (!is_dir($uploadDirectory)) {
+            mkdir($uploadDirectory, recursive: true);
+        }
+
+        $webpFilename = pathinfo($filename, PATHINFO_FILENAME) . ".webp";
+        $filepath = $uploadDirectory . '/' . $webpFilename;
+
+        if (imagewebp($image, $filepath, 100) === false) {
+            throw new \Exception("Unable to save the image {$filename} to WebP.");
+        }
+    }
+
+    /**
+     * Make a safe filename for a file.
+     * 
+     * @param string $fileContent 
+     * @param string $uploadDirectory 
+     * @param null|string $filename 
+     * @param string $extension 
+     * @param bool $unique 
+     * 
+     * @return string Safe filename.
+     */
+    private function makeFilename(
         string $fileContent,
         string $uploadDirectory,
-        string $extension
+        ?string $filename,
+        string $extension,
+        bool $unique
     ): string {
         if (!$fileContent) {
             throw new \InvalidArgumentException("The file content is empty.");
         }
 
-        // Create a safe filename and check if it's available
-        $hash = md5($fileContent);
-        do {
-            $filename = $hash . '-' . uniqid() . '.' . $extension;
-        } while (is_file($uploadDirectory . '/' . $filename));
+        if ($filename && !$unique) {
+            return pathinfo($filename, PATHINFO_FILENAME) . '.' . $extension;
+        }
 
-        return $filename;
+        // Create a safe filename and check if it's available
+        $filename = pathinfo($filename, PATHINFO_FILENAME) ?: md5($fileContent);
+        do {
+            $safeFilename = $filename . ($unique ? '-' . uniqid() : '') . '.' . $extension;
+            if (!$unique) break;
+        } while (is_file($uploadDirectory . '/' . $safeFilename));
+
+        return $safeFilename;
     }
 
     /**
@@ -153,7 +212,7 @@ class FileManager
 
         $fullPath = $fullPath ?: $this->getFullpath($directory, $filename);
 
-        if (is_file($fullPath)) {
+        if (is_file((string) $fullPath)) {
             return unlink($fullPath);
         } else {
             return true;
@@ -163,7 +222,6 @@ class FileManager
     public function getFullpath(
         string $directory,
         string $filename,
-        bool $freeExtension = true,
     ): ?string {
         if (!is_dir($directory)) {
             return null;
@@ -172,11 +230,11 @@ class FileManager
         $directoryIterator = new \DirectoryIterator($directory);
 
         foreach ($directoryIterator as $fileInfo) {
-            if (is_file($fileInfo->getRealPath())) {
+            if ($fileInfo->isFile()) {
                 $extension = $fileInfo->getExtension();
-                $currentFilename = $fileInfo->getBasename($freeExtension ? '.' . $extension : '');
+                $currentFilename = $fileInfo->getBasename('.' . $extension);
 
-                if ($currentFilename === $filename) {
+                if ($currentFilename === pathinfo($filename, PATHINFO_FILENAME)) {
                     return $fileInfo->getRealPath();
                 }
             }
@@ -196,8 +254,13 @@ class FileManager
         $directoryIterator = new \DirectoryIterator($directory);
 
         foreach ($directoryIterator as $fileInfo) {
-            if (is_file($fileInfo->getRealPath())) {
+            if ($fileInfo->isFile()) {
                 unlink($fileInfo->getRealPath());
+            }
+
+            if ($fileInfo->isDir() && !$fileInfo->isDot()) {
+                $this->clearDirectory($fileInfo->getRealPath());
+                rmdir($fileInfo->getRealPath());
             }
         }
     }

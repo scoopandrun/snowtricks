@@ -2,28 +2,27 @@
 
 namespace App\Twig\Runtime;
 
-use App\Entity\User;
+use App\Service\TrickService;
 use App\Service\UserService;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        #[Autowire('%app.uploads.pictures%/')]
-        private readonly string $picturesUploadsDirectory,
+        private TrickService $trickService,
         private UserService $userService,
     ) {
         // Inject dependencies if needed
     }
 
     /**
-     * @param string $library Name of the picture library.
-     * @param mixed $attribute Either the trick's filename or the user object.
+     * @param string $library   Name of the picture library.
+     * @param mixed  $attribute Either the trick's picture filename or the user object.
+     * @param string $size      Optional. The desired image size. See ImageResizer sizes. Default = 'original'.
      * 
      * @return null|string The full path of the image file, or null if the file is not found.
      */
-    public function getUrl(string $library, mixed $attribute): ?string
+    public function getUrl(string $library, mixed $attribute, string $size = 'original'): ?string
     {
         $libraries = ['tricks', 'users'];
 
@@ -34,11 +33,11 @@ class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
 
         // Check if the file exists
         $fullpath = match ($library) {
-            'tricks' => $this->picturesUploadsDirectory . 'tricks/' . $attribute,
-            'users' => $this->userService->getProfilePictureFilename($attribute),
+            'tricks' => $this->trickService->getTrickPictureFilename((string) $attribute, $size),
+            'users' => $this->userService->getProfilePictureFilename($attribute, $size),
         };
 
-        if (!is_file($fullpath)) {
+        if (!is_file((string) $fullpath)) {
             return null;
         }
 

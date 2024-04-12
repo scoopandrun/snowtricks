@@ -6,7 +6,6 @@ use App\Component\Batch;
 use App\Entity\Picture;
 use App\Entity\Trick;
 use App\Repository\TrickRepository;
-use App\Service\FileManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -18,6 +17,7 @@ class TrickService
         private readonly string $tricksPicturesUploadsDirectory,
         private LoggerInterface $logger,
         private SlugService $slugService,
+        private ImageManager $imageManager,
         private FileManager $fileManager,
     ) {
     }
@@ -63,7 +63,7 @@ class TrickService
     public function setMainPicture(Trick $trick): void
     {
         // Default main picture = first of collection
-        $trick->setMainPicture($trick->getPictures()->first() ?? null);
+        $trick->setMainPicture($trick->getPictures()->first() ?: null);
 
         foreach ($trick->getPictures() as $picture) {
             if (true === $picture->getSetAsMainPicture()) {
@@ -75,23 +75,35 @@ class TrickService
 
     public function saveTrickPicture(Picture $picture): bool
     {
-        $file = $picture->getFile();
-
-        $filename = $this->fileManager->saveUploadedFile($file, $this->tricksPicturesUploadsDirectory);
+        $filename = $this->imageManager->saveImage(
+            $picture->getFile(),
+            $this->tricksPicturesUploadsDirectory,
+            sizes: ImageManager::SIZE_ALL,
+            unique: true,
+        );
 
         $picture->setFilename($filename);
 
         return (bool) $filename;
     }
 
-    public function deleteTrickPicture(Picture $picture): bool
+    public function deleteTrickPicture(Picture $picture): void
     {
-        $uploadDirectory = $this->tricksPicturesUploadsDirectory;
+        $this->imageManager->deleteImage(
+            $this->tricksPicturesUploadsDirectory,
+            $picture->getFilename()
+        );
+    }
 
-        $filename = $picture->getFilename();
+    public function getTrickPictureFilename(?string $filename, string $size = 'original'): ?string
+    {
+        if (is_null($filename)) {
+            return null;
+        }
 
-        $fullPath = $uploadDirectory . '/' . $filename;
-
-        return $this->fileManager->delete($fullPath);
+        return $this->fileManager->getFullpath(
+            directory: $this->tricksPicturesUploadsDirectory . '/' . $size,
+            filename: pathinfo($filename, PATHINFO_FILENAME),
+        );
     }
 }

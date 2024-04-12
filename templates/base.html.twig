@@ -82,7 +82,7 @@
                 <div class="d-flex align-items-center">
                   {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
                   <img
-                    src="{{ image('users', app.user)|default(fallbackProfilePicture) }}"
+                    src="{{ image('users', app.user, 'thumbnail')|default(fallbackProfilePicture) }}"
                     alt="Profile picture"
                     height="30"
                     width="30"

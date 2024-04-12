@@ -28,7 +28,7 @@
         </div>
       </div>
 
-      {% set profilePicture = image('users', app.user) %}
+      {% set profilePicture = image('users', app.user, 'small') %}
       <div class="mt-3">
         {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
         <img

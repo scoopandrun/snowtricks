@@ -23,6 +23,7 @@ class UserService
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $userPasswordHasher,
         private RouterInterface $router,
+        private ImageManager $imageManager,
         private FileManager $fileManager,
         #[Autowire('%app.uploads.pictures%/users')]
         private string $profilePictureUploadDirectory,
@@ -62,31 +63,35 @@ class UserService
         // Remove the old profile picture, if there is one
         $this->deleteProfilePicture($user);
 
-        $filename = $this->fileManager->saveUploadedFile(
+        $filename = $this->imageManager->saveImage(
             $file,
             $this->profilePictureUploadDirectory,
-            (string) $user->getId()
+            (string) $user->getId(),
+            [
+                ImageManager::SIZE_THUMBNAIL,
+                ImageManager::SIZE_SMALL,
+            ]
         );
 
         return (bool) $filename;
     }
 
-    public function deleteProfilePicture(User $user): bool
+    public function deleteProfilePicture(User $user): void
     {
-        return $this->fileManager->delete(
-            directory: $this->profilePictureUploadDirectory,
-            filename: (string) $user->getId(),
+        $this->imageManager->deleteImage(
+            $this->profilePictureUploadDirectory,
+            (string) $user->getId(),
         );
     }
 
-    public function getProfilePictureFilename(?User $user): ?string
+    public function getProfilePictureFilename(?User $user, string $size = 'original'): ?string
     {
         if (is_null($user)) {
             return null;
         }
 
         return $this->fileManager->getFullpath(
-            directory: $this->profilePictureUploadDirectory,
+            directory: $this->profilePictureUploadDirectory . '/' . $size,
             filename: (string) $user->getId(),
         );
     }

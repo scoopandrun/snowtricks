@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 use App\Service\FileManager;
+use App\Service\ImageManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -19,6 +20,7 @@ class UserFixture extends Fixture
         private string $profilePictureUploadDirectory,
         private LoggerInterface $logger,
         private FileManager $fileManager,
+        private ImageManager $imageManager,
     ) {
         $this->makeUsers();
     }
@@ -63,7 +65,7 @@ class UserFixture extends Fixture
                 array_push(static::$usersData, [
                     "username" => $result->name->first . ' ' . $result->name->last,
                     "email" => $result->email,
-                    "picture" => $result->picture->medium,
+                    "picture" => $result->picture->large,
                 ]);
             }
         } catch (\Exception $e) {
@@ -121,10 +123,14 @@ class UserFixture extends Fixture
             }))[0] ?? null;
 
             if (isset($userData['picture'])) {
-                $filename = $this->fileManager->saveRawFile(
+                $filename = $this->imageManager->saveImage(
                     file_get_contents($userData['picture']),
                     $this->profilePictureUploadDirectory,
-                    $user->getId() . '.' . pathinfo($userData['picture'], PATHINFO_EXTENSION)
+                    $user->getId() . '.' . pathinfo($userData['picture'], PATHINFO_EXTENSION),
+                    [
+                        ImageManager::SIZE_THUMBNAIL,
+                        ImageManager::SIZE_SMALL,
+                    ]
                 );
 
                 if ($filename) {

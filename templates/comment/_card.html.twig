@@ -3,69 +3,65 @@
 {% else %}
   <turbo-frame id="comment-{{ comment.id }}-frame">
     <div class="card card-border-secondary mb-3">
-      {# {% if comment.deletedAt %}
-        <div class="p-2">This comment was deleted.</div>
-      {% else %} #}
-        {% if comment.id %}
-          <div class="card-header">
-            <div class="d-inline me-1">
-              {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
-              <img
-                src="{{ image('users', comment.author)|default(fallbackProfilePicture) }}"
-                alt="Profile picture"
-                height="50"
-                width="50"
-                class="rounded-circle"
-              >
-            </div>
-            <span class="text-body">{{ comment.author ?? "Account deleted" }}</span>
-            -
-            <div class="d-inline text-dark">
-              {{ comment.createdAt|format_date("full", locale = "en-US") }}
-              {% if comment.updatedAt %}
-                (updated {{ comment.updatedAt|format_date("full", locale = "en-US") }})
-              {% endif %}
-            </div>
-    
-            {% if not comment.deletedAt %}
-              {% if is_granted('comment_edit', comment) %}
-                <a href="{{ path('comment.edit', { id: comment.id }) }}" class="btn btn-primary btn-sm" title="Edit this comment">Edit</a>
-              {% endif %}
-    
-              {% if is_granted('comment_delete', comment) %}              
-                <form action="{{ path('comment.delete', { id: comment.id }) }}" method="POST" class="d-inline ms-2">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <button
-                    class="btn btn-danger btn-sm"
-                    title="Delete the comment"
-                    data-controller="delete-button"
-                    data-confirmation="Are you sure that you want to delete this comment?"
-                  >Delete</button>
-                </form>
-              {% endif %}
+
+      {% if comment.id %}
+        <div class="card-header">
+          <div class="d-inline me-1">
+            {% set fallbackProfilePicture = asset('images/fallback-profile-picture.png') %}
+            <img
+              src="{{ image('users', comment.author, 'thumbnail')|default(fallbackProfilePicture) }}"
+              alt="Profile picture"
+              height="50"
+              width="50"
+              class="rounded-circle"
+            >
+          </div>
+          <span class="text-body">{{ comment.author ?? "Account deleted" }}</span>
+          -
+          <div class="d-inline text-dark">
+            {{ comment.createdAt|format_date("full", locale = "en-US") }}
+            {% if comment.updatedAt %}
+              (updated {{ comment.updatedAt|format_date("full", locale = "en-US") }})
             {% endif %}
           </div>
-    
-          {% if comment.deletedAt %}
-            <div class="card-body">
-              <em>This comment was deleted.</em>
-            </div>
-          {% else %}
-            <div class="card-body">
-              {{ comment.text|nl2br }}
-            </div>
-
-            {% if is_granted('comment_create') %}
-              <div class="card-body">
-                {{ render(path('comment.reply-to', { id: comment.id })) }}
-              </div>
+  
+          {% if not comment.deletedAt %}
+            {% if is_granted('comment_edit', comment) %}
+              <a href="{{ path('comment.edit', { id: comment.id }) }}" class="btn btn-primary btn-sm" title="Edit this comment">Edit</a>
+            {% endif %}
+  
+            {% if is_granted('comment_delete', comment) %}              
+              <form action="{{ path('comment.delete', { id: comment.id }) }}" method="POST" class="d-inline ms-2">
+                <input type="hidden" name="_method" value="DELETE">
+                <button
+                  class="btn btn-danger btn-sm"
+                  title="Delete the comment"
+                  data-controller="delete-button"
+                  data-confirmation="Are you sure that you want to delete this comment?"
+                >Delete</button>
+              </form>
             {% endif %}
           {% endif %}
-
+        </div>
   
+        {% if comment.deletedAt %}
+          <div class="card-body">
+            <em>This comment was deleted.</em>
+          </div>
+        {% else %}
+          <div class="card-body">
+            {{ comment.text|nl2br }}
+          </div>
+
+          {% if is_granted('comment_create') %}
+            <div class="card-body">
+              {{ render(path('comment.reply-to', { id: comment.id })) }}
+            </div>
+          {% endif %}
         {% endif %}
 
-      {# {% endif %} #}
+
+      {% endif %}
 
       <div class="mx-2" id="comment-{{ comment.id }}-replies">
         {% if comment.replies|length > 0 %}
