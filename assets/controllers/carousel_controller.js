@@ -55,9 +55,7 @@ export default class extends Controller {
     /** @type {"picture"|"video"} */
     const mediaType = button.dataset.type;
     const src =
-      mediaType === "picture"
-        ? button.firstElementChild.src
-        : button.dataset.iframe;
+      mediaType === "picture" ? button.dataset.src : button.dataset.iframe;
     const content = this._makeContent(mediaType, src);
 
     /** @type {HTMLDivElement} */

@@ -6,7 +6,7 @@
   >
     {% set fallbackMainPicture = asset('images/fallback-trick-image-640.jpg') %}
     <img
-      src="{{ image('tricks', trick.mainPicture)|default(fallbackMainPicture) }}"
+      src="{{ image('tricks', trick.mainPicture, 'medium')|default(fallbackMainPicture) }}"
       class="w-100 rounded-top"
       alt="{{ trick.name }}"
     >

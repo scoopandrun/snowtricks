@@ -8,6 +8,7 @@ use App\Entity\Picture;
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Service\FileManager;
+use App\Service\ImageManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -22,6 +23,7 @@ class TrickFixture extends Fixture implements DependentFixtureInterface
         private readonly SluggerInterface $slugger,
         private LoggerInterface $logger,
         private FileManager $fileManager,
+        private ImageManager $imageManager,
         #[Autowire('%app.uploads.pictures%/tricks')]
         private string $trickPictureUploadDirectory,
         private HttpClientInterface $httpClient,
@@ -87,11 +89,12 @@ class TrickFixture extends Fixture implements DependentFixtureInterface
 
                     $fileContent = $response->getContent();
 
-                    $filename = $this->fileManager->saveRawFile(
+                    $filename = $this->imageManager->saveImage(
                         $fileContent,
                         $this->trickPictureUploadDirectory,
-                        parse_url($url, PHP_URL_PATH),
-                        true
+                        filename: md5($fileContent) . '.' . pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION),
+                        sizes: ImageManager::SIZE_ALL,
+                        unique: true,
                     );
 
                     if (!$filename) {

@@ -14,7 +14,7 @@
     <div class="container mx-3 mx-sm-auto my-5 text-center main-picture">
       {% set fallbackMainPicture = asset('images/fallback-trick-image-1920.jpg') %}
       <img
-        src="{{ image('tricks', trick.mainPicture)|default(fallbackMainPicture) }}"
+        src="{{ image('tricks', trick.mainPicture, 'large')|default(fallbackMainPicture) }}"
         class="main-picture__image rounded"
         alt="{{ trick.name }}"
       >
@@ -70,10 +70,11 @@
             class="btn mx-3 my-2 thumbnail"
             data-carousel-target="media"
             data-type="picture"
+            data-src="{{ image('tricks', picture, 'large') }}"
             data-caption="{{ picture.description }}"
           >
             <img
-              src="{{ image('tricks', picture) }}"
+              src="{{ image('tricks', picture, 'thumbnail') }}"
               height="100"
               title="[Picture] {{ picture.description }}"
               alt="{{ picture.description }}"

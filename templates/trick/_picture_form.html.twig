@@ -2,7 +2,7 @@
   <div id="{{ picture.vars.id }}">
     <img
       id="{{ 'thumbnail_' ~ picture.vars.data.id }}"
-      src="{{ image('tricks', picture.vars.data.filename) }}"
+      src="{{ image('tricks', picture.vars.data.filename, 'thumbnail') }}"
       alt="{{ picture.vars.data.description }}"
       width="auto"
       height="100"
