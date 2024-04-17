@@ -95,7 +95,7 @@ class TrickService
         );
     }
 
-    public function getTrickPictureFilename(?string $filename, string $size = 'original'): ?string
+    public function getTrickPicturePath(?string $filename, string $size = ImageManager::SIZE_ORIGINAL): ?string
     {
         if (is_null($filename)) {
             return null;

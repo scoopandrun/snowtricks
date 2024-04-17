@@ -28,6 +28,11 @@ class ImageManager
     public const SIZE_LARGE = 'large';
 
     /**
+     * Original size of the image.
+     */
+    public const SIZE_ORIGINAL = 'original';
+
+    /**
      * All sizes:
      * - thumbnail (height: 100px)
      * - small (height: 300px)
@@ -87,14 +92,14 @@ class ImageManager
             $fileContent = $image->getContent();
 
             // Save original image
-            $filename = $this->fileManager->saveUploadedFile($image, $uploadDirectory . '/original', $filename, $unique);
+            $filename = $this->fileManager->saveUploadedFile($image, $uploadDirectory . '/' . self::SIZE_ORIGINAL, $filename, $unique);
         }
 
         if (is_string($image)) {
             $fileContent = $image;
 
             // Save original image
-            $filename = $this->fileManager->saveRawFile($image, $uploadDirectory . '/original', $filename, $unique);
+            $filename = $this->fileManager->saveRawFile($image, $uploadDirectory . '/' . self::SIZE_ORIGINAL, $filename, $unique);
         }
 
         // Save resized images
@@ -116,7 +121,7 @@ class ImageManager
      */
     public function deleteImage(string $directory, string $filename): void
     {
-        $sizes = array_merge(self::SIZE_ALL, ['original']);
+        $sizes = array_merge(self::SIZE_ALL, [ImageManager::SIZE_ORIGINAL]);
 
         foreach ($sizes as $size) {
             $this->fileManager->delete(
