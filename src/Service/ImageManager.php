@@ -73,13 +73,16 @@ class ImageManager
     /**
      * Save an image in different sizes.
      * 
+     * The original image is saved with the original extension.
+     * The resized images are saved in WebP format.
+     * 
      * @param UploadedFile|string $image 
      * @param string              $uploadDirectory 
      * @param null|string         $filename 
      * @param array               $sizes 
      * @param bool                $unique 
      * 
-     * @return string Filename of the saves image.
+     * @return string Filename (without the path) of the saved image.
      */
     public function saveImage(
         UploadedFile|string $image,
@@ -139,7 +142,7 @@ class ImageManager
      * 
      * @return \Generator<array>
      */
-    public function resize(string $imageContent, array $sizes = []): \Generator
+    private function resize(string $imageContent, array $sizes = []): \Generator
     {
         $gdImage = imagecreatefromstring($imageContent);
 

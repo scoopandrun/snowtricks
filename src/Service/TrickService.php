@@ -27,7 +27,7 @@ class TrickService
      * @param int $batchNumber 
      * @param int $batchSize   Number of tricks to show in the batch.
      * 
-     * @return Batch<App\DTO\TrickCardDTO>
+     * @return Batch<\App\DTO\TrickCardDTO>
      */
     public function getBatch(int $batchNumber = 1, int $batchSize = 10): Batch
     {
