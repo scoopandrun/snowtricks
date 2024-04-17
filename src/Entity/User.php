@@ -55,8 +55,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
     private Collection $comments;
 
+    #[ORM\Column(options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Assert\Type(\DateTimeImmutable::class)]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function __construct()
     {
+        $this->setCreatedAt(new \DateTimeImmutable());
         $this->tricks = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -236,6 +241,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \String
                 $comment->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

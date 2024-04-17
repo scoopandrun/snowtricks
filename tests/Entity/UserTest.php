@@ -47,6 +47,11 @@ class UserTest extends TestCase
         $resetToken = 'resettoken123';
         $user->setPasswordResetToken($resetToken);
         $this->assertEquals($resetToken, $user->getPasswordResetToken());
+
+        // Test setCreatedAt and getCreatedAt
+        $createdAt = new \DateTimeImmutable();
+        $user->setCreatedAt($createdAt);
+        $this->assertSame($createdAt, $user->getCreatedAt());
     }
 
     public function testAddAndRemoveTrick()
