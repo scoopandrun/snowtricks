@@ -35,7 +35,13 @@ class VideoService
     private function getOembedData(string $url, string $property = ""): mixed
     {
         if (is_null(self::$oembedData[$url] ?? null)) {
-            $oembedUrl = $this->getProviderInfo($url)["oembedUrl"];
+            $providerInfo = $this->getProviderInfo($url);
+
+            if (is_null($providerInfo)) {
+                return null;
+            }
+
+            $oembedUrl = $providerInfo["oembedUrl"];
             $oembedData = $this->fetchOembedData($oembedUrl);
             self::$oembedData[$url] = $oembedData;
         }
