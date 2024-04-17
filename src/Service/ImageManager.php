@@ -162,4 +162,35 @@ class ImageManager
             }
         }
     }
+
+    /**
+     * Get the full path of an image.
+     * 
+     * @param string $directory 
+     * @param string $filename 
+     * @param string $size 
+     * 
+     * @return string|null Full path of the image or null if not found.
+     */
+    public function getImagePath(
+        string $directory,
+        string $filename,
+        string $size
+    ): ?string {
+        // Try provided size
+        $fullpath = $this->fileManager->getFullpath(
+            $directory . '/' . $size,
+            $filename
+        );
+
+        // If not found, try original size
+        if (is_null($fullpath)) {
+            $fullpath = $this->fileManager->getFullpath(
+                $directory . '/' . self::SIZE_ORIGINAL,
+                $filename
+            );
+        }
+
+        return $fullpath;
+    }
 }

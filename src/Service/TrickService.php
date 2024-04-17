@@ -13,12 +13,11 @@ class TrickService
 {
     public function __construct(
         private TrickRepository $trickRepository,
-        #[Autowire('%app.uploads.pictures%/tricks')]
-        private readonly string $tricksPicturesUploadsDirectory,
         private LoggerInterface $logger,
         private SlugService $slugService,
         private ImageManager $imageManager,
-        private FileManager $fileManager,
+        #[Autowire('%app.uploads.pictures%/tricks')]
+        private readonly string $tricksPicturesUploadsDirectory,
     ) {
     }
 
@@ -101,9 +100,12 @@ class TrickService
             return null;
         }
 
-        return $this->fileManager->getFullpath(
-            directory: $this->tricksPicturesUploadsDirectory . '/' . $size,
-            filename: pathinfo($filename, PATHINFO_FILENAME),
+        $fullpath = $this->imageManager->getImagePath(
+            $this->tricksPicturesUploadsDirectory,
+            $filename,
+            $size
         );
+
+        return $fullpath;
     }
 }
