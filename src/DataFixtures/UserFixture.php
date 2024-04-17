@@ -98,7 +98,7 @@ class UserFixture extends Fixture
             return (new User())
                 ->setUsername($userData["username"])
                 ->setEmail($userData["email"])
-                ->setPassword(password_hash(random_bytes(20), PASSWORD_DEFAULT))
+                ->setPassword(password_hash(bin2hex(random_bytes(20)), PASSWORD_DEFAULT))
                 ->setIsVerified(true);
         }, static::$usersData);
     }
