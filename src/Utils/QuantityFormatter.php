@@ -12,13 +12,14 @@ class QuantityFormatter
      * 
      * Available units:
      * 
-     * | format | description                 |
+     * |  unit  | description                 |
      * |--------|-----------------------------|
      * |  null  | the original value          |
-     * |   B    | value in bytes (B)          |
-     * |   K    | value in kilobytes (KB)     |
-     * |   M    | value in megabytes (MB)     |
-     * |   G    | value in gigabytes (GB)     |
+     * |  B     | value in bytes (B)          |
+     * |  K(B)  | value in kilobytes (KB)     |
+     * |  M(B)  | value in megabytes (MB)     |
+     * |  G(B)  | value in gigabytes (GB)     |
+     * |  T(B)  | value in terabytes (TB)     |
      * |  auto  | value with the closest unit |
      * 
      * @param int|string  $value       Value to be formatted.
@@ -43,25 +44,31 @@ class QuantityFormatter
 
         $exponentToBytes = match (strtoupper($originalUnit)) {
             'B' => 0,
-            'K' => 1,
-            'M' => 2,
-            'G' => 3,
+            'K', 'KB' => 1,
+            'M', 'MB' => 2,
+            'G', 'GB' => 3,
+            'T', 'TB' => 4,
         };
 
         $valueInBytes = $originalValue * pow(1024, $exponentToBytes);
 
         $exponentToDisplayedValue = match (strtoupper((string) $unit)) {
             'B' => 0,
-            'K' => 1,
-            'M' => 2,
-            'G' => 3,
+            'K', 'KB' => 1,
+            'M', 'MB' => 2,
+            'G', 'GB' => 3,
+            'T', 'TB' => 4,
             'AUTO' => (int) log($valueInBytes, 1024),
             default => 0,
         };
 
         $displayedValue = match (strtoupper((string) $unit)) {
-            null => $value,
-            'B', 'K', 'M', 'G', 'AUTO' => intval($valueInBytes / pow(1024, $exponentToDisplayedValue)),
+            'B',
+            'K', 'KB',
+            'M', 'MB',
+            'G', 'GB',
+            'T', 'TB',
+            'AUTO' => intval($valueInBytes / pow(1024, $exponentToDisplayedValue)),
             default => $value,
         };
 
@@ -72,6 +79,9 @@ class QuantityFormatter
             3 => 'GB',
             4 => 'TB',
         };
+
+        // $unit = null should return the original value, as-is
+        $displayedUnit = is_null($unit) ? '' : $displayedUnit;
 
         return $displayedValue . ($displayUnit ? $displayedUnit : '');
     }
