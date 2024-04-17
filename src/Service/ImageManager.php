@@ -28,6 +28,11 @@ class ImageManager
     public const SIZE_LARGE = 'large';
 
     /**
+     * Original size of the image.
+     */
+    public const SIZE_ORIGINAL = 'original';
+
+    /**
      * All sizes:
      * - thumbnail (height: 100px)
      * - small (height: 300px)
@@ -68,13 +73,16 @@ class ImageManager
     /**
      * Save an image in different sizes.
      * 
+     * The original image is saved with the original extension.
+     * The resized images are saved in WebP format.
+     * 
      * @param UploadedFile|string $image 
      * @param string              $uploadDirectory 
      * @param null|string         $filename 
      * @param array               $sizes 
      * @param bool                $unique 
      * 
-     * @return string Filename of the saves image.
+     * @return string Filename (without the path) of the saved image.
      */
     public function saveImage(
         UploadedFile|string $image,
@@ -87,14 +95,14 @@ class ImageManager
             $fileContent = $image->getContent();
 
             // Save original image
-            $filename = $this->fileManager->saveUploadedFile($image, $uploadDirectory . '/original', $filename, $unique);
+            $filename = $this->fileManager->saveUploadedFile($image, $uploadDirectory . '/' . self::SIZE_ORIGINAL, $filename, $unique);
         }
 
         if (is_string($image)) {
             $fileContent = $image;
 
             // Save original image
-            $filename = $this->fileManager->saveRawFile($image, $uploadDirectory . '/original', $filename, $unique);
+            $filename = $this->fileManager->saveRawFile($image, $uploadDirectory . '/' . self::SIZE_ORIGINAL, $filename, $unique);
         }
 
         // Save resized images
@@ -116,7 +124,7 @@ class ImageManager
      */
     public function deleteImage(string $directory, string $filename): void
     {
-        $sizes = array_merge(self::SIZE_ALL, ['original']);
+        $sizes = array_merge(self::SIZE_ALL, [ImageManager::SIZE_ORIGINAL]);
 
         foreach ($sizes as $size) {
             $this->fileManager->delete(
@@ -134,7 +142,7 @@ class ImageManager
      * 
      * @return \Generator<array>
      */
-    public function resize(string $imageContent, array $sizes = []): \Generator
+    private function resize(string $imageContent, array $sizes = []): \Generator
     {
         $gdImage = imagecreatefromstring($imageContent);
 
@@ -156,5 +164,36 @@ class ImageManager
                 ];
             }
         }
+    }
+
+    /**
+     * Get the full path of an image.
+     * 
+     * @param string $directory 
+     * @param string $filename 
+     * @param string $size 
+     * 
+     * @return string|null Full path of the image or null if not found.
+     */
+    public function getImagePath(
+        string $directory,
+        string $filename,
+        string $size
+    ): ?string {
+        // Try provided size
+        $fullpath = $this->fileManager->getFullpath(
+            $directory . '/' . $size,
+            $filename
+        );
+
+        // If not found, try original size
+        if (is_null($fullpath)) {
+            $fullpath = $this->fileManager->getFullpath(
+                $directory . '/' . self::SIZE_ORIGINAL,
+                $filename
+            );
+        }
+
+        return $fullpath;
     }
 }

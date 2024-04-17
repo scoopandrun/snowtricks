@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Utils\QuantityFormatter;
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -40,12 +39,6 @@ class FileManager
                 (string) $file->guessExtension(),
                 $unique,
             );
-
-            // Make sure we have an extension
-            // (we might not have one when saving a user profile picture as only the ID is passed to the function)
-            if (!pathinfo($filename, PATHINFO_EXTENSION)) {
-                $filename = $filename . '.' . (string) $file->guessExtension();
-            }
 
             $file->move($uploadDirectory, $safeFilename);
 
@@ -145,7 +138,7 @@ class FileManager
         $webpFilename = pathinfo($filename, PATHINFO_FILENAME) . ".webp";
         $filepath = $uploadDirectory . '/' . $webpFilename;
 
-        if (imagewebp($image, $filepath, 100) === false) {
+        if (false === imagewebp($image, $filepath, 100)) {
             throw new \Exception("Unable to save the image {$filename} to WebP.");
         }
     }
@@ -177,7 +170,7 @@ class FileManager
         }
 
         // Create a safe filename and check if it's available
-        $filename = pathinfo($filename, PATHINFO_FILENAME) ?: md5($fileContent);
+        $filename = pathinfo((string) $filename, PATHINFO_FILENAME) ?: md5($fileContent);
         do {
             $safeFilename = $filename . ($unique ? '-' . uniqid() : '') . '.' . $extension;
             if (!$unique) break;
@@ -247,7 +240,7 @@ class FileManager
     public function clearDirectory(string $directory): void
     {
         if (!is_dir($directory)) {
-            $this->logger->debug(sprintf("%s is not a directory!", $directory));
+            $this->logger->debug(sprintf("'%s' is not a directory!", $directory));
             return;
         }
 

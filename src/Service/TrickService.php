@@ -13,12 +13,11 @@ class TrickService
 {
     public function __construct(
         private TrickRepository $trickRepository,
-        #[Autowire('%app.uploads.pictures%/tricks')]
-        private readonly string $tricksPicturesUploadsDirectory,
         private LoggerInterface $logger,
         private SlugService $slugService,
         private ImageManager $imageManager,
-        private FileManager $fileManager,
+        #[Autowire('%app.uploads.pictures%/tricks')]
+        private readonly string $tricksPicturesUploadsDirectory,
     ) {
     }
 
@@ -28,7 +27,7 @@ class TrickService
      * @param int $batchNumber 
      * @param int $batchSize   Number of tricks to show in the batch.
      * 
-     * @return Batch<App\DTO\TrickCardDTO>
+     * @return Batch<\App\DTO\TrickCardDTO>
      */
     public function getBatch(int $batchNumber = 1, int $batchSize = 10): Batch
     {
@@ -95,15 +94,18 @@ class TrickService
         );
     }
 
-    public function getTrickPictureFilename(?string $filename, string $size = 'original'): ?string
+    public function getTrickPicturePath(?string $filename, string $size = ImageManager::SIZE_ORIGINAL): ?string
     {
         if (is_null($filename)) {
             return null;
         }
 
-        return $this->fileManager->getFullpath(
-            directory: $this->tricksPicturesUploadsDirectory . '/' . $size,
-            filename: pathinfo($filename, PATHINFO_FILENAME),
+        $fullpath = $this->imageManager->getImagePath(
+            $this->tricksPicturesUploadsDirectory,
+            $filename,
+            $size
         );
+
+        return $fullpath;
     }
 }

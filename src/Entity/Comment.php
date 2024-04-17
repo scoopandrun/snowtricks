@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
-class Comment
+class Comment implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -177,5 +177,10 @@ class Comment
         $this->trick = $trick;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getText();
     }
 }

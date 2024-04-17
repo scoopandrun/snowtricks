@@ -2,6 +2,7 @@
 
 namespace App\Twig\Runtime;
 
+use App\Service\ImageManager;
 use App\Service\TrickService;
 use App\Service\UserService;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -22,7 +23,7 @@ class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
      * 
      * @return null|string The full path of the image file, or null if the file is not found.
      */
-    public function getUrl(string $library, mixed $attribute, string $size = 'original'): ?string
+    public function getUrl(string $library, mixed $attribute, string $size = ImageManager::SIZE_ORIGINAL): ?string
     {
         $libraries = ['tricks', 'users'];
 
@@ -33,8 +34,8 @@ class ImageUrlExtensionRuntime implements RuntimeExtensionInterface
 
         // Check if the file exists
         $fullpath = match ($library) {
-            'tricks' => $this->trickService->getTrickPictureFilename((string) $attribute, $size),
-            'users' => $this->userService->getProfilePictureFilename($attribute, $size),
+            'tricks' => $this->trickService->getTrickPicturePath((string) $attribute, $size),
+            'users' => $this->userService->getProfilePicturePath($attribute, $size),
         };
 
         if (!is_file((string) $fullpath)) {

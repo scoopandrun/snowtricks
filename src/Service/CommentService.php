@@ -20,7 +20,7 @@ class CommentService
      * @param int $batchNumber 
      * @param int $batchSize   Number of comments to show in the batch.
      * 
-     * @return Batch<App\DTO\TrickCardDTO>
+     * @return Batch<\App\Entity\Comment>
      */
     public function getBatch(
         int $trickId,
@@ -74,7 +74,6 @@ class CommentService
     public function remove(Comment $comment): void
     {
         $comment
-            // ->setAuthor(null)
             ->setText("")
             ->setDeletedAt(new \DateTimeImmutable());
     }

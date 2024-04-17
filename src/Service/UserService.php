@@ -24,7 +24,6 @@ class UserService
         private UserPasswordHasherInterface $userPasswordHasher,
         private RouterInterface $router,
         private ImageManager $imageManager,
-        private FileManager $fileManager,
         #[Autowire('%app.uploads.pictures%/users')]
         private string $profilePictureUploadDirectory,
     ) {
@@ -84,16 +83,21 @@ class UserService
         );
     }
 
-    public function getProfilePictureFilename(?User $user, string $size = 'original'): ?string
-    {
+    public function getProfilePicturePath(
+        ?User $user,
+        string $size = ImageManager::SIZE_ORIGINAL
+    ): ?string {
         if (is_null($user)) {
             return null;
         }
 
-        return $this->fileManager->getFullpath(
-            directory: $this->profilePictureUploadDirectory . '/' . $size,
-            filename: (string) $user->getId(),
+        $fullpath = $this->imageManager->getImagePath(
+            $this->profilePictureUploadDirectory,
+            (string) $user->getId(),
+            $size
         );
+
+        return $fullpath;
     }
 
     /**
