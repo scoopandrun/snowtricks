@@ -1,3 +1,8 @@
 .trick-edit-form .pictures {
   padding-left: 0;
 }
+
+.difficulty-slider::-webkit-slider-thumb,
+.difficulty-slider::-moz-range-thumb {
+  background-color: var(--difficulty, #158cba);
+}

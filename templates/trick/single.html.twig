@@ -114,7 +114,11 @@
     <div class="container mb-5">
       <div class="d-flex justify-content-center flex-wrap">
         {% if trick.category %}
-          <div class="badge bg-secondary m-1">{{ trick.category.name }}</div>
+          <div class="badge bg-secondary m-1">{{ trick.category }}</div>
+        {% endif %}
+
+        {% if trick.difficulty %}
+          <div class="badge m-1 difficulty-badge" style="--difficulty: var(--difficulty-{{ trick.difficulty|lower }})">{{ trick.difficulty }}</div>
         {% endif %}
 
         {% if trick.author %}

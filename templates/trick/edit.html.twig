@@ -8,7 +8,6 @@
   {{ parent() }}
   <link rel="stylesheet" href="{{ asset('styles/trick/single.css') }}">
   <link rel="stylesheet" href="{{ asset('styles/trick/edit.css') }}">
-  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css" rel="stylesheet">
   {% endblock %}
 
 {% block body %}
@@ -50,6 +49,31 @@
         {% do form.pictures.setRendered %}
 
         {{ form_row(form.videos) }}
+
+        <div class="mb-3">
+          {{ form_label(form.difficulty) }}
+
+          <div>
+            <input
+              type="range"
+              class="form-range difficulty-slider"
+              style="--difficulty: var(--difficulty-{{ trick.difficulty|lower }})"
+              name="{{ form.difficulty.vars.full_name }}"
+              id="{{ form.difficulty.vars.id }}"
+              min="1"
+              max="5"
+              step="1"
+              value="{{ form.difficulty.vars.data.value }}"
+              data-controller="difficulty-slider"
+              data-action="input->difficulty-slider#update"
+            >
+            <span id="difficulty-name">{{ form.difficulty.vars.data.name }}</span>
+          </div>
+
+          {{ form_errors(form.difficulty) }}
+        </div>
+
+        {% do form.difficulty.setRendered %}
         
         {{ form_row(form.category) }}
 
