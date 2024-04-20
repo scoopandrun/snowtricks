@@ -42,6 +42,7 @@ class TrickForm extends AbstractType
                 'entry_type' => VideoType::class,
                 'entry_options' => [
                     'label' => false,
+                    'help' => "Currently supported: YouTube, Dailymotion, Vimeo",
                 ],
                 'by_reference' => false,
                 'allow_add' => true,

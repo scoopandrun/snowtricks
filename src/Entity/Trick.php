@@ -12,7 +12,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: TrickRepository::class)]
 #[UniqueEntity('name')]
-#[ORM\HasLifecycleCallbacks]
 class Trick implements \Stringable
 {
     #[ORM\Id]

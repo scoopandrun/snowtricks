@@ -58,9 +58,9 @@ class AuthController extends AbstractController
             $this->addFlash(FlashClasses::SUCCESS, "Your account has been created.");
             $this->addFlash(FlashClasses::WARNING, "You must validate your account with the link sent by email before editing tricks or posting comments.");
 
-            $redirectResponse = $security->login($user, AppAuthenticator::class);
+            $security->login($user, AppAuthenticator::class);
 
-            return $redirectResponse ?? $this->redirectToRoute('homepage.index');
+            return $this->redirectToRoute('homepage.index');
         }
 
         return $this->render('auth/signup.html.twig', [

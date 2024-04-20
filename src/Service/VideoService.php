@@ -134,7 +134,7 @@ class VideoService
                 "normalizedUrlTemplate" => "https://www.youtube.com/watch?v=<id>",
                 "embedUrlTemplate" => "https://www.youtube.com/embed/<id>",
                 "oembedUrlTemplate" => "https://www.youtube.com/oembed?url=<normalizedUrl>",
-                "videoIdRegex" => "\w+",
+                "videoIdRegex" => "[\w_-]+",
             ],
             "Dailymotion" => [
                 "urlTemplates" => [
