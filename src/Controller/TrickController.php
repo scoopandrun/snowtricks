@@ -7,6 +7,7 @@ use App\Entity\Trick;
 use App\Event\TrickCreatedEvent;
 use App\Event\TrickUpdatedEvent;
 use App\Form\TrickForm;
+use App\Repository\TrickRepository;
 use App\Security\Voter\TrickVoter;
 use App\Service\FileManager;
 use App\Service\TrickService;
@@ -34,9 +35,9 @@ class TrickController extends AbstractController
         name: '.archive',
         methods: ['GET'],
     )]
-    public function archive(EntityManagerInterface $entityManager): Response
+    public function archive(TrickRepository $trickRepository): Response
     {
-        $tricks = $entityManager->getRepository(Trick::class)->findTrickCards();
+        $tricks = $trickRepository->findTrickCards();
 
         return $this->render(
             'trick/archive.html.twig',

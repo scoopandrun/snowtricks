@@ -36,7 +36,8 @@ class TrickRepository extends ServiceEntityRepository
                 TrickCardDTO::class
             ))
             ->leftJoin('t.mainPicture', 'p')
-            ->leftJoin('t.category', 'c');
+            ->leftJoin('t.category', 'c')
+            ->orderBy('t.name', 'ASC');
 
         if ($limit) {
             $builder->setFirstResult($offset)->setMaxResults($limit);
