@@ -1,3 +1,11 @@
+:root {
+  --difficulty-easy: hsl(184, 29%, 58%);
+  --difficulty-intermediate: hsl(157, 98%, 25%);
+  --difficulty-advanced: hsl(69, 60%, 44%);
+  --difficulty-expert: hsl(46, 49%, 55%);
+  --difficulty-pro: hsl(354, 70%, 54%);
+}
+
 .skip-link {
   position: absolute;
   top: -3rem;
@@ -20,4 +28,9 @@
 
 .trick-card [data-controller="delete-button"]:hover {
   color: var(--bs-red, red);
+}
+
+.difficulty-badge {
+  background-color: var(--difficulty, black);
+  color: white;
 }

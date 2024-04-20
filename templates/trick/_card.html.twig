@@ -54,5 +54,9 @@
     {% if trick.category %}
       <p class="badge bg-secondary">{{ trick.category|lower }}</p>
     {% endif %}
+
+    {% if trick.difficulty %}
+      <p class="badge difficulty-badge" style="--difficulty: var(--difficulty-{{ trick.difficulty|lower }})">{{ trick.difficulty|lower }}</p>
+    {% endif %}
   </div>
 </div>

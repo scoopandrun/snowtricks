@@ -10,6 +10,7 @@ class TrickCardDTO
         public readonly string $name,
         public readonly ?string $mainPicture = null,
         public readonly ?string $category = null,
+        public readonly ?string $difficulty = null,
     ) {
     }
 }

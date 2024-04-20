@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use App\Entity\Difficulty;
 use App\Entity\Trick;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -52,6 +53,11 @@ class TrickForm extends AbstractType
                     'data-controller' => 'collection-edit',
                     'data-add-button-text' => 'Add a video',
                 ],
+            ])
+            ->add('difficulty', EntityType::class, [
+                'class' => Difficulty::class,
+                'choice_label' => 'value',
+                'required' => true,
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,

@@ -32,11 +32,12 @@ class TrickRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('t')
             ->select(sprintf(
-                'NEW %s(t.id, t.slug, t.name, p.filename, c.name)',
+                'NEW %s(t.id, t.slug, t.name, p.filename, c.name, d.name)',
                 TrickCardDTO::class
             ))
             ->leftJoin('t.mainPicture', 'p')
             ->leftJoin('t.category', 'c')
+            ->leftJoin('t.difficulty', 'd')
             ->orderBy('t.name', 'ASC');
 
         if ($limit) {

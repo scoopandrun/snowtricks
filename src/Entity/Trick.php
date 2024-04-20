@@ -90,6 +90,9 @@ class Trick implements \Stringable
     )]
     private Collection $comments;
 
+    #[ORM\ManyToOne(inversedBy: 'tricks')]
+    private ?Difficulty $difficulty = null;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
@@ -295,6 +298,18 @@ class Trick implements \Stringable
                 $comment->setTrick(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDifficulty(): ?Difficulty
+    {
+        return $this->difficulty;
+    }
+
+    public function setDifficulty(?Difficulty $difficulty): static
+    {
+        $this->difficulty = $difficulty;
 
         return $this;
     }
