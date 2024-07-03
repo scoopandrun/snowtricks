@@ -26,6 +26,10 @@ class UserService
         private ImageManager $imageManager,
         #[Autowire('%app.uploads.pictures%/users')]
         private string $profilePictureUploadDirectory,
+        #[Autowire('%app.mail.sender_email%')]
+        private string $senderEmail,
+        #[Autowire('%app.mail.sender_name%')]
+        private string $senderName,
     ) {
     }
 
@@ -120,7 +124,7 @@ class UserService
         $user->setEmailVerificationToken($token);
 
         $email = (new TemplatedEmail())
-            ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
+            ->from(new Address($this->senderEmail, $this->senderName))
             ->to($user->getEmail())
             ->subject("Validate your email address")
             ->htmlTemplate("email/account_verification.html.twig")
@@ -168,7 +172,7 @@ class UserService
         $user->setPasswordResetToken($token);
 
         $email = (new TemplatedEmail())
-            ->from(new Address("no-reply@snowtricks.localhost", "Snowtricks"))
+            ->from(new Address($this->senderEmail, $this->senderName))
             ->to($user->getEmail())
             ->subject("Reset your password")
             ->htmlTemplate("email/password_reset.html.twig")
